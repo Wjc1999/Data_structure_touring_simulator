@@ -4,18 +4,14 @@
 #include <iostream>
 #include <map>
 #include <string>
+
+#include "user_type.h"
 /* class IDMap
  * 储存各类序号及其对应的字符串,供输出使用
  */
 class IDMap
 {
 public:
-  using City_id = int;
-  using Train_id = int;
-  using Trans_id = int;
-  using City_str = std::string;
-  using Train_str = std::string;
-  using Trans_str = std::string;
   /* 
      */
   IDMap() = default;

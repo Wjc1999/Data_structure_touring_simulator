@@ -1,31 +1,42 @@
 #ifndef SRC_PATH
 #define SRC_PATH
-#include"time_format.h"
 #include <vector>
-using city_id = int;
-using transport_id = std::string;
+#include "time_format.h"
+#include "user_type.h"
 
-struct PathNode // 路径节点
+class PathNode // 路径节点
 {
-    city_id city;//城市名
-    int nodetype;//规定0为“起点”，1为“其它点”，
-    /*以下相当于一种交通方法的信息
+public:
+  PathNode(City_id city, bool start, const Time &depart, const Time &arrive, int price, Trans_id transport_type);
+
+  City_id city_;  //节点城市名
+  bool is_start_; //规定true为路径的“起点”，false为“其它点”，
+  /*以下相当于一种交通方法的信息
     */
-    Time depart_time;//之前离开的时间
-    Time arrive_time;//到达时间
-    int price;//来此地的花费
-    transport_id transport_type;//乘坐来的方法
+  Time depart_time_;         //从前一个城市离开时的时间
+  Time arrive_time_;         //到达该城市时间
+  int price_;                //来此地的花费
+  Trans_id transport_type_;  //乘坐来的方法
+  Train_id train_seat_type_; //如果搭乘火车,记录席别
 };
+
 class Path // 路径
 {
-  public:
-    /*通过一个id添加至路径
+public:
+  /*添加一个PathNode到路径尾端,并且更改总价与总时间
     */
-    Path &path_append(transport_id);
+  Path() = default;
+  Path &path_append(City_id city, bool start, const Time &depart, const Time &arrive, int price, Trans_id transport_type);
+  /*获取路径长度
+   */
+  std::vector<PathNode>::size_type GetLen() const;
 
-  private:
-    vector <PathNode> cities_;//储存节点
-    int total_price_;//总价
-    Time total_timecost_;//总时间
+  int GetTotalPrice() const;
+  Time GetTotalTime() const;
+
+private:
+  std::vector<PathNode> cities_; //储存节点
+  int total_price_;              //总价
+  Time total_timecost_;          //总时间
 };
-#endif//SRC_PATH
+#endif // SRC_PATH
