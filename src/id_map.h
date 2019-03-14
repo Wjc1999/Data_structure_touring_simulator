@@ -20,13 +20,13 @@ public:
 
   /* 给序号获得城市名
    */
-  const std::string GetCityStr(City_id id) const { return GetStr(id, city_map_); }
+  const std::string &GetCityStr(City_id id) const { return GetStr(id, city_map_); }
   /* 给序号获得火车座位等级名
    */
-  const std::string GetTrainSeatTypeStr(Train_id id) const { return GetStr(id, train_map_); }
+  const std::string &GetTrainSeatTypeStr(Train_id id) const { return GetStr(id, train_map_); }
   /* 给序号获得交通方式
    */
-  const std::string GetTransStr(Trans_id id) const { return GetStr(id, trans_map_); }
+  const std::string &GetTransStr(Trans_id id) const { return GetStr(id, trans_map_); }
 #define TEST_IDMAP
 #ifdef TEST_IDMAP
   std::map<int, std::string>::size_type GetCityMapSize()
@@ -42,7 +42,7 @@ private:
   std::map<Train_id, Train_str> train_map_;
   std::map<Trans_id, Trans_str> trans_map_;
   bool LoadID(std::ifstream &id_file, std::map<int, std::string> &map); //从给定的文件中加载ID
-  const std::string GetStr(int id, const std::map<int, std::string> &map) const;
+  const std::string &GetStr(int id, const std::map<int, std::string> &map) const;
   const std::string paths_[3] = {
       // 文件路径
       "..//data//city_id.txt",            // city_id_path
@@ -85,7 +85,7 @@ bool IDMap::LoadID(std::ifstream &id_file, std::map<int, std::string> &map)
   return id_file.eof();
 }
 
-inline const std::string IDMap::GetStr(int id, const std::map<int, std::string> &map) const
+inline const std::string &IDMap::GetStr(int id, const std::map<int, std::string> &map) const
 {
   // TODO: error handling
   return map.at(id);
