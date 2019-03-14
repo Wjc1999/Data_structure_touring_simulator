@@ -39,24 +39,24 @@ public:
 private:
   int day_ = 0; // day_为0表示当天
   int hour_ = 0;
-  void set_time(Time &time, int day, int hour)
+  void set_time(int day, int hour)
   {
     // todo: format check
-    time.day_ = day;
-    time.hour_ = hour;
+    day_ = day;
+    hour_ = hour;
   }
 };
 
 inline Time::Time(int time)
 {
   int t_day = time / 10000, t_hour = (time - t_day * 10000) / 100;
-  set_time(*this, t_day - 1, t_hour);
+  set_time(t_day - 1, t_hour);
   
 }
 
 inline Time::Time(int day, int hour)
 {
-  set_time(*this, day - 1, hour);
+  set_time(day - 1, hour);
 }
 
 inline Time Time::time_diff(const Time &t) const
