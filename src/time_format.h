@@ -31,8 +31,8 @@ public:
 #include <iostream>
   void print()
   {
-    std::cout << "日期是: " << this->GetDay()
-              << "\t时间是: " << this->GetHour() << std::endl;
+    std::cout << "日期是: " << GetDay()
+              << "\t时间是: " << GetHour() << std::endl;
   }
 #endif // TEST_TIME
 
@@ -55,8 +55,7 @@ inline Time Time::time_diff(const Time &t) const
 
 inline Time &Time::add_time(const Time &t)
 {
-  this->add_time(t.hour_, t.day_);
-  return *this;
+  return add_time(t.hour_, t.day_);;
 }
 
 inline Time &Time::add_time(const int hour, const int day /* = 0 */)
@@ -73,7 +72,7 @@ inline Time &Time::add_time(const int hour, const int day /* = 0 */)
 
 inline int Time::hour_diff(const Time &t) const
 {
-  Time temp = this->time_diff(t);
+  Time temp = time_diff(t);
   return temp.hour_ + temp.day_ * 24;
 }
 
