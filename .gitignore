@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+test/time_format_test
+.vscode/settings.json
+data/flight_ex.py
