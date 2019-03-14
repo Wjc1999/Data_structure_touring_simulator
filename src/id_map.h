@@ -13,14 +13,14 @@ class IDMap
 {
 public:
   /* 
-     */
+   */
   IDMap() = default;
   ~IDMap(); // 是否需要析构函数?
   /* 给序号获得城市名
-    */
+   */
   std::string GetCityStr(City_id id) const;
   /* 给序号获得火车座位等级名
-    */
+   */
   std::string GetTrainSeatTypeStr(Train_id id) const;
   /* 给序号获得交通方式
    */
