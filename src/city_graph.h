@@ -1,10 +1,12 @@
 #ifndef SRC_CG
 #define SRC_CG
+
 #include <iostream>
 #include <vector>
 #include <fstream>
 #include <string>
 #include <sstream>
+
 #include "user_type.h"
 #include "time_format.h"
 #include "path.h"
@@ -22,6 +24,7 @@ struct Route
   Time end_time;
   int price;
 };
+
 class CityGraph // 城市图
 {
 public:
@@ -32,21 +35,24 @@ public:
   //测试用
   void print()
   {
-    for(int i=0;i<5;i++)
-      for(int j=0;j<5;j++){
-        if(i!=j){
-          for(int k=0;k<city[i][j].size();k++){
-            std::cout<<i<<' '<<j<<' ';
-            std::cout<<city[i][j].at(k).transport_type<<' '<<city[i][j].at(k).price<<std::endl;
+    for (int i = 0; i < 5; i++)
+      for (int j = 0; j < 5; j++)
+      {
+        if (i != j)
+        {
+          for (int k = 0; k < city[i][j].size(); k++)
+          {
+            std::cout << i << ' ' << j << ' ';
+            std::cout << city[i][j].at(k).transport_type << ' ' << city[i][j].at(k).price << std::endl;
           }
         }
       }
   }
 #endif // TEST_CG
-  
+
 private:
-  bool LoadCityGraph(std::string name, int type);         // 加载文件
-  std::vector <Route> city[City_number][City_number];
+    bool LoadCityGraph(std::string name, int type); // 加载文件
+  std::vector<Route> city[City_number][City_number];
 };
 
 inline CityGraph::CityGraph(){
@@ -79,14 +85,20 @@ inline bool CityGraph::LoadCityGraph(std::string name, int type){//将飞机火�
     stream.close();
     return false;
   }
-  else{
-    if(stream.is_open()){
+  else
+  {
+    if (stream.is_open())
+    {
       int data[5];
       std::string line;
-      while(getline(stream,line)){
+      while (getline(stream, line))
+      {
         std::istringstream ss(line);
-        for(int i=0;i<7;i++){ss>>data[i];}
-        Route temp = {type,0,Time(data[2]),Time(data[3]),data[6]};
+        for (int i = 0; i < 7; i++)
+        {
+          ss >> data[i];
+        }
+        Route temp = {type, 0, Time(data[2]), Time(data[3]), data[6]};
         city[data[0]][data[1]].push_back(temp);
       }
       stream.close();
