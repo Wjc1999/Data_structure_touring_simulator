@@ -8,7 +8,11 @@
 #include "user_type.h"
 #include "time_format.h"
 #include "path.h"
+
 #define City_number 31
+#define flightfn "../data/flight_extract_with_id.txt"
+#define trainfn "../data/train_extract_with_id.txt"
+#define carfn "../data/car_extract_with_id.txt"
 
 struct Route
 {
@@ -21,8 +25,7 @@ struct Route
 class CityGraph // 城市图
 {
 public:
-  CityGraph();
-  Path get_path(const std::vector <City_id> &plan, Strategy s);
+  CityGraph();//构造函数
 
 #ifdef TEST_CG
 #include <iostream>
@@ -47,9 +50,6 @@ private:
 };
 
 inline CityGraph::CityGraph(){
-  std::string flightfn = "../data/flight_extract_with_id.txt";
-  std::string trainfn = "../data/train_extract_with_id.txt";
-  std::string carfn = "../data/car_extract_with_id.txt";
   if(
   LoadCityGraph(flightfn, 2)&&
   LoadCityGraph(trainfn, 1)&&
@@ -58,14 +58,13 @@ inline CityGraph::CityGraph(){
   else std::cout<<"Loading error!"<<std::endl;
 }
 
-inline bool CityGraph::LoadCityGraph(std::string name, int type){
+inline bool CityGraph::LoadCityGraph(std::string name, int type){//将飞机火车汽车数据加载到程序中
   std::ifstream stream(name);
-  if(type != 1){
+  if(type != 1){//火车的要特殊处理
     if(stream.is_open()){
       int data[5];
       while(!stream.eof()){
         for(int i=0;i<5;i++){stream>>data[i];}
-        //Route temp;
         Route temp = {type,0,Time(data[2]),Time(data[3]),data[4]};
         //temp.transport_type = type;
         //temp.train_seat_type = ;
@@ -74,8 +73,10 @@ inline bool CityGraph::LoadCityGraph(std::string name, int type){
         //temp.price = data[4];
         city[data[0]][data[1]].push_back(temp);
       }
+      stream.close();
       return true;
     }
+    stream.close();
     return false;
   }
   else{
@@ -88,8 +89,10 @@ inline bool CityGraph::LoadCityGraph(std::string name, int type){
         Route temp = {type,0,Time(data[2]),Time(data[3]),data[6]};
         city[data[0]][data[1]].push_back(temp);
       }
+      stream.close();
       return true;
     }
+    stream.close();
     return false;
   }
 }
