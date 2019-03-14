@@ -9,10 +9,10 @@
 #include "time_format.h"
 #include "path.h"
 
-#define City_number 31
-#define flightfn "../data/flight_extract_with_id.txt"
-#define trainfn "../data/train_extract_with_id.txt"
-#define carfn "../data/car_extract_with_id.txt"
+const int City_number = 31;
+const std::string flightfn = "../data/flight_extract_with_id.txt";
+const std::string trainfn = "../data/train_extract_with_id.txt";
+const std::string carfn = "../data/car_extract_with_id.txt";
 
 struct Route
 {
