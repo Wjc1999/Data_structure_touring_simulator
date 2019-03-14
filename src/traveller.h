@@ -13,7 +13,7 @@ public:
 
 private:
   Strategy strategy;                     // 旅行策略
-  std::vector<City_id> travelling_plan;  // 旅行计划
+  std::vector<City_id> travelling_plan;  // 旅行计划 <起点>, <中继点>... , <终点>
   Path touring_path;                     // 旅行路径
   std::vector<Path>::iterator next_city; // 路径中的下一个城市
 };

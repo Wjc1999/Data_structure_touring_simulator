@@ -7,5 +7,10 @@ using Trans_id = int;
 using City_str = std::string;
 using Train_str = std::string;
 using Trans_str = std::string;
-using Strategy = int;
+enum Strategy
+{
+    LEAST_MONEY,    // 最少费用
+    LEAST_TIME,     // 最少时间
+    LIMIT_TIME      // 限定时间内最少费用
+};
 #endif // SRC_USER_TYPE
