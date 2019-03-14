@@ -8,8 +8,8 @@ class Time
 public:
   /* 接受一个形如dhh00的整数,将d作为日期,hh作为小时储存 
   */
-  Time(int time);
-  Time(int day, int hour);
+  Time(int time = 0) : Time(time / 10000, (time - time / 10000 * 10000) / 100) {}
+  Time(int day, int hour) : day_(day - 1), hour_(hour) {}
 
   /* 获取当前时间与给定时间的差值,返回值为差值时间的拷贝(this - t)
   */
@@ -31,33 +31,15 @@ public:
 #include <iostream>
   void print()
   {
-    std::cout << "日期是: " << this->GetDay()
-              << "\t时间是: " << this->GetHour() << std::endl;
+    std::cout << "日期是: " << GetDay()
+              << "\t时间是: " << GetHour() << std::endl;
   }
 #endif // TEST_TIME
 
 private:
   int day_ = 0; // day_为0表示当天
   int hour_ = 0;
-  void set_time(int day, int hour)
-  {
-    // todo: format check
-    day_ = day;
-    hour_ = hour;
-  }
 };
-
-inline Time::Time(int time)
-{
-  int t_day = time / 10000, t_hour = (time - t_day * 10000) / 100;
-  set_time(t_day - 1, t_hour);
-  
-}
-
-inline Time::Time(int day, int hour)
-{
-  set_time(day - 1, hour);
-}
 
 inline Time Time::time_diff(const Time &t) const
 {
@@ -73,8 +55,7 @@ inline Time Time::time_diff(const Time &t) const
 
 inline Time &Time::add_time(const Time &t)
 {
-  this->add_time(t.hour_, t.day_);
-  return *this;
+  return add_time(t.hour_, t.day_);;
 }
 
 inline Time &Time::add_time(const int hour, const int day /* = 0 */)
@@ -91,7 +72,7 @@ inline Time &Time::add_time(const int hour, const int day /* = 0 */)
 
 inline int Time::hour_diff(const Time &t) const
 {
-  Time temp = this->time_diff(t);
+  Time temp = time_diff(t);
   return temp.hour_ + temp.day_ * 24;
 }
 
