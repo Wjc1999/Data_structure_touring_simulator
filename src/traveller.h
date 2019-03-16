@@ -15,7 +15,7 @@ const int kMaxInt = INT32_MAX; // 0x7fffffff
 class Traveller                // 旅行者
 {
 public:
-  Traveller();
+  Traveller() = default;
   // 显示旅客id
   const std::string &ShowID() const
   {
@@ -26,15 +26,17 @@ public:
   void ShowPath() const { touring_path_.Show(); };
   // 为旅客获取一条路径**关键算法**
   Path get_path(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s);
+  // 设置旅行路径
+  void set_path(Path path);
 
 private:
-  std::string id_;                        // 旅客id
-  int state_;                             // 旅客当前状态
+  std::string id_ = "";                        // 旅客id
+  TravellerState state_ = STAY;                             // 旅客当前状态
   Time new_journey_;                      // 旅客下一次空闲的时间
-  Strategy strategy_;                     // 旅行策略
+  Strategy strategy_ = LEAST_MONEY;                     // 旅行策略
   std::vector<City_id> travelling_plan_;  // 旅行计划 <起点>, <中继点>... , <终点>
   Path touring_path_;                     // 旅行路径
-  std::vector<Path>::iterator next_city_; // 路径中的下一个城市
+  std::vector<PathNode>::iterator next_city_; // 路径中的下一个城市
   Path get_path_LM(const CityGraph &graph, const std::vector<City_id> &plan);
 };
 
