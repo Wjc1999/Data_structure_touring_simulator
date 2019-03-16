@@ -2,7 +2,6 @@
 #define SRC_IDMAP
 
 // #include <iostream>
-
 #include <fstream>
 #include <map>
 #include <string>
@@ -14,27 +13,20 @@
 class IDMap
 {
 public:
-  /* 
-   */
   IDMap();
 
-  /* 给序号获得城市名
-   */
-  const std::string GetCityStr(City_id id) const { return GetStr(id, city_map_); }
-  /* 给序号获得火车座位等级名
-   */
-  const std::string GetTrainSeatTypeStr(Train_id id) const { return GetStr(id, train_map_); }
-  /* 给序号获得交通方式
-   */
-  const std::string GetTransStr(Trans_id id) const { return GetStr(id, trans_map_); }
+  // 给序号获得城市名
+  const std::string &GetCityStr(City_id id) const { return GetStr(id, city_map_); }
+  // 给序号获得火车座位等级名
+  const std::string &GetTrainSeatTypeStr(Train_id id) const { return GetStr(id, train_map_); }
+  // 给序号获得交通方式
+  const std::string &GetTransStr(Trans_id id) const { return GetStr(id, trans_map_); }
+
 #define TEST_IDMAP
 #ifdef TEST_IDMAP
-  std::map<int, std::string>::size_type GetCityMapSize()
-  {
-    return city_map_.size();
-  }
-  std::map<int, std::string>::size_type GetTrainMapSize() { return train_map_.size(); }
-  std::map<int, std::string>::size_type GetTransMapSize() { return trans_map_.size(); }
+  std::map<int, std::string>::size_type GetCityMapSize()  const { return city_map_.size();  }
+  std::map<int, std::string>::size_type GetTrainMapSize() const { return train_map_.size(); }
+  std::map<int, std::string>::size_type GetTransMapSize() const { return trans_map_.size(); }
 #endif // TEST_IDMAP
 
 private:
@@ -42,7 +34,7 @@ private:
   std::map<Train_id, Train_str> train_map_;
   std::map<Trans_id, Trans_str> trans_map_;
   bool LoadID(std::ifstream &id_file, std::map<int, std::string> &map); //从给定的文件中加载ID
-  const std::string GetStr(int id, const std::map<int, std::string> &map) const;
+  const std::string &GetStr(int id, const std::map<int, std::string> &map) const;
   const std::string paths_[3] = {
       // 文件路径
       "..//data//city_id.txt",            // city_id_path
@@ -54,7 +46,7 @@ private:
 IDMap::IDMap()
 {
   std::ifstream in_id_file;
-  decltype(&city_map_) map_table[3] =
+  decltype(&city_map_) map_table[3] = // 三个map的类型实际上是一样的
       {
           &city_map_,
           &train_map_,
@@ -85,10 +77,10 @@ bool IDMap::LoadID(std::ifstream &id_file, std::map<int, std::string> &map)
   return id_file.eof();
 }
 
-inline const std::string IDMap::GetStr(int id, const std::map<int, std::string> &map) const
+inline const std::string &IDMap::GetStr(int id, const std::map<int, std::string> &map) const
 {
   // TODO: error handling
-  return map.at(id);
+  return map.at(id);  // map为const
 }
 
 #endif // SRC_IDMAP
