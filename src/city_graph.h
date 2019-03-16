@@ -10,6 +10,7 @@
 #include "user_type.h"
 #include "time_format.h"
 #include "path.h"
+#include "id_map.h"
 
 static const int kCityNum = 31;
 static const std::string flightfn = "../data/flight_extract_with_id.txt";
@@ -30,6 +31,9 @@ class CityGraph // 城市图
 public:
   CityGraph(); //构造函数
   int get_city_num() const { return kCityNum; }
+  void Show(City_id i, City_id j, int k);//打印ijk的存储数据
+  Route Get(City_id i, City_id j, int k) const {return city[i][j].at(k);};//获得存储在ijk的Route
+  int Getsize(City_id i, City_id j) const {return city[i][j].size();};//获得city[i][j]的大小
 
 #ifdef TEST_CG
 #include <iostream>
@@ -41,11 +45,7 @@ public:
       {
         if (i != j)
         {
-          for (int k = 0; k < city[i][j].size(); k++)
-          {
-            std::cout << i << ' ' << j << ' ';
-            std::cout << city[i][j].at(k).transport_type << ' ' << city[i][j].at(k).price << std::endl;
-          }
+          for (int k = 0; k < city[i][j].size(); k++)Show(i,j,k);
         }
       }
   }
@@ -71,10 +71,8 @@ inline CityGraph::CityGraph()
 inline bool CityGraph::LoadCityGraph(const std::string &name, int type)
 { //将飞机火车汽车数据加载到程序中
   std::ifstream stream(name);
-  if (type != 1)  // 处理飞机与汽车
-  { //火车的要特殊处理
-    if (stream.is_open())
-    {
+  if(type != 1){//飞机汽车的数据
+    if(stream.is_open()){
       int data[5];
       while (!stream.eof())
       {
@@ -96,11 +94,11 @@ inline bool CityGraph::LoadCityGraph(const std::string &name, int type)
     stream.close();
     return false;
   }
-  else // 处理火车
-  {
+  else
+  {//火车的数据
     if (stream.is_open())
     {
-      int data[7]; 
+      int data[7];
       std::string line;
       while (getline(stream, line))
       {
@@ -120,4 +118,12 @@ inline bool CityGraph::LoadCityGraph(const std::string &name, int type)
   }
 }
 
+inline void CityGraph::Show(City_id i, City_id j, int k){
+  if(i!=j){
+    std::cout<<i<<j<<k<<city[i][j].at[k].start_time.GetDay() + city[i][j].at[k].start_time.GetHour()<<' ';
+    std::cout<<city[i][j].at[k].end_time.GetDay() + city[i][j].at[k].end_time.GetHour()<<' ';
+    std::cout<<city[i][j].at[k].price<<std::endl;
+  }
+  else std::cout<<"No data!"<<std::endl;
+}
 #endif //SRC_CG
