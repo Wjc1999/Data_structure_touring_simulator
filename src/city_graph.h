@@ -11,10 +11,10 @@
 #include "time_format.h"
 #include "path.h"
 
-const int City_number = 31;
-const std::string flightfn = "../data/flight_extract_with_id.txt";
-const std::string trainfn = "../data/train_extract_with_id.txt";
-const std::string carfn = "../data/car_extract_with_id.txt";
+static const int kCityNum = 31;
+static const std::string flightfn = "../data/flight_extract_with_id.txt";
+static const std::string trainfn = "../data/train_extract_with_id.txt";
+static const std::string carfn = "../data/car_extract_with_id.txt";
 
 struct Route
 {
@@ -28,7 +28,8 @@ struct Route
 class CityGraph // 城市图
 {
 public:
-  CityGraph();//构造函数
+  CityGraph(); //构造函数
+  int get_city_num() const { return kCityNum; }
 
 #ifdef TEST_CG
 #include <iostream>
@@ -51,27 +52,37 @@ public:
 #endif // TEST_CG
 
 private:
-    bool LoadCityGraph(std::string name, int type); // 加载文件
-  std::vector<Route> city[City_number][City_number];
+  bool LoadCityGraph(const std::string &name, int type); // 加载文件
+  std::vector<Route> city[kCityNum][kCityNum];
+
 };
 
-inline CityGraph::CityGraph(){
-  if(
-  LoadCityGraph(flightfn, 2)&&
-  LoadCityGraph(trainfn, 1)&&
-  LoadCityGraph(carfn, 0))
-  std::cout<<"Loading succeed!"<<std::endl;
-  else std::cout<<"Loading error!"<<std::endl;
+inline CityGraph::CityGraph()
+{
+  if (
+      LoadCityGraph(flightfn, 2) &&
+      LoadCityGraph(trainfn, 1) &&
+      LoadCityGraph(carfn, 0))
+    std::cout << "Loading succeed!" << std::endl;
+  else
+    std::cout << "Loading error!" << std::endl;
 }
 
-inline bool CityGraph::LoadCityGraph(std::string name, int type){//将飞机火车汽车数据加载到程序中
+inline bool CityGraph::LoadCityGraph(const std::string &name, int type)
+{ //将飞机火车汽车数据加载到程序中
   std::ifstream stream(name);
-  if(type != 1){//火车的要特殊处理
-    if(stream.is_open()){
+  if (type != 1)  // 处理飞机与汽车
+  { //火车的要特殊处理
+    if (stream.is_open())
+    {
       int data[5];
-      while(!stream.eof()){
-        for(int i=0;i<5;i++){stream>>data[i];}
-        Route temp = {type,0,Time(data[2]),Time(data[3]),data[4]};
+      while (!stream.eof())
+      {
+        for (int i = 0; i < 5; i++)
+        {
+          stream >> data[i];
+        }
+        Route temp = {type, 0, Time(data[2]), Time(data[3]), data[4]};
         //temp.transport_type = type;
         //temp.train_seat_type = ;
         //temp.start_time = Time(data[2]);
@@ -85,11 +96,11 @@ inline bool CityGraph::LoadCityGraph(std::string name, int type){//将飞机火�
     stream.close();
     return false;
   }
-  else
+  else // 处理火车
   {
     if (stream.is_open())
     {
-      int data[5];
+      int data[7]; 
       std::string line;
       while (getline(stream, line))
       {

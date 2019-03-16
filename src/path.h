@@ -1,5 +1,6 @@
 #ifndef SRC_PATH
 #define SRC_PATH
+
 #include <vector>
 #include "time_format.h"
 #include "user_type.h"
