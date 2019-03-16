@@ -9,7 +9,6 @@
 
 #include "user_type.h"
 #include "time_format.h"
-#include "path.h"
 #include "id_map.h"
 
 const int kCityNum = 31;
@@ -127,9 +126,12 @@ inline void CityGraph::Show(City_id former_city, City_id current_city, int k) co
 {
   if (former_city != current_city)
   {
-    std::cout << former_city << current_city << k << city_[former_city][current_city].at[k].start_time.GetDay() << ' ' << city_[former_city][current_city].at[k].start_time.GetHour() << ' '
-              << city_[former_city][current_city].at[k].end_time.GetDay() << ' ' << city_[former_city][current_city].at[k].end_time.GetHour() << ' '
-              << city_[former_city][current_city].at[k].price << std::endl;
+    std::cout << former_city << ' ' << current_city << ' ' << k << ' ' 
+              << city_[former_city][current_city].at(k).start_time.GetDay() << ' ' 
+              << city_[former_city][current_city].at(k).start_time.GetHour() << ' '
+              << city_[former_city][current_city].at(k).end_time.GetDay() << ' ' 
+              << city_[former_city][current_city].at(k).end_time.GetHour() << ' '
+              << city_[former_city][current_city].at(k).price << std::endl;
   }
   else
     std::cout << "No data!" << std::endl;
