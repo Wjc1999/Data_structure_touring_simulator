@@ -25,7 +25,7 @@ public:
 
 #ifdef TEST_TIME
 #include <iostream>
-  void print()
+  void print() const
   {
     std::cout << "日期是: " << GetDay()
               << "\t时间是: " << GetHour() << std::endl;
