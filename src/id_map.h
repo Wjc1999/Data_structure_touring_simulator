@@ -13,18 +13,13 @@
 class IDMap
 {
 public:
-  /* 
-   */
   IDMap();
 
-  /* 给序号获得城市名
-   */
+  // 给序号获得城市名
   const std::string &GetCityStr(City_id id) const { return GetStr(id, city_map_); }
-  /* 给序号获得火车座位等级名
-   */
+  // 给序号获得火车座位等级名
   const std::string &GetTrainSeatTypeStr(Train_id id) const { return GetStr(id, train_map_); }
-  /* 给序号获得交通方式
-   */
+  // 给序号获得交通方式
   const std::string &GetTransStr(Trans_id id) const { return GetStr(id, trans_map_); }
 
 #define TEST_IDMAP
