@@ -40,16 +40,16 @@ public:
   //打印这条路径
   void Show() const;
   //获取路径长度
-  int GetLen() const { return len_; };
+  int GetLen() const { return len_; }
   //获取路径总价
-  int GetTotalPrice() const { return total_price_; };
+  int GetTotalPrice() const { return total_price_; }
   //获取总时间
-  const Time &GetTotalTime() const { return total_timecost_; };
+  const Time &GetTotalTime() const { return total_timecost_; }
   // 返回指向路径第首个元素的迭代器
-  std::deque<PathNode>::const_iterator cbegin() { return cities_.cbegin(); };
+  std::deque<PathNode>::const_iterator cbegin() { return cities_.cbegin(); }
 
   // 返回指向路径尾后元素的迭代器
-  std::deque<PathNode>::const_iterator cend() { return cities_.cend(); };
+  std::deque<PathNode>::const_iterator cend() { return cities_.cend(); }
 
 #ifdef TEST_PATH
 
