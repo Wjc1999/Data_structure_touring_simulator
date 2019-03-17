@@ -24,11 +24,9 @@ class Log
 public:
   Log() = default; // 根据给定的文件路径打开日志文件
   ~Log();          // 关闭日志文件
-  /*  向日志文件中写入log_str
-     */
+  //  向日志文件中写入log_str
   void write(const std::string &log_str);
-  /* 根据给定的模式串以及补充信息向日志文件中添加日志
-     */
+  // 根据给定的模式串以及补充信息向日志文件中添加日志
   void write(WriteTplt tplt_str, const std::string &supply_str);
 
 private:

@@ -33,3 +33,5 @@
 test/time_format_test
 .vscode/settings.json
 data/flight_ex.py
+test/city_graph_test
+test/id_map_test
