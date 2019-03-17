@@ -7,7 +7,7 @@ class Time
 {
 public:
   // 接受一个形如dhh00的整数,将d作为日期,hh作为小时储存 
-  Time(int time = 10000) : Time(time / 10000, (time - time / 10000 * 10000) / 100) {}
+  explicit Time(int time = 10000) : Time(time / 10000, (time - time / 10000 * 10000) / 100) {}
   Time(int day, int hour) : day_(day - 1), hour_(hour) {}
 
   // 获取当前时间与给定时间的差值,返回值为差值时间的拷贝(this - t)
@@ -25,7 +25,7 @@ public:
 
 #ifdef TEST_TIME
 #include <iostream>
-  void print()
+  void print() const
   {
     std::cout << "日期是: " << GetDay()
               << "\t时间是: " << GetHour() << std::endl;
