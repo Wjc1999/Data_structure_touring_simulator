@@ -35,5 +35,3 @@ test/time_format_test
 data/flight_ex.py
 test/city_graph_test
 test/id_map_test
-data/time_fix.py
-test/get_path_LM
