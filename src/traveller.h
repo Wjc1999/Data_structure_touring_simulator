@@ -57,8 +57,8 @@ Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<City_id> &
   {
     destination = plan[cnt];
     origin = plan[cnt - 1];
-    int price[kCityNum];
-    int preway[kCityNum][2];
+    int price[kCityNum];  // 记录最小花费
+    int preway[kCityNum][2];  // preway[cityA][] = {CityB, transport_index_from_CityB_to_CityA}
     bool is_count[kCityNum];
     std::vector<int> find_min_price;
 
@@ -66,10 +66,10 @@ Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<City_id> &
     {
       if (j == origin)
         continue;
-      for (int k = 0; k < graph.Getsize(origin, j); k++)
+      for (int k = 0; k < graph.Getsize(origin, j); k++)  // 将所有从origin到j的价格push到find_min_price中
         find_min_price.push_back(graph.GetRoute(origin, j, k).price);
 
-      if (!find_min_price.empty())
+      if (!find_min_price.empty())  // 如果可以从origin到j
       {
         std::vector<int>::iterator min = min_element(find_min_price.begin(), find_min_price.end());
         price[j] = *min;
@@ -77,7 +77,7 @@ Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<City_id> &
         preway[j][1] = distance(find_min_price.begin(), min);
         find_min_price.clear();
       }
-      else
+      else  // 不可达
       {
         price[j] = kMaxInt;
         preway[j][0] = -1;
@@ -85,7 +85,7 @@ Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<City_id> &
       }
     }
 
-    price[origin] = kMaxInt;
+    price[origin] = kMaxInt;  // 去除origin
     preway[origin][0] = -1;
     preway[origin][1] = -1;
     is_count[origin] = true;
@@ -134,7 +134,7 @@ Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<City_id> &
     }
   }
   //path.Reverse();
-  path.Show();
+  //path.Show();
   return path;
 }
 #endif // SRC_TRAVELLER
