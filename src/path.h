@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include "time_format.h"
 #include "user_type.h"
 #include "city_graph.h"
@@ -26,9 +27,13 @@ struct PathNode // 路径节点
 class Path // 路径
 {
 public:
-  Path();
+  Path() = default;
   // 添加一个PathNode到路径尾端,并且更改总价与总时间、长度
-  void append(const CityGraph graph, City_id former_city, City_id current_city, int k); //通过ijk添加一个节点
+  void Append(const CityGraph graph, City_id former_city, City_id current_city, int k); //通过ijk添加一个节点
+  //固定路径的出发与结束点
+  void Fix();
+  //将cities向量反转
+  void Reverse();
   //打印这条路径
   void Show() const;
   //获取路径长度
@@ -60,16 +65,25 @@ private:
   Time total_timecost_;          //总时间
 };
 
-inline void Path::append(const CityGraph graph, City_id i, City_id j, int k)
+inline void Path::Append(const CityGraph graph, City_id i, City_id j, int k)
 { //用ijk给每一种方式编号，通过ijk获得所有数据。
   PathNode temp = {i, j, k};
   cities_.push_back(temp);
-  if (!len_)
-    start_city_ = i; //设置起始点
-  end_city_ = j;     //记录终点
   len_++;
-  total_price_ += graph.Get(i, j, k).price;
-  total_timecost_.add_time(graph.Get(i, j, k).end_time.time_diff(graph.Get(i, j, k).start_time));
+  total_price_ += graph.GetRoute(i, j, k).price;
+  total_timecost_.add_time(graph.GetRoute(i, j, k).end_time.time_diff(graph.GetRoute(i, j, k).start_time));
+  Fix();
+}
+
+inline void Path::Reverse(){
+  reverse(cities_.begin(),cities_.end());
+  Fix();
+}
+inline void Path::Fix(){
+  if(this->len_){
+    start_city_ = cities_[0].former_city;
+    end_city_ = cities_[cities_.size()-1].current_city;
+  }
 }
 
 void Path::Show() const
