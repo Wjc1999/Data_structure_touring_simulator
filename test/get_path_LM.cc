@@ -1,9 +1,10 @@
 #include "../src/traveller.h"
 using namespace std;
-int main(){
+int main()
+{
     CityGraph graph;
     Traveller me;
-    vector <City_id> plan;
+    vector<City_id> plan;
     plan.push_back(16);
     plan.push_back(27);
     plan.push_back(29);
