@@ -9,5 +9,6 @@ int main(){
     plan.push_back(29);
     plan.push_back(0);
     me.get_path(graph, plan, LEAST_MONEY);
+    me.get_path(graph, plan, LEAST_TIME).Show();
     return 0;
 }
