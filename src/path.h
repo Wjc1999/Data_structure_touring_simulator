@@ -41,11 +41,11 @@ public:
   //获取总时间
   const Time &GetTotalTime() const { return total_timecost_; };
   // 返回指向路径第首个元素的迭代器
-  std::vector<PathNode>::iterator begin() { return cities_.begin(); };
-  std::vector<PathNode>::const_iterator cbegin() const { return cities_.cbegin(); };
+  std::vector<PathNode>::const_iterator cbegin() { return cities_.cbegin(); };
+  
   // 返回指向路径尾后元素的迭代器
-  std::vector<PathNode>::iterator end() { return cities_.end(); };
-  std::vector<PathNode>::const_iterator cend() const { return cities_.cend(); };
+  std::vector<PathNode>::const_iterator cend() { return cities_.cend(); };
+  
 
 #ifdef TEST_PATH
 

@@ -30,12 +30,12 @@ public:
   void set_path(Path path);
 
 private:
-  std::string id_ = "";                        // 旅客id
-  TravellerState state_ = STAY;                             // 旅客当前状态
-  Time new_journey_;                      // 旅客下一次空闲的时间
-  Strategy strategy_ = LEAST_MONEY;                     // 旅行策略
-  std::vector<City_id> travelling_plan_;  // 旅行计划 <起点>, <中继点>... , <终点>
-  Path touring_path_;                     // 旅行路径
+  std::string id_ = "";                       // 旅客id
+  TravellerState state_ = STAY;               // 旅客当前状态
+  Time new_journey_;                          // 旅客下一次空闲的时间
+  Strategy strategy_ = LEAST_MONEY;           // 旅行策略
+  std::vector<City_id> travelling_plan_;      // 旅行计划 <起点>, <中继点>... , <终点>
+  Path touring_path_;                         // 旅行路径
   std::vector<PathNode>::iterator next_city_; // 路径中的下一个城市
   Path get_path_LM(const CityGraph &graph, const std::vector<City_id> &plan);
 };
@@ -50,8 +50,8 @@ Path Traveller::get_path(const CityGraph &graph, const std::vector<City_id> &pla
 
 Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<City_id> &plan)
 {
-  City_id destination = plan[plan.size() - 1]; // 终点
-  City_id origin = plan[0];                    // 起点
+  City_id destination = plan.back(); // 终点
+  City_id origin = plan.front();     // 起点
   Path path;
   int price[kCityNum];
   int preway[kCityNum][2];
