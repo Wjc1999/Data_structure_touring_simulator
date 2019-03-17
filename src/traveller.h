@@ -51,17 +51,18 @@ Path Traveller::get_path(const CityGraph &graph, const std::vector<City_id> &pla
 Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<City_id> &plan)
 {
   City_id destination; // 终点
-  City_id origin;                    // 起点
+  City_id origin;      // 起点
   Path path;
-  for(int cnt=plan.size()-1;cnt>0;cnt--){
+  for (int cnt = plan.size() - 1; cnt > 0; cnt--)
+  {
     destination = plan[cnt];
-    origin = plan[cnt-1];
-    int price[kCityNum];                         
+    origin = plan[cnt - 1];
+    int price[kCityNum];
     int preway[kCityNum][2];
     bool is_count[kCityNum];
     std::vector<int> find_min_price;
 
-    for (int j = 0; j < kCityNum; j++)//对数据进行初始化
+    for (int j = 0; j < kCityNum; j++) //对数据进行初始化
     {
       if (j == origin)
         continue;
@@ -94,7 +95,7 @@ Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<City_id> &
       int temp = kMaxInt;
       int city_temp = origin;
 
-      for (int i = 0; i < kCityNum; i++)   //找到最小值
+      for (int i = 0; i < kCityNum; i++) //找到最小值
       {
         if (!is_count[i] && price[i] < temp)
         {
@@ -104,10 +105,10 @@ Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<City_id> &
       }
 
       is_count[city_temp] = true;
-      if (city_temp = destination)
+      if (city_temp == destination)
         break;
 
-      for (int j = 0; j < kCityNum; j++)  //更新
+      for (int j = 0; j < kCityNum; j++) //更新
       {
         if (is_count[j])
           continue;
@@ -127,11 +128,13 @@ Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<City_id> &
         }
       }
     }
-    for(int traceback = destination;traceback!=origin;traceback = preway[traceback][0]){
+    for (int traceback = destination; traceback != origin; traceback = preway[traceback][0])
+    {
       path.Append(graph, preway[traceback][0], traceback, preway[traceback][1]);
     }
   }
-  path.Reverse();
+  // path.Reverse();
   path.Show();
+  return path;
 }
 #endif // SRC_TRAVELLER
