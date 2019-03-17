@@ -4,9 +4,9 @@
 #include <cassert>
 
 #include <iostream>
-#include <deque>
+#include <vector>
 #include <algorithm>
-
+#include "time_format.h"
 #include "user_type.h"
 #include "time_format.h"
 #include "city_graph.h"
@@ -46,10 +46,11 @@ public:
   //获取总时间
   const Time &GetTotalTime() const { return total_timecost_; };
   // 返回指向路径第首个元素的迭代器
-  std::deque<PathNode>::const_iterator cbegin() { return cities_.cbegin(); };
-
+  std::vector<PathNode>::const_iterator cbegin() { return cities_.cbegin(); };
+  
   // 返回指向路径尾后元素的迭代器
-  std::deque<PathNode>::const_iterator cend() { return cities_.cend(); };
+  std::vector<PathNode>::const_iterator cend() { return cities_.cend(); };
+  
 
 #ifdef TEST_PATH
 
@@ -65,7 +66,7 @@ public:
 #endif
 
 private:
-  std::deque<PathNode> cities_; //储存节点
+  std::vector<PathNode> cities_; //储存节点
   int start_city_ = 0;           //记录出发城市
   int end_city_ = 0;             //记录到达城市
   int len_ = 0;                  //路径长度
@@ -73,30 +74,26 @@ private:
   Time total_timecost_;          //总时间
 };
 
-inline void Path::Append(const CityGraph &graph, City_id i, City_id j, int k)
+
+inline void Path::Append(const CityGraph graph, City_id i, City_id j, int k)
 { //用ijk给每一种方式编号，通过ijk获得所有数据。
-  //std::cout << i << '\t' << j << '\t' << k << std::endl;
+  std::cout << i << '\t' << j << '\t' << k << std::endl;
   PathNode temp = {i, j, k};
-  cities_.push_front(temp);
-  if (!len_++)
-    end_city_ = j;
-  start_city_ = i;
+  cities_.push_back(temp);
+  len_++;
   total_price_ += graph.GetRoute(i, j, k).price;
   total_timecost_.add_time(graph.GetRoute(i, j, k).end_time.time_diff(graph.GetRoute(i, j, k).start_time));
-}
-
-inline void Path::Reverse()
-{
-  reverse(cities_.begin(), cities_.end());
   Fix();
 }
 
-inline void Path::Fix()
-{
-  if (len_)
-  {
+inline void Path::Reverse(){
+  reverse(cities_.begin(),cities_.end());
+  Fix();
+}
+inline void Path::Fix(){
+  if(this->len_){
     start_city_ = cities_[0].former_city;
-    end_city_ = cities_[cities_.size() - 1].current_city;
+    end_city_ = cities_[cities_.size()-1].current_city;
   }
 }
 
