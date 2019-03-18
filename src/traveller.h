@@ -216,7 +216,8 @@ Path Traveller::get_path_LT(const CityGraph &graph, const std::vector<City_id> &
     origin = plan[cnt - 1];
     int cost[kCityNum];      // 记录最小花费
     int preway[kCityNum][2]; // preway[cityA][] = {CityB, transport_index_from_CityB_to_CityA}
-    bool is_count[kCityNum];
+    Time pretime[kCityNum];
+    bool is_count[kCityNum] = {false};
     std::vector<int> find_min_cost;
 
     for (int j = 0; j < kCityNum; j++) //对数据进行初始化
@@ -226,7 +227,7 @@ Path Traveller::get_path_LT(const CityGraph &graph, const std::vector<City_id> &
       for (int k = 0; k < graph.Getsize(origin, j); k++) // 将所有从origin到j的价格push到find_min_cost中
       {                                                  //*****和LM的区别*****
         Route route = graph.GetRoute(origin, j, k);
-        find_min_cost.push_back(now.hour_diff(route.start_time) + route.start_time.hour_diff(route.end_time));
+        find_min_cost.push_back(now.hour_diff(route.end_time));
       }
 
       if (!find_min_cost.empty()) // 如果可以从origin到j
@@ -235,6 +236,7 @@ Path Traveller::get_path_LT(const CityGraph &graph, const std::vector<City_id> &
         cost[j] = *min;
         preway[j][0] = origin;
         preway[j][1] = distance(find_min_cost.begin(), min);
+        pretime[j] = now;
         find_min_cost.clear();
       }
       else // 不可达
@@ -277,7 +279,7 @@ Path Traveller::get_path_LT(const CityGraph &graph, const std::vector<City_id> &
         for (int k = 0; k < graph.Getsize(city_temp, j); k++)
         { //*****和LM的区别*****
           Route route = graph.GetRoute(origin, j, k);
-          find_min_cost.push_back(now.hour_diff(route.start_time) + route.start_time.hour_diff(route.end_time));
+          find_min_cost.push_back(now.hour_diff(route.end_time));
         }
 
         if (!find_min_cost.empty())
@@ -289,6 +291,7 @@ Path Traveller::get_path_LT(const CityGraph &graph, const std::vector<City_id> &
             cost[j] = newcost;
             preway[j][0] = city_temp;
             preway[j][1] = distance(find_min_cost.begin(), min);
+            pretime[j] = now;
           }
           find_min_cost.clear();
         }
@@ -296,7 +299,7 @@ Path Traveller::get_path_LT(const CityGraph &graph, const std::vector<City_id> &
     }
     for (int traceback = destination; traceback != origin; traceback = preway[traceback][0])
     {
-      path.Append(graph, preway[traceback][0], traceback, preway[traceback][1]);
+      path.Append(graph, preway[traceback][0], traceback, preway[traceback][1], pretime[traceback]);
     }
   }
   //path.Reverse();
