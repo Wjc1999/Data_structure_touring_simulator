@@ -1,3 +1,7 @@
+
+#ifndef TEST_GET_PATH
+#define TEST_GET_PATH
+
 #include "../src/traveller.h"
 using namespace std;
 int main(){
@@ -7,7 +11,13 @@ int main(){
     plan.push_back(16);
     plan.push_back(27);
     plan.push_back(29);
+    plan.push_back(13);
+    plan.push_back(19);
     plan.push_back(0);
-    me.get_path(graph, plan, LEAST_MONEY);
+    me.get_path(graph, plan, LEAST_MONEY).Show();
+    cout << endl;
+    me.get_path(graph, plan, LEAST_TIME).Show();
     return 0;
 }
+
+#endif // TEST_GET_PATH

@@ -41,13 +41,73 @@ private:
   Path get_path_LT(const CityGraph &graph, const std::vector<City_id> &plan, Time now);
 };
 
-Path Traveller::get_path(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time t = Time())
+void dfs(Path &path, const CityGraph &graph, const std::vector<std::vector<Path>> &adj_matrix, std::vector<Path> &paths, bool *isMeet, int current, int depth)
 {
+  if (current == adj_matrix.size() - 1)
+  {
+    if (depth == adj_matrix.size())
+      paths.push_back(path);
+    else
+      return;
+  }
+
+  for (int i = 0; i != adj_matrix.size(); ++i)
+  {
+
+    if (i == current)
+    {
+      isMeet[i] = true;
+      continue;
+    }
+    if (!isMeet[i])
+    {
+      isMeet[i] = true;
+      Path save = path;
+      path.Append(graph, adj_matrix[current][i]);
+      dfs(path, graph, adj_matrix, paths, isMeet, i, depth + 1);
+      isMeet[i] = false;
+      path = save;
+    }
+  }
+}
+
+Path Traveller::get_path(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time t)
+{
+
   if (plan.size() < 2)
     throw plan.size();
   if (s == LEAST_MONEY)
-    return get_path_LM(graph, plan);
-  else if(s == LEAST_TIME)
+  {
+    Path temp;
+    std::vector<std::vector<Path>> adj_matrix;
+    std::vector<Path> paths;
+    auto s = plan.size();
+    bool *isMeet = new bool[s];
+    for (int i = 0; i != s; ++i)
+    {
+      adj_matrix.emplace_back();
+      for (int j = 0; j != s; ++j)
+        if (i != j || j == s - 1)
+        {
+          std::vector<City_id> temp_plan{plan[i], plan[j]};
+          adj_matrix[i].push_back(get_path_LM(graph, temp_plan));
+        }
+        else
+        {
+          adj_matrix[i].emplace_back();
+        }
+    }
+    dfs(temp, graph, adj_matrix, paths, isMeet, 0, 1);
+    temp = paths.front();
+    for (auto &path: paths)
+    {
+      if (temp.GetTotalPrice() > path.GetTotalPrice())
+        temp = path;
+    }
+    return temp;
+    // return get_path_LM(graph, plan);
+  }
+  else // if (s == LEAST_TIME)
     return get_path_LT(graph, plan, t);
 }
 
@@ -60,8 +120,8 @@ Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<City_id> &
   {
     destination = plan[cnt];
     origin = plan[cnt - 1];
-    int cost[kCityNum];  // 记录最小花费
-    int preway[kCityNum][2];  // preway[cityA][] = {CityB, transport_index_from_CityB_to_CityA}
+    int cost[kCityNum];      // 记录最小花费
+    int preway[kCityNum][2]; // preway[cityA][] = {CityB, transport_index_from_CityB_to_CityA}
     bool is_count[kCityNum];
     std::vector<int> find_min_cost;
 
@@ -69,10 +129,10 @@ Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<City_id> &
     {
       if (j == origin)
         continue;
-      for (int k = 0; k < graph.Getsize(origin, j); k++)  // 将所有从origin到j的价格push到find_min_cost中
+      for (int k = 0; k < graph.Getsize(origin, j); k++) // 将所有从origin到j的价格push到find_min_cost中
         find_min_cost.push_back(graph.GetRoute(origin, j, k).price);
 
-      if (!find_min_cost.empty())  // 如果可以从origin到j
+      if (!find_min_cost.empty()) // 如果可以从origin到j
       {
         std::vector<int>::iterator min = min_element(find_min_cost.begin(), find_min_cost.end());
         cost[j] = *min;
@@ -80,7 +140,7 @@ Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<City_id> &
         preway[j][1] = distance(find_min_cost.begin(), min);
         find_min_cost.clear();
       }
-      else  // 不可达
+      else // 不可达
       {
         cost[j] = kMaxInt;
         preway[j][0] = -1;
@@ -88,7 +148,7 @@ Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<City_id> &
       }
     }
 
-    cost[origin] = kMaxInt;  // 去除origin
+    cost[origin] = kMaxInt; // 去除origin
     preway[origin][0] = -1;
     preway[origin][1] = -1;
     is_count[origin] = true;
@@ -150,8 +210,8 @@ Path Traveller::get_path_LT(const CityGraph &graph, const std::vector<City_id> &
   {
     destination = plan[cnt];
     origin = plan[cnt - 1];
-    int cost[kCityNum];  // 记录最小花费
-    int preway[kCityNum][2];  // preway[cityA][] = {CityB, transport_index_from_CityB_to_CityA}
+    int cost[kCityNum];      // 记录最小花费
+    int preway[kCityNum][2]; // preway[cityA][] = {CityB, transport_index_from_CityB_to_CityA}
     bool is_count[kCityNum];
     std::vector<int> find_min_cost;
 
@@ -159,13 +219,13 @@ Path Traveller::get_path_LT(const CityGraph &graph, const std::vector<City_id> &
     {
       if (j == origin)
         continue;
-      for (int k = 0; k < graph.Getsize(origin, j); k++)  // 将所有从origin到j的价格push到find_min_cost中
-      {//*****和LM的区别*****
-        Route route = graph.GetRoute(origin,j,k);
+      for (int k = 0; k < graph.Getsize(origin, j); k++) // 将所有从origin到j的价格push到find_min_cost中
+      {                                                  //*****和LM的区别*****
+        Route route = graph.GetRoute(origin, j, k);
         find_min_cost.push_back(now.hour_diff(route.start_time) + route.start_time.hour_diff(route.end_time));
       }
 
-      if (!find_min_cost.empty())  // 如果可以从origin到j
+      if (!find_min_cost.empty()) // 如果可以从origin到j
       {
         std::vector<int>::iterator min = min_element(find_min_cost.begin(), find_min_cost.end());
         cost[j] = *min;
@@ -173,7 +233,7 @@ Path Traveller::get_path_LT(const CityGraph &graph, const std::vector<City_id> &
         preway[j][1] = distance(find_min_cost.begin(), min);
         find_min_cost.clear();
       }
-      else  // 不可达
+      else // 不可达
       {
         cost[j] = kMaxInt;
         preway[j][0] = -1;
@@ -181,7 +241,7 @@ Path Traveller::get_path_LT(const CityGraph &graph, const std::vector<City_id> &
       }
     }
 
-    cost[origin] = kMaxInt;  // 去除origin
+    cost[origin] = kMaxInt; // 去除origin
     preway[origin][0] = -1;
     preway[origin][1] = -1;
     is_count[origin] = true;
@@ -211,8 +271,8 @@ Path Traveller::get_path_LT(const CityGraph &graph, const std::vector<City_id> &
         if (is_count[j])
           continue;
         for (int k = 0; k < graph.Getsize(city_temp, j); k++)
-        {//*****和LM的区别*****
-          Route route = graph.GetRoute(origin,j,k);
+        { //*****和LM的区别*****
+          Route route = graph.GetRoute(origin, j, k);
           find_min_cost.push_back(now.hour_diff(route.start_time) + route.start_time.hour_diff(route.end_time));
         }
 

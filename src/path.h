@@ -33,6 +33,7 @@ public:
   Path() = default;
   // 添加一个PathNode到路径首个元素之前,并且更改总价与总时间、长度
   void Append(const CityGraph &graph, City_id former_city, City_id current_city, int k); //通过ijk添加一个节点
+  Path &Append(const CityGraph &graph, const Path &path);
   //固定路径的出发与结束点
   void Fix();
   //将cities向量反转
@@ -82,7 +83,23 @@ inline void Path::Append(const CityGraph &graph, City_id i, City_id j, int k)
   start_city_ = i;
   cities_.push_front(temp);
   total_price_ += graph.GetRoute(i, j, k).price;
-  total_timecost_.add_time(graph.GetRoute(i, j, k).end_time.time_diff(graph.GetRoute(i, j, k).start_time));
+  total_timecost_.add_time(graph.GetRoute(i, j, k).end_time.time_diff(graph.GetRoute(i, j, k).start_time));  // 只计算路途上的时间,不计等候时间
+}
+
+inline Path &Path::Append(const CityGraph &graph, const Path &path)
+{
+  len_ += path.len_;
+  end_city_ = path.end_city_;
+  total_price_ += path.total_price_;
+  // PathNode end = cities_.back();
+  // PathNode path_start = path.cities_.front();
+  // Time diff = graph.GetRoute(end.former_city, end.current_city, end.kth_way).end_time.time_diff(graph.GetRoute(end.former_city, end.current_city, end.kth_way).start_time);
+  // if (diff.GetDay() < 0)
+  //     diff.add_time(0, 1);
+  total_timecost_.add_time(path.total_timecost_); // 只计算路途上的时间,不计等候时间
+  for (const auto &node: path.cities_)
+    cities_.push_back(node);
+  return *this;
 }
 
 inline void Path::Reverse()
