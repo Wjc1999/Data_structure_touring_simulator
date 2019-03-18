@@ -4,9 +4,9 @@
 #include <cassert>
 
 #include <iostream>
-#include <vector>
+#include <deque>
 #include <algorithm>
-#include "time_format.h"
+
 #include "user_type.h"
 #include "time_format.h"
 #include "city_graph.h"
@@ -31,8 +31,9 @@ class Path // 路径
 {
 public:
   Path() = default;
-  // 添加一个PathNode到路径尾端,并且更改总价与总时间、长度
+  // 添加一个PathNode到路径首个元素之前,并且更改总价与总时间、长度
   void Append(const CityGraph &graph, City_id former_city, City_id current_city, int k); //通过ijk添加一个节点
+  Path &Append(const CityGraph &graph, const Path &path);
   //固定路径的出发与结束点
   void Fix();
   //将cities向量反转
@@ -40,17 +41,16 @@ public:
   //打印这条路径
   void Show() const;
   //获取路径长度
-  int GetLen() const { return len_; };
+  int GetLen() const { return len_; }
   //获取路径总价
-  int GetTotalPrice() const { return total_price_; };
+  int GetTotalPrice() const { return total_price_; }
   //获取总时间
-  const Time &GetTotalTime() const { return total_timecost_; };
+  const Time &GetTotalTime() const { return total_timecost_; }
   // 返回指向路径第首个元素的迭代器
-  std::vector<PathNode>::const_iterator cbegin() { return cities_.cbegin(); };
-  
+  std::deque<PathNode>::const_iterator cbegin() { return cities_.cbegin(); }
+
   // 返回指向路径尾后元素的迭代器
-  std::vector<PathNode>::const_iterator cend() { return cities_.cend(); };
-  
+  std::deque<PathNode>::const_iterator cend() { return cities_.cend(); }
 
 #ifdef TEST_PATH
 
@@ -66,40 +66,61 @@ public:
 #endif
 
 private:
-  std::vector<PathNode> cities_; //储存节点
-  int start_city_ = 0;           //记录出发城市
-  int end_city_ = 0;             //记录到达城市
-  int len_ = 0;                  //路径长度
-  int total_price_ = 0;          //总价
-  Time total_timecost_;          //总时间
+  std::deque<PathNode> cities_; //储存节点
+  int start_city_ = 0;          //记录出发城市
+  int end_city_ = 0;            //记录到达城市
+  int len_ = 0;                 //路径长度
+  int total_price_ = 0;         //总价
+  Time total_timecost_;         //总时间
 };
 
-
-inline void Path::Append(const CityGraph graph, City_id i, City_id j, int k)
+inline void Path::Append(const CityGraph &graph, City_id i, City_id j, int k)
 { //用ijk给每一种方式编号，通过ijk获得所有数据。
-  std::cout << i << '\t' << j << '\t' << k << std::endl;
+  //std::cout << i << '\t' << j << '\t' << k << std::endl;
   PathNode temp = {i, j, k};
-  cities_.push_back(temp);
-  len_++;
+  if (len_++)
+    end_city_ = j;
+  start_city_ = i;
+  cities_.push_front(temp);
   total_price_ += graph.GetRoute(i, j, k).price;
-  total_timecost_.add_time(graph.GetRoute(i, j, k).end_time.time_diff(graph.GetRoute(i, j, k).start_time));
-  Fix();
+  total_timecost_.add_time(graph.GetRoute(i, j, k).end_time.time_diff(graph.GetRoute(i, j, k).start_time));  // 只计算路途上的时间,不计等候时间
 }
 
-inline void Path::Reverse(){
-  reverse(cities_.begin(),cities_.end());
+inline Path &Path::Append(const CityGraph &graph, const Path &path)
+{
+  len_ += path.len_;
+  end_city_ = path.end_city_;
+  total_price_ += path.total_price_;
+  // PathNode end = cities_.back();
+  // PathNode path_start = path.cities_.front();
+  // Time diff = graph.GetRoute(end.former_city, end.current_city, end.kth_way).end_time.time_diff(graph.GetRoute(end.former_city, end.current_city, end.kth_way).start_time);
+  // if (diff.GetDay() < 0)
+  //     diff.add_time(0, 1);
+  total_timecost_.add_time(path.total_timecost_); // 只计算路途上的时间,不计等候时间
+  for (const auto &node: path.cities_)
+    cities_.push_back(node);
+  return *this;
+}
+
+inline void Path::Reverse()
+{
+  reverse(cities_.begin(), cities_.end());
   Fix();
 }
-inline void Path::Fix(){
-  if(this->len_){
+inline void Path::Fix()
+{
+  if (this->len_)
+  {
     start_city_ = cities_[0].former_city;
-    end_city_ = cities_[cities_.size()-1].current_city;
+    end_city_ = cities_[cities_.size() - 1].current_city;
   }
 }
 
 void Path::Show() const
 {
   for (auto path_node : cities_)
-    std::cout << path_node.former_city << '\t' << path_node.current_city << '\t' << path_node.kth_way << std::endl;
+    std::cout << path_node.former_city << '\t'
+              << path_node.current_city << '\t'
+              << path_node.kth_way << std::endl;
 }
 #endif // SRC_PATH
