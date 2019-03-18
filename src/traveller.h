@@ -55,11 +55,8 @@ void dfs(Path &path, const CityGraph &graph, const std::vector<std::vector<Path>
   {
 
     if (i == current)
-    {
-      isMeet[i] = true;
       continue;
-    }
-    if (!isMeet[i])
+    if (!isMeet[i] && adj_matrix[current][i].GetLen())
     {
       isMeet[i] = true;
       Path save = path;
@@ -85,9 +82,12 @@ Path Traveller::get_path(const CityGraph &graph, const std::vector<City_id> &pla
     bool *isMeet = new bool[s];
     for (int i = 0; i != s; ++i)
     {
+      isMeet[i] = false;
       adj_matrix.emplace_back();
       for (int j = 0; j != s; ++j)
-        if (i != j || j == s - 1)
+      {
+        // std::cout << i << '\t' << j << std::endl;
+        if (i != j && i != s - 1)
         {
           std::vector<City_id> temp_plan{plan[i], plan[j]};
           adj_matrix[i].push_back(get_path_LM(graph, temp_plan));
@@ -96,10 +96,12 @@ Path Traveller::get_path(const CityGraph &graph, const std::vector<City_id> &pla
         {
           adj_matrix[i].emplace_back();
         }
+      }
     }
+    isMeet[0] = true;
     dfs(temp, graph, adj_matrix, paths, isMeet, 0, 1);
     temp = paths.front();
-    for (auto &path: paths)
+    for (auto &path : paths)
     {
       if (temp.GetTotalPrice() > path.GetTotalPrice())
         temp = path;
@@ -116,14 +118,16 @@ Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<City_id> &
   City_id destination; // 终点
   City_id origin;      // 起点
   Path path;
+  // std::cout << plan[0] << plan[1] << std::endl;
   for (int cnt = plan.size() - 1; cnt > 0; cnt--)
   {
     destination = plan[cnt];
     origin = plan[cnt - 1];
     int cost[kCityNum];      // 记录最小花费
     int preway[kCityNum][2]; // preway[cityA][] = {CityB, transport_index_from_CityB_to_CityA}
-    bool is_count[kCityNum];
-    std::vector<int> find_min_cost;
+    bool is_count[kCityNum] = {false};
+    std::vector<int>
+        find_min_cost;
 
     for (int j = 0; j < kCityNum; j++) //对数据进行初始化
     {

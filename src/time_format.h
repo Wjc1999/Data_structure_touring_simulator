@@ -6,7 +6,7 @@
 class Time
 {
 public:
-  // 接受一个形如dhh00的整数,将d作为日期,hh作为小时储存 
+  // 接受一个形如dhh00的整数,将d作为日期,hh作为小时储存
   explicit Time(int time = 10000) : Time(time / 10000, (time - time / 10000 * 10000) / 100) {}
   Time(int day, int hour) : day_(day - 1), hour_(hour) {}
 
@@ -25,10 +25,11 @@ public:
 
 #ifdef TEST_TIME
 #include <iostream>
-  void print() const
+  std::ostream &print(std::ostream &os = std::cout) const
   {
-    std::cout << "日期是: " << GetDay()
-              << "\t时间是: " << GetHour() << std::endl;
+    os << "日期是: " << GetDay()
+       << "\t时间是: " << GetHour();
+    return os;
   }
 #endif // TEST_TIME
 
@@ -51,7 +52,8 @@ inline Time Time::time_diff(const Time &t) const
 
 inline Time &Time::add_time(const Time &t)
 {
-  return add_time(t.hour_, t.day_);;
+  return add_time(t.hour_, t.day_);
+  ;
 }
 
 inline Time &Time::add_time(const int hour, const int day /* = 0 */)
