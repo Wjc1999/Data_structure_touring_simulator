@@ -33,7 +33,7 @@ public:
   Path() = default;
   // 添加一个PathNode到路径首个元素之前,并且更改总价与总时间、长度
   void Append(const CityGraph &graph, City_id former_city, City_id current_city, int k); //通过ijk添加一个节点
-  Path &Append(const CityGraph &graph, const Path &path);
+  Path &Append(const Path &path);
   //固定路径的出发与结束点
   void Fix();
   //将cities向量反转
@@ -86,7 +86,7 @@ inline void Path::Append(const CityGraph &graph, City_id i, City_id j, int k)
   total_timecost_.add_time(graph.GetRoute(i, j, k).end_time.time_diff(graph.GetRoute(i, j, k).start_time));  // 只计算路途上的时间,不计等候时间
 }
 
-inline Path &Path::Append(const CityGraph &graph, const Path &path)
+inline Path &Path::Append(const Path &path)
 {
   len_ += path.len_;
   end_city_ = path.end_city_;

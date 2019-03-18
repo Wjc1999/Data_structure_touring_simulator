@@ -60,7 +60,7 @@ static void dfs(Path &path, const CityGraph &graph, const std::vector<std::vecto
     {
       isMeet[i] = true;
       Path save = path;
-      path.Append(graph, adj_matrix[current][i]);
+      path.Append(adj_matrix[current][i]);
       dfs(path, graph, adj_matrix, paths, isMeet, i, depth + 1);
       isMeet[i] = false;
       path = save;
