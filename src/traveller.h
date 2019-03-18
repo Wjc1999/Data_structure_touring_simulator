@@ -41,7 +41,7 @@ private:
   Path get_path_LT(const CityGraph &graph, const std::vector<City_id> &plan, Time now);
 };
 
-void dfs(Path &path, const CityGraph &graph, const std::vector<std::vector<Path>> &adj_matrix, std::vector<Path> &paths, bool *isMeet, int current, int depth)
+static void dfs(Path &path, const CityGraph &graph, const std::vector<std::vector<Path>> &adj_matrix, std::vector<Path> &paths, bool *isMeet, int current, int depth)
 {
   if (current == adj_matrix.size() - 1)
   {
@@ -78,7 +78,7 @@ Path Traveller::get_path(const CityGraph &graph, const std::vector<City_id> &pla
     Path temp;
     std::vector<std::vector<Path>> adj_matrix;
     std::vector<Path> paths;
-    auto s = plan.size();
+    size_t s = plan.size();
     bool *isMeet = new bool[s];
     for (int i = 0; i != s; ++i)
     {
@@ -106,6 +106,7 @@ Path Traveller::get_path(const CityGraph &graph, const std::vector<City_id> &pla
       if (temp.GetTotalPrice() > path.GetTotalPrice())
         temp = path;
     }
+    delete isMeet;
     return temp;
     // return get_path_LM(graph, plan);
   }

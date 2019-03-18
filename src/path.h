@@ -78,7 +78,7 @@ inline void Path::Append(const CityGraph &graph, City_id i, City_id j, int k)
 { //用ijk给每一种方式编号，通过ijk获得所有数据。
   //std::cout << i << '\t' << j << '\t' << k << std::endl;
   PathNode temp = {i, j, k};
-  if (len_++)
+  if (!(len_++))
     end_city_ = j;
   start_city_ = i;
   cities_.push_front(temp);
@@ -107,14 +107,16 @@ inline void Path::Reverse()
   reverse(cities_.begin(), cities_.end());
   Fix();
 }
+
 inline void Path::Fix()
 {
-  if (this->len_)
+  if (len_)
   {
     start_city_ = cities_[0].former_city;
     end_city_ = cities_[cities_.size() - 1].current_city;
   }
 }
+
 
 void Path::Show() const
 {
