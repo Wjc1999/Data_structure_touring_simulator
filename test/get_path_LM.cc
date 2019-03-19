@@ -10,6 +10,7 @@ int main(){
     vector <City_id> plan;
     plan.push_back(1);
     plan.push_back(8);
+    plan.push_back(23);
     plan.push_back(16);
     plan.push_back(29);
     plan.push_back(13);
