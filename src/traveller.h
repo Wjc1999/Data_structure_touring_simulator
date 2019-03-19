@@ -41,7 +41,7 @@ private:
   Path get_path_LT(const CityGraph &graph, const std::vector<City_id> &plan, Time now);
 };
 
-void dfs(Path &path, const CityGraph &graph, const std::vector<std::vector<Path>> &adj_matrix, std::vector<Path> &paths, bool *isMeet, int current, int depth)
+static void dfs(Path &path, const CityGraph &graph, const std::vector<std::vector<Path>> &adj_matrix, std::vector<Path> &paths, bool *isMeet, int current, int depth)
 {
   if (current == adj_matrix.size() - 1)
   {
@@ -60,7 +60,7 @@ void dfs(Path &path, const CityGraph &graph, const std::vector<std::vector<Path>
     {
       isMeet[i] = true;
       Path save = path;
-      path.Append(graph, adj_matrix[current][i]);
+      path.Append(adj_matrix[current][i]);
       dfs(path, graph, adj_matrix, paths, isMeet, i, depth + 1);
       isMeet[i] = false;
       path = save;
@@ -78,7 +78,7 @@ Path Traveller::get_path(const CityGraph &graph, const std::vector<City_id> &pla
     Path temp;
     std::vector<std::vector<Path>> adj_matrix;
     std::vector<Path> paths;
-    auto s = plan.size();
+    size_t s = plan.size();
     bool *isMeet = new bool[s];
     for (int i = 0; i != s; ++i)
     {
@@ -106,11 +106,14 @@ Path Traveller::get_path(const CityGraph &graph, const std::vector<City_id> &pla
       if (temp.GetTotalPrice() > path.GetTotalPrice())
         temp = path;
     }
+    delete isMeet;
     return temp;
     // return get_path_LM(graph, plan);
   }
-  else // if (s == LEAST_TIME)
+  else if (s == LEAST_TIME)
+  {
     return get_path_LT(graph, plan, t);
+  }
 }
 
 Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<City_id> &plan)
@@ -227,7 +230,12 @@ Path Traveller::get_path_LT(const CityGraph &graph, const std::vector<City_id> &
       for (int k = 0; k < graph.Getsize(origin, j); k++) // 将所有从origin到j的价格push到find_min_cost中
       {                                                  //*****和LM的区别*****
         Route route = graph.GetRoute(origin, j, k);
-        find_min_cost.push_back(now.hour_diff(route.end_time));
+        Time temp_now(1, now.GetHour());
+        int wait_hour = route.start_time.hour_diff(temp_now); // 计算从当前时间开始需要等待的时间
+        if (wait_hour < 0)                                    // 如果发车时间在now之前,想要搭乘这辆车就必须等候到其发车
+          wait_hour += 24;
+        int route_hour = route.end_time.hour_diff(route.start_time); // 路途上的时间
+        find_min_cost.push_back(wait_hour + route_hour);
       }
 
       if (!find_min_cost.empty()) // 如果可以从origin到j
@@ -270,7 +278,11 @@ Path Traveller::get_path_LT(const CityGraph &graph, const std::vector<City_id> &
       if (city_temp == destination)
         break;
       //*****和LM的区别*****
+      // Route temp_route = graph.GetRoute(preway[city_temp][0], city_temp, preway[city_temp][1]);
+      // now.add_time(cost[city_temp]);   // 此时的时间为之前的时间加上从前一个城市到city_temp的时间(包括等候时间)
       now = graph.GetRoute(preway[city_temp][0], city_temp, preway[city_temp][1]).end_time;
+      Time temp_now(1, now.GetHour()); // 只看到达时间,不看天数
+      // now = graph.GetRoute(preway[city_temp][0], city_temp, preway[city_temp][1]).end_time;
 
       for (int j = 0; j < kCityNum; j++) //更新
       {
@@ -278,8 +290,12 @@ Path Traveller::get_path_LT(const CityGraph &graph, const std::vector<City_id> &
           continue;
         for (int k = 0; k < graph.Getsize(city_temp, j); k++)
         { //*****和LM的区别*****
-          Route route = graph.GetRoute(origin, j, k);
-          find_min_cost.push_back(now.hour_diff(route.end_time));
+          Route route = graph.GetRoute(city_temp, j, k);
+          int wait_hour = route.start_time.hour_diff(temp_now); // 计算从当前时间开始需要等待的时间
+          if (wait_hour < 0)                                    // 如果发车时间在now之前,想要搭乘这辆车就必须等候到其发车
+            wait_hour += 24;
+          int route_hour = route.end_time.hour_diff(route.start_time); // 路途上的时间
+          find_min_cost.push_back(wait_hour + route_hour);
         }
 
         if (!find_min_cost.empty())
