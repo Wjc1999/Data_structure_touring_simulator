@@ -37,11 +37,14 @@ private:
   std::vector<City_id> travelling_plan_;      // 旅行计划 <起点>, <中继点>... , <终点>
   Path touring_path_;                         // 旅行路径
   std::vector<PathNode>::iterator next_city_; // 路径中的下一个城市
+  Time init_time_;                            // 最开始时的时间
   Path get_path_LM(const CityGraph &graph, const std::vector<City_id> &plan);
   Path get_path_LT(const CityGraph &graph, const std::vector<City_id> &plan, Time now);
+  void dfs_LT(const CityGraph &graph, Time t, const std::vector<City_id> &plan, Path &path, Path &temp_path, City_id current, bool *isMeet, int depth);
+  void dfs(Path &path, const CityGraph &graph, const std::vector<std::vector<Path>> &adj_matrix, std::vector<Path> &paths, bool *isMeet, int current, int depth);
 };
 
-static void dfs(Path &path, const CityGraph &graph, const std::vector<std::vector<Path>> &adj_matrix, std::vector<Path> &paths, bool *isMeet, int current, int depth)
+void Traveller::dfs(Path &path, const CityGraph &graph, const std::vector<std::vector<Path>> &adj_matrix, std::vector<Path> &paths, bool *isMeet, int current, int depth)
 {
   if (current == adj_matrix.size() - 1)
   {
@@ -68,9 +71,39 @@ static void dfs(Path &path, const CityGraph &graph, const std::vector<std::vecto
   }
 }
 
-Path Traveller::get_path(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time t)
+void Traveller::dfs_LT(const CityGraph &graph, Time t, const std::vector<City_id> &plan, Path &path, Path &temp_path, City_id current, bool *isMeet, int depth)
 {
+  if (current == plan.back())
+  {
+    if (depth == plan.size() - 1)
+      path = temp_path;
+    else
+      return;
+  }
 
+  for (int i = 0; i < plan.size(); ++i)
+  {
+    if (i == current || isMeet[i])
+      continue;
+    else
+    {
+      std::vector<City_id> temp{plan[current], plan[i]};
+      Time temp_time = init_time_;
+      Path save = temp_path;
+      isMeet[i] = true;
+      temp_path.Append(get_path_LT(graph, temp, t));
+      temp_path.FixTotalTime(graph, init_time_);
+      if (temp_path.GetTotalTime().to_hour() < path.GetTotalTime().to_hour())
+        dfs_LT(graph, temp_time.add_time(temp_path.GetTotalTime()), plan, path, temp_path, i, isMeet, depth + 1);
+      isMeet[i] = false;
+      temp_path = save;
+    }
+  }
+}
+
+Path Traveller::get_path(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time start_time)
+{
+  init_time_ = start_time;
   if (plan.size() < 2)
     throw plan.size();
   if (s == LEAST_MONEY)
@@ -112,7 +145,19 @@ Path Traveller::get_path(const CityGraph &graph, const std::vector<City_id> &pla
   }
   else if (s == LEAST_TIME)
   {
-    return get_path_LT(graph, plan, t);
+    Path path = get_path_LT(graph, plan, start_time);
+    if (plan.size() == 2)
+      return path;
+    else
+    {
+      Path temp_path;
+      std::vector<City_id> buf;
+      bool *isMeet = new bool[plan.size()];
+      for (int i = 1; i != plan.size(); ++i)
+        isMeet[i] = false;
+      dfs_LT(graph, start_time, plan, path, temp_path, plan[0], isMeet, 0);
+    }
+    return path;
   }
 }
 
