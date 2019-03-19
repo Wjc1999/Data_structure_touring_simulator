@@ -20,6 +20,7 @@ public:
   // 获取当前时间与给定时间的差值,返回值为两者相差的小时数(this - t)
   int hour_diff(const Time &) const;
 
+  int to_hour() const { return day_ * 24 + hour_; }
   int GetDay() const { return day_; }
   int GetHour() const { return hour_; }
 
@@ -53,17 +54,17 @@ inline Time Time::time_diff(const Time &t) const
 inline Time &Time::add_time(const Time &t)
 {
   return add_time(t.hour_, t.day_);
-  ;
 }
 
 inline Time &Time::add_time(const int hour, const int day /* = 0 */)
 {
   day_ += day;
   hour_ += hour;
-  if (hour_ > 24)
+  int d = hour_ / 24;
+  if (d)
   {
-    hour_ -= 24;
-    ++day_;
+    hour_ -= 24 * d;
+    day_ += d;
   }
   return *this;
 }

@@ -35,8 +35,10 @@ public:
   void Append(const CityGraph &graph, City_id former_city, City_id current_city, int k); //通过ijk添加一个节点
   void Append(const CityGraph &graph, City_id i, City_id j, int k, Time wait_time);
   Path &Append(const Path &path);
-  //固定路径的出发与结束点
+  // 固定路径的出发与结束点
   void Fix();
+  // 根据路径设置总时间
+  void FixTotalTime(const CityGraph &graph, const Time &start_time = Time());
   //将cities向量反转
   void Reverse();
   //打印这条路径
@@ -87,15 +89,21 @@ inline void Path::Append(const CityGraph &graph, City_id i, City_id j, int k)
   total_timecost_.add_time(graph.GetRoute(i, j, k).end_time.time_diff(graph.GetRoute(i, j, k).start_time));  // 只计算路途上的时间,不计等候时间
 }
 
-inline void Path::Append(const CityGraph &graph, City_id i, City_id j, int k, Time wait_time)
+inline void Path::Append(const CityGraph &graph, City_id i, City_id j, int k, Time total_time)
 {
   PathNode temp = {i, j, k};
-  if (len_++)
+  if (!(len_++))
     end_city_ = j;
   start_city_ = i;
   cities_.push_front(temp);
   total_price_ += graph.GetRoute(i, j, k).price;
-  total_timecost_.add_time(graph.GetRoute(i, j, k).end_time.time_diff(wait_time));  // 只计算路途上的时间,不计等候时间
+  // assert(graph.GetRoute(i, j, k).end_time.time_diff(wait_time).GetDay() >= 0);
+  // Time diff = graph.GetRoute(i, j, k).end_time.time_diff(wait_time);
+  // if (diff.GetDay() < 0)
+  //   diff.add_time(24);
+  // assert(diff.GetDay() >= 0);
+  // total_timecost_.add_time(diff);
+  total_timecost_ = total_time;
 }
 
 inline Path &Path::Append(const Path &path)
@@ -113,6 +121,23 @@ inline Path &Path::Append(const Path &path)
     cities_.push_back(node);
   return *this;
 }
+
+inline void Path::FixTotalTime(const CityGraph &graph, const Time &start_time)
+{
+  Time now = start_time;
+  total_timecost_ = Time();
+  for (const auto &node : cities_)
+  {
+    Time temp_now(1, now.GetHour());
+    Route r = graph.GetRoute(node.former_city, node.current_city, node.kth_way);
+    int wait_hour = r.start_time.hour_diff(temp_now);
+    int route_hour = r.end_time.hour_diff(r.start_time);
+    wait_hour += ((wait_hour < 0) ? 24 : 0);
+    total_timecost_.add_time(wait_hour + route_hour);
+    now.add_time(wait_hour + route_hour);
+  }
+}
+
 
 inline void Path::Reverse()
 {
