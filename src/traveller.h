@@ -12,7 +12,17 @@
 #include "city_graph.h"
 
 const int kMaxInt = INT32_MAX; // 0x7fffffff
-class Traveller                // 旅行者
+
+struct dfs_logic
+{
+  int temp_price;
+  int path_price;
+  bool *isMeet;
+  int current;
+  int depth;
+};
+
+class Traveller // 旅行者
 {
 public:
   Traveller() = default;
@@ -41,37 +51,47 @@ private:
   Path get_path_LM(const CityGraph &graph, const std::vector<City_id> &plan);
   Path get_path_LT(const CityGraph &graph, const std::vector<City_id> &plan, Time now);
   void dfs_LT(const CityGraph &graph, Time t, const std::vector<City_id> &plan, Path &path, Path &temp_path, City_id current, bool *isMeet, int depth);
-  void dfs(Path &path, const CityGraph &graph, const std::vector<std::vector<Path>> &adj_matrix, Path &paths, bool *isMeet, int current, int depth);
+  void dfs(const std::vector<std::vector<int>> &price_matrix, std::vector<int> &path, std::vector<int> &temp_path, dfs_logic &dl);
 };
 
-inline void Traveller::dfs(Path &temp_path, const CityGraph &graph, const std::vector<std::vector<Path>> &adj_matrix, Path &path, bool *isMeet, int current, int depth)
+void Traveller::dfs(const std::vector<std::vector<int>> &price_matrix, std::vector<int> &path, std::vector<int> &temp_path, dfs_logic &dl)
 {
-  if (current == adj_matrix.size() - 1)
+  if (dl.current == price_matrix.size() - 1)
   {
-    if (depth == adj_matrix.size())
+    if (dl.depth == price_matrix.size())
+    {
       path = temp_path;
+      dl.path_price = dl.temp_price;
+    }
     else
       return;
   }
-  Path save;
-  for (int i = 0; i != adj_matrix.size(); ++i)
+  std::vector<int> save;
+  int temp_current = dl.current;
+  for (int i = 0; i != price_matrix.size(); ++i)
   {
-    if (i == current || isMeet[i])
+    if (i == dl.current || dl.isMeet[i])
       continue;
     else
     {
-      isMeet[i] = true;
+      dl.isMeet[i] = true;
       save = temp_path;
-      temp_path.Append(adj_matrix[current][i]);
-      if (temp_path.GetTotalPrice() < path.GetTotalPrice())
-        dfs(temp_path, graph, adj_matrix, path, isMeet, i, depth + 1);
-      isMeet[i] = false;
+      dl.temp_price += price_matrix[dl.current][i];
+      if (dl.temp_price < dl.path_price)
+      {
+        temp_path.push_back(i);
+        dl.depth++, dl.current = i;
+        dfs(price_matrix, path, temp_path, dl);
+        dl.depth--, dl.current = temp_current;
+      }
+      dl.temp_price -= price_matrix[dl.current][i];
+      dl.isMeet[i] = false;
       temp_path = save;
     }
   }
 }
 
-inline void Traveller::dfs_LT(const CityGraph &graph, Time t, const std::vector<City_id> &plan, Path &path, Path &temp_path, City_id current, bool *isMeet, int depth)
+void Traveller::dfs_LT(const CityGraph &graph, Time t, const std::vector<City_id> &plan, Path &path, Path &temp_path, City_id current, bool *isMeet, int depth)
 {
   if (current == plan.back())
   {
@@ -103,16 +123,18 @@ inline void Traveller::dfs_LT(const CityGraph &graph, Time t, const std::vector<
   }
 }
 
-inline Path Traveller::get_path(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time start_time)
+Path Traveller::get_path(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time start_time)
 {
   init_time_ = start_time;
   if (plan.size() < 2)
     throw plan.size();
   if (s == LEAST_MONEY)
   {
-    Path temp;
     std::vector<std::vector<Path>> adj_matrix;
-    Path path = get_path_LM(graph, plan);
+    std::vector<std::vector<int>> price_matrix;
+    std::vector<int> path_order, temp_path;
+    Path path;
+    int path_price = get_path_LM(graph, plan).GetTotalPrice();
     size_t s = plan.size();
     bool *isMeet = new bool[s];
     std::vector<City_id> temp_plan{0, 1};
@@ -134,8 +156,20 @@ inline Path Traveller::get_path(const CityGraph &graph, const std::vector<City_i
         }
       }
     }
+    for (int i = 0; i != adj_matrix.size(); ++i)
+    {
+      price_matrix.emplace_back();
+      for (int j = 0; j != adj_matrix[i].size(); ++j)
+        price_matrix[i].push_back(adj_matrix[i][j].GetTotalPrice());
+    }
     isMeet[0] = true;
-    dfs(temp, graph, adj_matrix, path, isMeet, 0, 1);
+    dfs_logic temp_l = {0, path_price, isMeet, 0, 1};
+    path_order.push_back(0);
+    temp_path.push_back(0);
+    dfs(price_matrix, path_order, temp_path, temp_l);
+    for (int i = 1; i != path_order.size(); ++i)
+      path.Append(adj_matrix[path_order[i - 1]][path_order[i]]);
+    path.FixTotalTime(graph, start_time);
     delete isMeet;
     return path;
     // return get_path_LM(graph, plan);
@@ -159,7 +193,7 @@ inline Path Traveller::get_path(const CityGraph &graph, const std::vector<City_i
   }
 }
 
-inline Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<City_id> &plan)
+Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<City_id> &plan)
 {
   City_id destination; // 终点
   City_id origin;      // 起点
@@ -250,7 +284,7 @@ inline Path Traveller::get_path_LM(const CityGraph &graph, const std::vector<Cit
   return path;
 }
 
-inline Path Traveller::get_path_LT(const CityGraph &graph, const std::vector<City_id> &plan, Time now)
+Path Traveller::get_path_LT(const CityGraph &graph, const std::vector<City_id> &plan, Time now)
 {
   City_id destination; // 终点
   City_id origin;      // 起点
