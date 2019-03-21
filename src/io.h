@@ -2,14 +2,22 @@
 #define SRC_IO
 #include<iostream>
 #include<limits>
+#include"id_map.h"
 
-#include<id_map.h>
 const int kCityNum = 31;
 using std::cin;
 using std::cout;
 using std::endl;
 using std::numeric_limits;
 using std::streamsize;
+
+inline void Welcome();
+inline void Menu(const IDMap &im);
+inline void Request(const IDMap &im);
+inline void Status();
+inline void Mapsearch();
+
+
 inline void Welcome() //欢迎界面
 {
     cout<<"|----------------------------------------------|"<<endl;
@@ -30,6 +38,7 @@ inline void Welcome() //欢迎界面
         cin>>sorl;
         if(sorl=='S'||sorl=='s')
         {
+
             cout<<"你获得了一个账号！"<<endl;
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(),'\n');
@@ -51,7 +60,7 @@ inline void Welcome() //欢迎界面
     }
 }
 
-inline void Menu() //功能菜单
+inline void Menu(const IDMap &im) //功能菜单
 {
     cout << "输入对应数字获取功能：" << endl;
     cout << "1、预定行程" << endl;
@@ -67,6 +76,7 @@ inline void Menu() //功能菜单
             cout<<"预定行程"<<endl;
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(),'\n');
+            Request(im);
             break;
         }
         else if(num=='2')
@@ -92,7 +102,7 @@ inline void Menu() //功能菜单
     }
 }
 
-inline void Request(IDMap im) //预定行程
+inline void Request(const IDMap &im) //预定行程
 {
     cout << "当前支持的城市有：" << endl;
     for(int i=0;i<kCityNum;i++)

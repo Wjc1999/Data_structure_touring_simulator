@@ -1,6 +1,7 @@
 #include "../src/io.h"
 int main()
 {
-    Menu();
+    IDMap im;
+    Menu(im);
     return 0;
 }
