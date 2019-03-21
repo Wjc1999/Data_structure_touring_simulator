@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <random>
+#include <fstream>
 
 #include "user_type.h"
 #include "path.h"
@@ -16,6 +17,7 @@ const int kMaxInt = INT32_MAX; // 0x7fffffff
 extern int call_counter_T;
 extern int call_counter_M;
 extern int depth_counter_T;
+static const std::string savepath = "../data/traveller_data.txt";
 
 struct dfs_logic_m
 {
@@ -52,14 +54,15 @@ public:
   Path get_path(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time t = Time());
   // 设置旅行路径
   void set_path(Path path);
+  void savedata();
 
 private:
   std::string id_ = "";                       // 旅客id
   TravellerState state_ = STAY;               // 旅客当前状态
-  Time new_journey_;                          // 旅客下一次空闲的时间
   Strategy strategy_ = LEAST_MONEY;           // 旅行策略
   std::vector<City_id> travelling_plan_;      // 旅行计划 <起点>, <中继点>... , <终点>
   Path touring_path_;                         // 旅行路径
+  Time next_city_tleft_;                      // 到下一个城市的时间
   std::vector<PathNode>::iterator next_city_; // 路径中的下一个城市
   Time init_time_;                            // 最开始时的时间
   Path get_path_LM(const CityGraph &graph, const std::vector<City_id> &plan);
@@ -447,5 +450,25 @@ Path Traveller::get_path_LT(const CityGraph &graph, const std::vector<City_id> &
   //path.Reverse();
   //path.Show();
   return path;
+}
+
+inline void Traveller::savedata()
+{
+  std::ofstream stream(savepath,ofstream::app);
+  if(stream.is_open())
+  {
+    stream<<id_<<endl;
+    stream<<state_<<endl;
+    stream<<strategy_<<endl;
+    for(int i=0;i<travelling_plan_.size();i++)
+    {
+      stream<<travelling_plan_.at(i)<<" ";
+    }
+    stream<<endl;
+    for(auto i = touring_path_.cbegin();i!=touring_path_.cend();i++)
+    {
+      stream<<*i.
+    }
+  }
 }
 #endif // SRC_TRAVELLER

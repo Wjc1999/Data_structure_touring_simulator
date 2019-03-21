@@ -2,7 +2,14 @@
 #define SRC_IO
 #include<iostream>
 #include<limits>
-using namespace std;
+
+#include<id_map.h>
+const int kCityNum = 31;
+using std::cin;
+using std::cout;
+using std::endl;
+using std::numeric_limits;
+using std::streamsize;
 inline void Welcome() //欢迎界面
 {
     cout<<"|----------------------------------------------|"<<endl;
@@ -51,13 +58,47 @@ inline void Menu() //功能菜单
     cout << "2、状态查询" << endl;
     cout << "3、路线查询" << endl;
     cout << "……" << endl;
-    cout << "" << endl;
+    char num;
+    while(1)
+    {
+        cin>>num;
+        if(num=='1')
+        {
+            cout<<"预定行程"<<endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+            break;
+        }
+        else if(num=='2')
+        {
+            cout<<"状态查询"<<endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+            break;
+        }
+        else if(num=='3')
+        {
+            cout<<"路线查询"<<endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+            break;
+        }
+        else
+        {
+            cout<<"请重新输入：";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+        }
+    }
 }
 
-inline void Request() //预定行程
+inline void Request(IDMap im) //预定行程
 {
     cout << "当前支持的城市有：" << endl;
-    //printcity();//打印城市列表
+    for(int i=0;i<kCityNum;i++)
+    {
+        cout<<i+1<<":"<<im.GetCityStr(i)<<endl;
+    }
     cout << "请输入您的当前城市：" << endl;
     //read();//读取数据
     cout << "请输入您的目的城市：" << endl;
