@@ -23,6 +23,7 @@ public:
   int to_hour() const { return day_ * 24 + hour_; }
   int GetDay() const { return day_; }
   int GetHour() const { return hour_; }
+  void set_hour(int hour) { hour_ = hour; }
 
 #ifdef TEST_TIME
 #include <iostream>
