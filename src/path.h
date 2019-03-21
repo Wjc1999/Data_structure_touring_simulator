@@ -54,6 +54,8 @@ public:
 
   // 返回指向路径尾后元素的迭代器
   std::deque<PathNode>::const_iterator cend() { return cities_.cend(); }
+  //返回节点
+  PathNode GetNode(int k){return cities_.at(k);}
 
 #ifdef TEST_PATH
 

@@ -1,6 +1,7 @@
-#ifndef TEST_IO
-#define TEST_IO
-
-
-
-#endif // TEST_IO
+#include "../src/io.h"
+int main()
+{
+    IDMap im;
+    Menu(im);
+    return 0;
+}
