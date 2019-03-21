@@ -5,9 +5,9 @@
 #include "../src/traveller.h"
 using namespace std;
 
-int call_counter_T = 0;
-int call_counter_M = 0;
-int depth_counter_T = 0;
+int call_counter_time = 0;
+int call_counter_money = 0;
+int depth_counter = 0;
 
 int main(){
     CityGraph graph;
@@ -27,17 +27,17 @@ int main(){
     
     plan.push_back(2);
     plan.push_back(5);
-    // plan.push_back(6);
+    plan.push_back(6);
     
     plan.push_back(13);
     plan.push_back(27);
-    auto path = me.get_path(graph, plan, LEAST_MONEY);
+    auto path = me.GetPath(graph, plan, LEAST_MONEY);
     path.FixTotalTime(graph);
     path.Show();
     cout << path.GetTotalPrice() << '\t' << endl;
     path.GetTotalTime().print() << endl;
-    cout << call_counter_M << endl;
-    cout << depth_counter_T << endl;
+    cout << call_counter_money << endl;
+    cout << depth_counter << endl;
 
     // path = me.get_path(graph, plan, LEAST_TIME);
     // path.FixTotalTime(graph);
