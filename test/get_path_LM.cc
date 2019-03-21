@@ -37,6 +37,7 @@ int main(){
     cout << path.GetTotalPrice() << '\t' << endl;
     path.GetTotalTime().print() << endl;
     cout << call_counter_M << endl;
+    cout << depth_counter_T << endl;
 
     // path = me.get_path(graph, plan, LEAST_TIME);
     // path.FixTotalTime(graph);

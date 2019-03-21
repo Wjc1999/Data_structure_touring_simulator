@@ -77,6 +77,8 @@ void Traveller::dfs(const std::vector<std::vector<int>> &price_matrix, std::vect
     {
       path = temp_path;
       dl.path_price = dl.temp_price;
+      depth_counter_T++;
+      std::cout << dl.path_price << std::endl;
     }
     else
       return;
@@ -158,9 +160,20 @@ Path Traveller::get_path(const CityGraph &graph, const std::vector<City_id> &pla
     std::vector<std::vector<Path>> adj_matrix;
     std::vector<std::vector<int>> price_matrix;
     std::vector<int> path_order, temp_path;
+    std::vector<City_id> plan_shuffle = plan;
     int min_price = kMaxInt;
     Path path;
     int path_price = get_path_LM(graph, plan).GetTotalPrice();
+    int temp_path_price;
+    std::random_device rd;
+    std::mt19937 g(rd());
+    for (int i = 0; i < 100; i++)
+    {
+      shuffle(plan_shuffle.begin() + 1, plan_shuffle.end() - 1, g);
+      temp_path_price = get_path_LM(graph, plan_shuffle).GetTotalPrice();
+      if (temp_path_price < path_price)
+        path_price = temp_path_price;
+    }
     size_t s = plan.size();
     bool *isMeet = new bool[s];
     std::vector<City_id> temp_plan{0, 1};
@@ -186,11 +199,11 @@ Path Traveller::get_path(const CityGraph &graph, const std::vector<City_id> &pla
     {
       price_matrix.emplace_back();
       for (int j = 0; j != adj_matrix[i].size(); ++j)
-        {
-          price_matrix[i].push_back(adj_matrix[i][j].GetTotalPrice());
-          if (price_matrix[i].back() && min_price > price_matrix[i].back())
-            min_price = price_matrix[i].back();
-        }
+      {
+        price_matrix[i].push_back(adj_matrix[i][j].GetTotalPrice());
+        if (price_matrix[i].back() && min_price > price_matrix[i].back())
+          min_price = price_matrix[i].back();
+      }
     }
     isMeet[0] = true;
     dfs_logic_m temp_l = {0, path_price, isMeet, 0, 1, min_price};
