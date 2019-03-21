@@ -1,6 +1,7 @@
 #ifndef SRC_IO
 #define SRC_IO
 #include<iostream>
+#include<limits>
 using namespace std;
 inline void Welcome()//欢迎界面
 {
@@ -16,6 +17,31 @@ inline void Welcome()//欢迎界面
     cout<<endl;
     cout<<"选择注册还是已有账号登陆？"<<endl;
     cout<<"注册：S           登陆：L"<<endl;
+    char sorl;
+    while(1)
+    {
+        cin>>sorl;
+        if(sorl=='S'||sorl=='s')
+        {
+            cout<<"你获得了一个账号！"<<endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+            break;
+        }
+        else if(sorl=='l'||sorl=='L')
+        {
+            cout<<"请输入你的id："<<endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+            break;
+        }
+        else
+        {
+            cout<<"请重新输入：";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+        }
+    }
 }
 
 inline void Menu()//功能菜单
