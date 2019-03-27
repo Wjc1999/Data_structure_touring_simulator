@@ -1,21 +1,28 @@
 #ifndef SRC_IO
 #define SRC_IO
-#include<iostream>
-#include<limits>
-#include"id_map.h"
-
-const int kCityNum = 31;
+#include <iostream>
+#include <limits>
+#include <string>
+#include <vector>
+#include <fstream>
+#include "id_map.h"
+#include "traveller.h"
 using std::cin;
 using std::cout;
 using std::endl;
 using std::numeric_limits;
 using std::streamsize;
+using std::string;
+using std::vector;
+
+const int kCityNum = 31;
 
 inline void Welcome();
 inline void Menu(const IDMap &im);
 inline void Request(const IDMap &im);
 inline void Status();
 inline void Mapsearch();
+inline int Namecheck(string s);
 
 
 inline void Welcome() //欢迎界面
@@ -38,7 +45,9 @@ inline void Welcome() //欢迎界面
         cin>>sorl;
         if(sorl=='S'||sorl=='s')
         {
-
+            cout<<"请输入你想注册的账号："<<endl;
+            string name;
+            cin>>name;
             cout<<"你获得了一个账号！"<<endl;
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(),'\n');
@@ -125,5 +134,25 @@ inline void Status()
 inline void Mapsearch()
 {
     //citygraph.()//关于图的输出
+}
+
+inline int Namecheck(string s)
+{
+    vector <string> namelist;
+    std::ifstream stream(namepath);
+    if(stream.is_open())
+    {
+        int cnt=0;
+        string temp;
+        while(getline(stream,temp))
+        {
+            if(temp==s)
+            {
+                return cnt;
+            }
+            cnt++;
+        }
+        return -1;
+    }
 }
 #endif //SRC_IO
