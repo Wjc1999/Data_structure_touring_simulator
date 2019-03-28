@@ -61,6 +61,7 @@ public:
   bool Loaddata(int cnt, const CityGraph &graph);
   void Confirm(const Path &chosen_path, Time now);
   void Update(const CityGraph &graph, Time now);
+  void Plan_Add(int city);
 
 private:
   std::string id_ = "";                       // 旅客id
@@ -545,8 +546,8 @@ inline bool Traveller::Loaddata(int cnt, const CityGraph &graph)
       ss>>c;
       touring_path_.Append(graph,a,b,c);
     }
-    stream>>next_city_tleft_;
-    stream>>kth_pathnode;
+    stream>>next_city_tleft_;                        //第六行
+    stream>>kth_pathnode;                            //第七行
   }
 }
 
@@ -600,4 +601,8 @@ inline void Traveller::Update(const CityGraph &graph, Time now)
   }
 }
 
+void Traveller::Plan_Add(int city)
+{
+  travelling_plan_.push_back(city);
+}
 #endif // SRC_TRAVELLER
