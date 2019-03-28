@@ -70,7 +70,6 @@ public:
   void set_plan(const std::vector<City_id> &plan) { travelling_plan_ = plan; }
   void Confirm(const Path &chosen_path, Time now);
   void Update(const CityGraph &graph, Time now);
-  void Plan_Add(int city);
 
 private:
   std::string id_ = "";                  // 旅客id
@@ -524,7 +523,7 @@ inline bool Traveller::Savedata()
       stream << travelling_plan_.at(i) << " ";
     }
     stream << std::endl;
-    for (auto i = touring_path_.cbegin(); i != touring_path_.cend(); i++)
+    for (auto i = touring_path_.cbegin(); i != touring_path_.cend(); i++)//第五行
     {
       stream << (*i).former_city << " " << (*i).current_city << " " << (*i).kth_way << " ";
     }
@@ -545,6 +544,7 @@ inline bool Traveller::Savedata()
 
 inline bool Traveller::Loaddata(int cnt, const CityGraph &graph)
 {
+  if(cnt==-1)return true;
   std::ifstream stream(savepath);
   if (stream.is_open())
   {
@@ -578,7 +578,7 @@ inline bool Traveller::Loaddata(int cnt, const CityGraph &graph)
     }
     
     getline(stream, temp); //第五行
-    std::istringstream ss(temp);
+    ss.str(temp);
     int a, b, c;
     while (ss >> a)
     {
@@ -588,16 +588,18 @@ inline bool Traveller::Loaddata(int cnt, const CityGraph &graph)
     }
     stream >> next_city_tleft_;
     stream >> kth_pathnode;
+    return true;
   }
+  return false;
 }
 
 inline void Traveller::Confirm(const Path &chosen_path, Time now)
 {
   std::cout << "是否选择该条路线？" << std::endl;
-  /*if(now,init_time_)
+  if(!now.hour_diff(init_time_))
   {
-    state_ = OFF
-  }  ***这里做一个当前时间和出发时间的判断*/
+    state_ = OFF;
+  }  //这里做一个当前时间和出发时间的判断
   touring_path_ = chosen_path;
   kth_pathnode = -1;
 }
@@ -642,8 +644,4 @@ inline void Traveller::Update(const CityGraph &graph, Time now)
   }
 }
 
-void Traveller::Plan_Add(int city)
-{
-  travelling_plan_.push_back(city);
-}
 #endif // SRC_TRAVELLER
