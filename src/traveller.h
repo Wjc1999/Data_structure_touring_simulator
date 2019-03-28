@@ -550,11 +550,13 @@ inline bool Traveller::Loaddata(int cnt, const CityGraph &graph)
     std::string temp;
     for (int i = 0; i < cnt * 7; i++)
       getline(stream, temp); //找位置
+
     stream >> id_;           //第一行
     int statetemp;
     int strategytemp;
     stream >> statetemp;    //第二行
     stream >> strategytemp; //第三行
+
     if (statetemp == 0)
       state_ = STAY;
     else if (statetemp == 1)
@@ -565,6 +567,7 @@ inline bool Traveller::Loaddata(int cnt, const CityGraph &graph)
       strategy_ = LEAST_TIME;
     else if (strategytemp == 2)
       strategy_ = LIMIT_TIME;
+
     getline(stream, temp); //第四行
     std::istringstream ss(temp);
     int plantemp;
@@ -572,6 +575,7 @@ inline bool Traveller::Loaddata(int cnt, const CityGraph &graph)
     {
       travelling_plan_.push_back(plantemp);
     }
+    
     getline(stream, temp); //第五行
     std::istringstream ss(temp);
     int a, b, c;
