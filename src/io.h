@@ -11,6 +11,7 @@
 #include <set>
 #include <algorithm>
 #include <iterator>
+#include <fstream>
 
 #include "id_map.h"
 #include "user_type.h"
@@ -23,6 +24,8 @@ using std::endl;
 using std::numeric_limits;
 using std::streamsize;
 using std::string;
+using std::vector;
+
 
 void Welcome();
 int Menu(const IDMap &im);
@@ -30,6 +33,7 @@ std::vector<City_id> Request(const IDMap &im);
 void ErrorMsg(const std::string &err_msg);
 inline void Status();
 inline void Mapsearch();
+inline int Namecheck(string s);
 
 void Welcome() //欢迎界面
 {
@@ -51,8 +55,10 @@ void Welcome() //欢迎界面
         cin >> sorl;
         if (sorl == 'S' || sorl == 's')
         {
-
-            cout << "你获得了一个账号！" << endl;
+            cout<<"请输入你想注册的账号："<<endl;
+            string name;
+            cin>>name;
+            cout<<"你获得了一个账号！"<<endl;
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             break;
@@ -225,5 +231,25 @@ void ErrorMsg(const std::string &err_msg)
 inline void Mapsearch()
 {
     //citygraph.()//关于图的输出
+}
+
+inline int Namecheck(string s)
+{
+    vector <string> namelist;
+    std::ifstream stream(namepath);
+    if(stream.is_open())
+    {
+        int cnt=0;
+        string temp;
+        while(getline(stream,temp))
+        {
+            if(temp==s)
+            {
+                return cnt;
+            }
+            cnt++;
+        }
+        return -1;
+    }
 }
 #endif //SRC_IO
