@@ -42,3 +42,5 @@ test/path_test
 
 .vscode/ipch/4c3ca03175e49768/mmap_address.bin
 *.bin
+test/main_test
+.vscode/ipch/9672b7358841a22a/MAIN_TEST.ipch

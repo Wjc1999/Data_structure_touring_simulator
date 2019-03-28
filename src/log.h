@@ -9,7 +9,7 @@
  * 用于建立日志文件,对程序的操作进行记录.
  * 日志文件格式: [系统时间] ([程序内系统时间]) [日志信息]
  */
-static enum WriteTplt
+enum WriteTplt
 {
   USER_INPUT,
   ERROR,
