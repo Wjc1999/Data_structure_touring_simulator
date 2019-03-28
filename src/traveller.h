@@ -70,6 +70,7 @@ public:
   void set_plan(const std::vector<City_id> &plan) { travelling_plan_ = plan; }
   void Confirm(const Path &chosen_path, Time now);
   void Update(const CityGraph &graph, Time now);
+  void Plan_Add(int city);
 
 private:
   std::string id_ = "";                  // 旅客id
@@ -641,4 +642,8 @@ inline void Traveller::Update(const CityGraph &graph, Time now)
   }
 }
 
+void Traveller::Plan_Add(int city)
+{
+  travelling_plan_.push_back(city);
+}
 #endif // SRC_TRAVELLER

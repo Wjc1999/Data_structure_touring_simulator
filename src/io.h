@@ -54,20 +54,36 @@ void Welcome() //欢迎界面
         cin >> sorl;
         if (sorl == 'S' || sorl == 's')
         {
-            cout << "请输入你想注册的账号：" << endl;
+            cout<<"请输入你想注册的账号：";
             string name;
-            cin >> name;
-            cout << "你获得了一个账号！" << endl;
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            break;
+            cin>>name;
+            while(Namecheck(name)==-1)
+            {
+                cout<<"该账号已被注册，请重新输入：";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                cin>>name;
+            }
+            cout<<"你已注册账号："<<name<<endl;
+            return;
         }
         else if (sorl == 'l' || sorl == 'L')
         {
-            cout << "请输入你的id：" << endl;
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            break;
+            cout<<"请输入你的账号：";
+            string name;
+            cin>>name;
+            while(Namecheck(name)==-1)
+            {
+                cout<<"输入账号有误，请重新输入：";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                cin>>name;
+            }
+            return;
+        }
+        else if(sorl=='q'||sorl=='Q')
+        {
+            exit(0);
         }
         else
         {
@@ -113,6 +129,10 @@ int Menu(const IDMap &im, Traveller &traveller) //功能菜单  返回一个操�
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             return num - '0';
+        }
+        else if(num=='q'||num=='Q')
+        {
+            exit(0);
         }
         else
         {
@@ -250,5 +270,6 @@ inline int Namecheck(string s)
         }
         return -1;
     }
+    return -1;
 }
 #endif //SRC_IO
