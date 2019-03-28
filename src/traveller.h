@@ -575,9 +575,9 @@ inline bool Traveller::Loaddata(int cnt, const CityGraph &graph)
     {
       travelling_plan_.push_back(plantemp);
     }
-    
+
     getline(stream, temp); //第五行
-    std::istringstream ss(temp);
+    ss.str(temp);
     int a, b, c;
     while (ss >> a)
     {
