@@ -72,6 +72,7 @@ public:
   void set_plan(std::initializer_list<City_id> il) { travelling_plan_ = std::vector<City_id>(il); }
   void append_plan(City_id city) { travelling_plan_.push_back(city); }
   void UpdateState(const CityGraph &graph, Time now);
+  void set_path(Path &p) { touring_path_ = p; }
 
 private:
   std::string id_ = "";                  // 旅客id
@@ -85,6 +86,7 @@ private:
   Time init_time_; // 最开始时的时间
   Path GetPathLeastMoney(const CityGraph &graph, const std::vector<City_id> &plan);
   Path GetPathLeastTime(const CityGraph &graph, const std::vector<City_id> &plan, Time now);
+  Path GetPathLTM(const CityGraph &graph, const std::vector<City_id> &plan, Time now, Time limit);
   void DFSLeastTime(const CityGraph &graph, const std::vector<City_id> &plan, Path &path, Path &temp_path, DFSLeastTimeParWarp &par_warp);
   void DFSLeastMoney(const std::vector<std::vector<int>> &price_matrix, std::vector<int> &path, std::vector<int> &temp_path, DFSLeastMoneyParWarp &par_warp);
 };
@@ -502,6 +504,10 @@ Path Traveller::GetPathLeastTime(const CityGraph &graph, const std::vector<City_
   return path;
 }
 
+Path Traveller::GetPathLTM(const CityGraph &graph, const std::vector<City_id> &plan, Time now, Time limit)
+{
+}
+
 bool Traveller::SaveData()
 {
   std::ofstream out_stream(save_path, std::ofstream::app);
@@ -553,7 +559,7 @@ bool Traveller::SaveData()
 
 bool Traveller::LoadData(int cnt, const CityGraph &graph)
 {
-  if(cnt == -1)
+  if (cnt == -1)
     return true;
   std::ifstream in_stream(save_path);
   int state_temp;
@@ -565,7 +571,7 @@ bool Traveller::LoadData(int cnt, const CityGraph &graph)
       getline(in_stream, temp); //找位置
 
     in_stream >> id_; //第一行
-
+    std::cout<<id_<<std::endl;//////////////
     in_stream >> state_temp;    //第二行
     in_stream >> strategy_temp; //第三行
 
@@ -579,26 +585,32 @@ bool Traveller::LoadData(int cnt, const CityGraph &graph)
       strategy_ = LEAST_TIME;
     else if (strategy_temp == 2)
       strategy_ = LIMIT_TIME;
-
+    std::cout<<state_<<std::endl;/////////////
+    std::cout<<strategy_<<std::endl;///////////
+    getline(in_stream, temp); //结束前一行
     getline(in_stream, temp); //第四行
-    std::istringstream ss(temp);
+    std::istringstream s(temp);
     int plantemp;
-    while (ss >> plantemp)
+    while (s >> plantemp)
     {
+      std::cout<<plantemp<<" ";///////////
       travelling_plan_.push_back(plantemp);
     }
-
+    std::cout<<std::endl;
     getline(in_stream, temp); //第五行
-    ss.str(temp);
+    std::istringstream ss(temp);
     City_id former_city, current_city, k;
     while (ss >> former_city)
     {
       ss >> current_city;
       ss >> k;
+      std::cout<<former_city<<" "<<current_city<<" "<<k<<std::endl;////////////
       touring_path_.Append(graph, former_city, current_city, k);
     }
     in_stream >> next_city_hour_left_;
+    std::cout<<next_city_hour_left_<<std::endl;
     in_stream >> position_pathnode_;
+    std::cout<<position_pathnode_<<std::endl;
     return true;
   }
   return false;

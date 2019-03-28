@@ -34,7 +34,7 @@ void ErrorMsg(const std::string &err_msg);
 inline void Status();
 inline void MapSearch();
 inline int NameCheck(string s);
-inline void Confirm(const Path &chosen_path, Time now);
+inline bool PathConfirm(const Path &chosen_path, Time now);
 
 int Welcome() //欢迎界面
 {
@@ -81,7 +81,7 @@ int Welcome() //欢迎界面
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cin >> name;
             }
-            return Namecheck(name);
+            return NameCheck(name);
         }
         else if (sorl == 'q' || sorl == 'Q')
         {
@@ -159,7 +159,7 @@ std::vector<City_id> Request(const IDMap &im) //预定行程
         cout << i + 1 << " : " << im.GetCityStr(i) << endl;
     }
 
-    cout <<"请输入您的当前城市(输入数字)：";
+    cout << "请输入您的当前城市(输入数字)：";
     while (1)
     {
         if (!cin.good())
@@ -170,7 +170,7 @@ std::vector<City_id> Request(const IDMap &im) //预定行程
             temp_id = std::stoi(id);
             if (temp_id < im.GetCityMapSize() + 1 || temp_id < 1)
             {
-                cout<<"你选择的当前城市是："<<im.GetCityStr(temp_id-1)<<endl;
+                cout << "你选择的当前城市是：" << im.GetCityStr(temp_id - 1) << endl;
                 res.push_back(std::stoi(id) - 1);
                 break;
             }
@@ -226,7 +226,7 @@ std::vector<City_id> Request(const IDMap &im) //预定行程
                 ErrorMsg("无效的城市");
             else
             {
-                cout<<"你选择的目的城市是："<<im.GetCityStr(temp_id - 1)<<endl;
+                cout << "你选择的目的城市是：" << im.GetCityStr(temp_id - 1) << endl;
                 res.push_back(temp_id - 1);
                 break;
             }
