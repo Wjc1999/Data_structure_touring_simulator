@@ -553,6 +553,8 @@ bool Traveller::SaveData()
 
 bool Traveller::LoadData(int cnt, const CityGraph &graph)
 {
+  if(cnt == -1)
+    return true;
   std::ifstream in_stream(save_path);
   int state_temp;
   int strategy_temp;
@@ -597,7 +599,9 @@ bool Traveller::LoadData(int cnt, const CityGraph &graph)
     }
     in_stream >> next_city_hour_left_;
     in_stream >> position_pathnode_;
+    return true;
   }
+  return false;
 }
 
 inline void Traveller::UpdateState(const CityGraph &graph, Time now)

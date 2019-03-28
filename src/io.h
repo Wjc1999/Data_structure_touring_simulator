@@ -27,7 +27,7 @@ using std::streamsize;
 using std::string;
 using std::vector;
 
-void Welcome();
+int Welcome();
 int Menu(const IDMap &im);
 std::vector<City_id> Request(const IDMap &im);
 void ErrorMsg(const std::string &err_msg);
@@ -36,7 +36,7 @@ inline void MapSearch();
 inline int NameCheck(string s);
 inline void Confirm(const Path &chosen_path, Time now);
 
-void Welcome() //欢迎界面
+int Welcome() //欢迎界面
 {
     cout << "|----------------------------------------------|" << endl;
     cout << endl;
@@ -67,7 +67,7 @@ void Welcome() //欢迎界面
                 cin >> name;
             }
             cout << "你已注册账号：" << name << endl;
-            return;
+            return -1;
         }
         else if (sorl == 'l' || sorl == 'L')
         {
@@ -81,7 +81,7 @@ void Welcome() //欢迎界面
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cin >> name;
             }
-            return;
+            return Namecheck(name);
         }
         else if (sorl == 'q' || sorl == 'Q')
         {
@@ -159,7 +159,7 @@ std::vector<City_id> Request(const IDMap &im) //预定行程
         cout << i + 1 << " : " << im.GetCityStr(i) << endl;
     }
 
-    cout << "请输入您的当前城市：" << endl;
+    cout <<"请输入您的当前城市(输入数字)：";
     while (1)
     {
         if (!cin.good())
@@ -170,6 +170,7 @@ std::vector<City_id> Request(const IDMap &im) //预定行程
             temp_id = std::stoi(id);
             if (temp_id < im.GetCityMapSize() + 1 || temp_id < 1)
             {
+                cout<<"你选择的当前城市是："<<im.GetCityStr(temp_id-1)<<endl;
                 res.push_back(std::stoi(id) - 1);
                 break;
             }
@@ -180,7 +181,7 @@ std::vector<City_id> Request(const IDMap &im) //预定行程
         }
     }
 
-    cout << "请输入您希望经过的城市(没有可填无)：" << endl;
+    cout << "请输入您希望经过的城市(没有可填无)：";
     while (1)
     {
         if (!cin.good())
@@ -225,6 +226,7 @@ std::vector<City_id> Request(const IDMap &im) //预定行程
                 ErrorMsg("无效的城市");
             else
             {
+                cout<<"你选择的目的城市是："<<im.GetCityStr(temp_id - 1)<<endl;
                 res.push_back(temp_id - 1);
                 break;
             }
@@ -238,9 +240,9 @@ inline void Status()
     //traveller.();//关于traveller的输出
 }
 
-void ErrorMsg(const std::string &err_msg)
+void ErrorMsg(const string &err_msg)
 {
-    std::cout << err_msg << std::endl;
+    cout << err_msg << endl;
 }
 
 inline void MapSearch()
