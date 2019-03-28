@@ -26,7 +26,6 @@ using std::streamsize;
 using std::string;
 using std::vector;
 
-
 void Welcome();
 int Menu(const IDMap &im);
 std::vector<City_id> Request(const IDMap &im);
@@ -55,10 +54,10 @@ void Welcome() //欢迎界面
         cin >> sorl;
         if (sorl == 'S' || sorl == 's')
         {
-            cout<<"请输入你想注册的账号："<<endl;
+            cout << "请输入你想注册的账号：" << endl;
             string name;
-            cin>>name;
-            cout<<"你获得了一个账号！"<<endl;
+            cin >> name;
+            cout << "你获得了一个账号！" << endl;
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             break;
@@ -124,7 +123,7 @@ int Menu(const IDMap &im, Traveller &traveller) //功能菜单  返回一个操�
     }
 }
 
-std::vector<City_id> Request(const IDMap &im) //预定行程    
+std::vector<City_id> Request(const IDMap &im) //预定行程
 // TODO : 判断输入是否为数字
 {
     std::vector<City_id> temp_res;
@@ -177,7 +176,7 @@ std::vector<City_id> Request(const IDMap &im) //预定行程
                     continue;
                 }
             }
-            
+
             temp_id = std::stoi(id);
             if (temp_id > im.GetCityMapSize() || temp_id < 1)
                 ErrorMsg("无效的城市");
@@ -235,15 +234,15 @@ inline void Mapsearch()
 
 inline int Namecheck(string s)
 {
-    vector <string> namelist;
+    vector<string> namelist;
     std::ifstream stream(namepath);
-    if(stream.is_open())
+    if (stream.is_open())
     {
-        int cnt=0;
+        int cnt = 0;
         string temp;
-        while(getline(stream,temp))
+        while (getline(stream, temp))
         {
-            if(temp==s)
+            if (temp == s)
             {
                 return cnt;
             }
