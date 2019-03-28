@@ -570,10 +570,10 @@ bool Traveller::LoadData(int cnt, const CityGraph &graph)
     for (int i = 0; i < cnt * 7; i++)
       getline(in_stream, temp); //找位置
 
-    in_stream >> id_; //第一行
-    std::cout<<id_<<std::endl;//////////////
-    in_stream >> state_temp;    //第二行
-    in_stream >> strategy_temp; //第三行
+    in_stream >> id_;              //第一行
+    //std::cout << id_ << std::endl; //////////////
+    in_stream >> state_temp;       //第二行
+    in_stream >> strategy_temp;    //第三行
 
     if (state_temp == 0)
       state_ = STAY;
@@ -585,18 +585,18 @@ bool Traveller::LoadData(int cnt, const CityGraph &graph)
       strategy_ = LEAST_TIME;
     else if (strategy_temp == 2)
       strategy_ = LIMIT_TIME;
-    std::cout<<state_<<std::endl;/////////////
-    std::cout<<strategy_<<std::endl;///////////
-    getline(in_stream, temp); //结束前一行
-    getline(in_stream, temp); //第四行
+    //std::cout << state_ << std::endl;    /////////////
+    //std::cout << strategy_ << std::endl; ///////////
+    getline(in_stream, temp);            //结束前一行
+    getline(in_stream, temp);            //第四行
     std::istringstream s(temp);
     int plantemp;
     while (s >> plantemp)
     {
-      std::cout<<plantemp<<" ";///////////
+      //std::cout << plantemp << " "; ///////////
       travelling_plan_.push_back(plantemp);
     }
-    std::cout<<std::endl;
+    std::cout << std::endl;
     getline(in_stream, temp); //第五行
     std::istringstream ss(temp);
     City_id former_city, current_city, k;
@@ -604,13 +604,13 @@ bool Traveller::LoadData(int cnt, const CityGraph &graph)
     {
       ss >> current_city;
       ss >> k;
-      std::cout<<former_city<<" "<<current_city<<" "<<k<<std::endl;////////////
-      touring_path_.Append(graph, former_city, current_city, k);
+      //std::cout << former_city << " " << current_city << " " << k << std::endl; ////////////
+      touring_path_.Append(graph, former_city, current_city, k, 1);
     }
     in_stream >> next_city_hour_left_;
-    std::cout<<next_city_hour_left_<<std::endl;
+    //std::cout << next_city_hour_left_ << std::endl;///////////
     in_stream >> position_pathnode_;
-    std::cout<<position_pathnode_<<std::endl;
+    //std::cout << position_pathnode_ << std::endl;///////////
     return true;
   }
   return false;
