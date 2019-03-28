@@ -81,7 +81,7 @@ int Welcome() //欢迎界面
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cin >> name;
             }
-            return Namecheck(name);
+            return NameCheck(name);
         }
         else if (sorl == 'q' || sorl == 'Q')
         {
@@ -159,7 +159,7 @@ std::vector<City_id> Request(const IDMap &im) //预定行程
         cout << i + 1 << " : " << im.GetCityStr(i) << endl;
     }
 
-    cout <<"请输入您的当前城市(输入数字)：";
+    cout << "请输入您的当前城市(输入数字)：";
     while (1)
     {
         if (!cin.good())
@@ -167,11 +167,11 @@ std::vector<City_id> Request(const IDMap &im) //预定行程
         cin >> id;
         if (cin.good())
         {
-            temp_id = std::stoi(id);
-            if (temp_id < im.GetCityMapSize() + 1 || temp_id < 1)
+            temp_id = std::stoi(id) - 1;
+            if (temp_id < im.GetCityMapSize() && temp_id >= 0)
             {
-                cout<<"你选择的当前城市是："<<im.GetCityStr(temp_id-1)<<endl;
-                res.push_back(std::stoi(id) - 1);
+                cout << "你选择的当前城市是：" << im.GetCityStr(temp_id) << endl;
+                res.push_back(temp_id);
                 break;
             }
             else
@@ -194,14 +194,14 @@ std::vector<City_id> Request(const IDMap &im) //预定行程
                 break;
             }
 
-            temp_id = std::stoi(id);
-            if (temp_id > im.GetCityMapSize() || temp_id < 1)
+            temp_id = std::stoi(id) - 1;
+            if (temp_id >= im.GetCityMapSize() || temp_id < 0)
                 ErrorMsg("无效的城市");
             else if (temp_id == res.front())
                 ErrorMsg("与起点重复");
             else
             {
-                temp_res.push_back(temp_id - 1);
+                temp_res.push_back(temp_id);
             }
         }
     }
@@ -217,17 +217,17 @@ std::vector<City_id> Request(const IDMap &im) //预定行程
         cin >> id;
         if (cin.good())
         {
-            temp_id = std::stoi(id);
+            temp_id = std::stoi(id) - 1;
             if (std::find(res.begin(), res.end(), temp_id) != res.end())
             {
                 ErrorMsg("重复的城市");
             }
-            else if (temp_id > im.GetCityMapSize() || temp_id < 1)
+            else if (temp_id >= im.GetCityMapSize() || temp_id < 0)
                 ErrorMsg("无效的城市");
             else
             {
-                cout<<"你选择的目的城市是："<<im.GetCityStr(temp_id - 1)<<endl;
-                res.push_back(temp_id - 1);
+                cout << "你选择的目的城市是：" << im.GetCityStr(temp_id) << endl;
+                res.push_back(temp_id);
                 break;
             }
         }
