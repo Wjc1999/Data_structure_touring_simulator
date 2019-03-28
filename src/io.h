@@ -98,43 +98,45 @@ int Welcome() //欢迎界面
 
 int Menu(const IDMap &im, Traveller &traveller) //功能菜单  返回一个操作代码
 {
-    cout << "输入对应数字获取功能：" << endl;
-    cout << "1、预定行程" << endl;
-    cout << "2、状态查询" << endl;
-    cout << "3、路线查询" << endl;
-    cout << "……" << endl;
+    cout << "输入对应数字获取功能：" << endl
+         << "1、预定行程" << endl
+         << "2、状态查询" << endl
+         << "3、路线查询" << endl
+         << "4、退出程序" << endl;
+
     char num;
     std::vector<City_id> plan;
     while (cin >> num)
     {
-        if (num == '1')
+        int operate_code = num - '0';
+        if (operate_code == SCHEDULE)
         {
             cout << "预定行程" << endl;
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             plan = Request(im);
-            std::for_each(plan.cbegin(), plan.cend(), [](City_id id) { cout << id << endl; });
+            // std::for_each(plan.cbegin(), plan.cend(), [](City_id id) { cout << id << endl; });
             traveller.set_plan(plan);
             // 输入旅行策略
-            return num - '0';
+            return operate_code;
         }
-        else if (num == '2')
+        else if (operate_code == INQUIRE_STATE)
         {
             cout << "状态查询" << endl;
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            return num - '0';
+            return operate_code;
         }
-        else if (num == '3')
+        else if (operate_code ==  INQUIRE_PATH)
         {
             cout << "路线查询" << endl;
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            return num - '0';
+            return operate_code;
         }
-        else if (num == 'q' || num == 'Q')
+        else if (operate_code == EXIT)
         {
-            exit(0);
+            return operate_code;
         }
         else
         {
@@ -167,11 +169,11 @@ std::vector<City_id> Request(const IDMap &im) //预定行程
         cin >> id;
         if (cin.good())
         {
-            temp_id = std::stoi(id);
-            if (temp_id < im.GetCityMapSize() + 1 || temp_id < 1)
+            temp_id = std::stoi(id) - 1;
+            if (temp_id < im.GetCityMapSize() && temp_id >= 0)
             {
-                cout << "你选择的当前城市是：" << im.GetCityStr(temp_id - 1) << endl;
-                res.push_back(std::stoi(id) - 1);
+                cout << "你选择的当前城市是：" << im.GetCityStr(temp_id) << endl;
+                res.push_back(temp_id);
                 break;
             }
             else
@@ -194,14 +196,14 @@ std::vector<City_id> Request(const IDMap &im) //预定行程
                 break;
             }
 
-            temp_id = std::stoi(id);
-            if (temp_id > im.GetCityMapSize() || temp_id < 1)
+            temp_id = std::stoi(id) - 1;
+            if (temp_id >= im.GetCityMapSize() || temp_id < 0)
                 ErrorMsg("无效的城市");
             else if (temp_id == res.front())
                 ErrorMsg("与起点重复");
             else
             {
-                temp_res.push_back(temp_id - 1);
+                temp_res.push_back(temp_id);
             }
         }
     }
@@ -217,17 +219,17 @@ std::vector<City_id> Request(const IDMap &im) //预定行程
         cin >> id;
         if (cin.good())
         {
-            temp_id = std::stoi(id);
+            temp_id = std::stoi(id) - 1;
             if (std::find(res.begin(), res.end(), temp_id) != res.end())
             {
                 ErrorMsg("重复的城市");
             }
-            else if (temp_id > im.GetCityMapSize() || temp_id < 1)
+            else if (temp_id >= im.GetCityMapSize() || temp_id < 0)
                 ErrorMsg("无效的城市");
             else
             {
-                cout << "你选择的目的城市是：" << im.GetCityStr(temp_id - 1) << endl;
-                res.push_back(temp_id - 1);
+                cout << "你选择的目的城市是：" << im.GetCityStr(temp_id) << endl;
+                res.push_back(temp_id);
                 break;
             }
         }

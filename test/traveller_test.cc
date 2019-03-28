@@ -1,5 +1,8 @@
 #include "../src/traveller.h"
-#include <vector>
+#include "../src/io.h"
+#include "../src/path.h"
+#include<vector>
+
 int main()
 {
     CityGraph graph;
