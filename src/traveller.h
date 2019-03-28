@@ -101,7 +101,7 @@ void Traveller::DFSLeastMoney(const std::vector<std::vector<int>> &price_matrix,
 #endif                                             // TEST_GET_PATH
   if (par_warp.current == price_matrix.size() - 1) // 到达终点时判断递归深度(路径长度)是否符合要求
   {
-    if (par_warp.depth == price_matrix.size()) // 路径长度是否符合要求
+    if (par_warp.depth == price_matrix.size() - 1) // 路径长度是否符合要求
     {
       path = temp_path;
       par_warp.path_price = par_warp.temp_price;
@@ -126,7 +126,7 @@ void Traveller::DFSLeastMoney(const std::vector<std::vector<int>> &price_matrix,
       par_warp.isMeet[i] = true;
       path_save = temp_path;
       par_warp.temp_price += price_matrix[par_warp.current][i];
-      if (par_warp.temp_price < par_warp.path_price && (price_matrix.size() - par_warp.depth) * par_warp.min_price < par_warp.path_price - par_warp.temp_price)
+      if (par_warp.temp_price <= par_warp.path_price && (price_matrix.size() - 2 - par_warp.depth) * par_warp.min_price <= par_warp.path_price - par_warp.temp_price)
       {
         temp_path.push_back(i);
         par_warp.depth++, par_warp.current = i; // 进入更深层的递归时保存当前的状态
@@ -252,7 +252,7 @@ Path Traveller::GetPath(const CityGraph &graph, const std::vector<City_id> &plan
     }
 
     isMeet[0] = true;
-    DFSLeastMoneyParWarp par_warp = {0, path_price, isMeet, 0, 1, min_price};
+    DFSLeastMoneyParWarp par_warp = {0, path_price, isMeet, 0, 0, min_price};
     order_of_path.push_back(0);
     temp_path.push_back(0);
     DFSLeastMoney(price_matrix, order_of_path, temp_path, par_warp);

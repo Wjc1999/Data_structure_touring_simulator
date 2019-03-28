@@ -1,5 +1,8 @@
 #include "../src/traveller.h"
+#include "../src/io.h"
+#include "../src/path.h"
 #include<vector>
+
 int main()
 {
     CityGraph graph;
@@ -10,9 +13,10 @@ int main()
     plan.push_back(27);
     plan.push_back(16);
     Time ti;
-    t.Confirm(t.GetPath(graph,plan,LEAST_MONEY),ti);
+    Path path = t.GetPath(graph, plan, LEAST_MONEY);
+    Confirm(path, ti);
     t.ShowPath();
-    if(t.Savedata())std::cout<<"success!"<<std::endl;
+    if(t.SaveData())std::cout<<"success!"<<std::endl;
     else std::cout<<"干!"<<std::endl;
     /*Traveller t("test");
     if(t.Loaddata(0,graph))
