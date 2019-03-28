@@ -44,3 +44,4 @@ test/path_test
 *.bin
 test/main_test
 .vscode/ipch/9672b7358841a22a/MAIN_TEST.ipch
+*.ipch

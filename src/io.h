@@ -17,6 +17,7 @@
 #include "user_type.h"
 #include "traveller.h"
 
+extern const std::string name_path;
 extern const int kCityNum;
 using std::cin;
 using std::cout;
@@ -31,8 +32,9 @@ int Menu(const IDMap &im);
 std::vector<City_id> Request(const IDMap &im);
 void ErrorMsg(const std::string &err_msg);
 inline void Status();
-inline void Mapsearch();
-inline int Namecheck(string s);
+inline void MapSearch();
+inline int NameCheck(string s);
+inline void Confirm(const Path &chosen_path, Time now);
 
 int Welcome() //欢迎界面
 {
@@ -54,34 +56,34 @@ int Welcome() //欢迎界面
         cin >> sorl;
         if (sorl == 'S' || sorl == 's')
         {
-            cout<<"请输入你想注册的账号：";
+            cout << "请输入你想注册的账号：";
             string name;
-            cin>>name;
-            while(Namecheck(name)!=-1)
+            cin >> name;
+            while (NameCheck(name) == -1)
             {
-                cout<<"该账号已被注册，请重新输入：";
+                cout << "该账号已被注册，请重新输入：";
                 cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(),'\n');
-                cin>>name;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cin >> name;
             }
-            cout<<"你已注册账号："<<name<<endl;
+            cout << "你已注册账号：" << name << endl;
             return -1;
         }
         else if (sorl == 'l' || sorl == 'L')
         {
-            cout<<"请输入你的账号：";
+            cout << "请输入你的账号：";
             string name;
-            cin>>name;
-            while(Namecheck(name)==-1)
+            cin >> name;
+            while (NameCheck(name) == -1)
             {
-                cout<<"输入账号有误，请重新输入：";
+                cout << "输入账号有误，请重新输入：";
                 cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(),'\n');
-                cin>>name;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cin >> name;
             }
             return Namecheck(name);
         }
-        else if(sorl=='q'||sorl=='Q')
+        else if (sorl == 'q' || sorl == 'Q')
         {
             exit(0);
         }
@@ -130,7 +132,7 @@ int Menu(const IDMap &im, Traveller &traveller) //功能菜单  返回一个操�
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             return num - '0';
         }
-        else if(num=='q'||num=='Q')
+        else if (num == 'q' || num == 'Q')
         {
             exit(0);
         }
@@ -189,13 +191,7 @@ std::vector<City_id> Request(const IDMap &im) //预定行程
         {
             if (id == "q")
             {
-                if (temp_res.size())
-                    break;
-                else
-                {
-                    ErrorMsg("无有效输入");
-                    continue;
-                }
+                break;
             }
 
             temp_id = std::stoi(id);
@@ -249,29 +245,51 @@ void ErrorMsg(const string &err_msg)
     cout << err_msg << endl;
 }
 
-inline void Mapsearch()
+inline void MapSearch()
 {
     //citygraph.()//关于图的输出
 }
 
-inline int Namecheck(string s)
+inline int NameCheck(string id)
 {
-    vector<string> namelist;
-    std::ifstream stream(namepath);
-    if (stream.is_open())
+    std::vector<string> namelist;
+    std::ifstream in_stream(name_path);
+    if (in_stream.is_open())
     {
         int cnt = 0;
         string temp;
-        while (getline(stream, temp))
+        while (getline(in_stream, temp))
         {
-            if (temp == s)
+            if (temp == id)
             {
                 return cnt;
             }
             cnt++;
         }
-        return -1;
     }
     return -1;
 }
+
+inline bool PathConfirm(const Path &chosen_path, Time now)
+{
+    char option;
+    std::cout << "是否选择该条路线?[Y/N]" << std::endl;
+    /*if(now,init_time_)
+  {
+    state_ = OFF
+  }  ***这里做一个当前时间和出发时间的判断*/
+    while (1)
+    {
+        std::cin >> option;
+        if (option == 'Y')
+            return true;
+        else if (option == 'N')
+            return false;
+        else
+        {
+            ErrorMsg("无效的输入");
+        }
+    }
+}
+
 #endif //SRC_IO
