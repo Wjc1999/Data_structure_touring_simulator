@@ -1,66 +1,79 @@
 #ifndef SRC_IO
 #define SRC_IO
-#include<iostream>
-#include<limits>
-#include"id_map.h"
 
-const int kCityNum = 31;
+#include <cctype>
+
+#include <iostream>
+#include <limits>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <set>
+#include <algorithm>
+#include <iterator>
+
+#include "id_map.h"
+#include "user_type.h"
+#include "traveller.h"
+
+extern const int kCityNum;
 using std::cin;
 using std::cout;
 using std::endl;
 using std::numeric_limits;
 using std::streamsize;
+using std::string;
 
-inline void Welcome();
-inline void Menu(const IDMap &im);
-inline void Request(const IDMap &im);
+void Welcome();
+int Menu(const IDMap &im);
+std::vector<City_id> Request(const IDMap &im);
+void ErrorMsg(const std::string &err_msg);
 inline void Status();
 inline void Mapsearch();
 
-
-inline void Welcome() //欢迎界面
+void Welcome() //欢迎界面
 {
-    cout<<"|----------------------------------------------|"<<endl;
-    cout<<endl;
-    cout<<"|                                              |"<<endl;
-    cout<<endl;
-    cout<<"|                   Welcome!                   |"<<endl;
-    cout<<endl;
-    cout<<"|                                              |"<<endl;
-    cout<<endl;
-    cout<<"|----------------------------------------------|"<<endl;
-    cout<<endl;
-    cout<<"选择注册还是已有账号登陆？"<<endl;
-    cout<<"注册：S           登陆：L"<<endl;
+    cout << "|----------------------------------------------|" << endl;
+    cout << endl;
+    cout << "|                                              |" << endl;
+    cout << endl;
+    cout << "|                   Welcome!                   |" << endl;
+    cout << endl;
+    cout << "|                                              |" << endl;
+    cout << endl;
+    cout << "|----------------------------------------------|" << endl;
+    cout << endl;
+    cout << "选择注册还是已有账号登陆？" << endl;
+    cout << "注册：S           登陆：L" << endl;
     char sorl;
-    while(1)
+    while (1)
     {
-        cin>>sorl;
-        if(sorl=='S'||sorl=='s')
+        cin >> sorl;
+        if (sorl == 'S' || sorl == 's')
         {
 
-            cout<<"你获得了一个账号！"<<endl;
+            cout << "你获得了一个账号！" << endl;
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             break;
         }
-        else if(sorl=='l'||sorl=='L')
+        else if (sorl == 'l' || sorl == 'L')
         {
-            cout<<"请输入你的id："<<endl;
+            cout << "请输入你的id：" << endl;
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             break;
         }
         else
         {
-            cout<<"请重新输入：";
+            cout << "请重新输入：";
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
     }
 }
 
-inline void Menu(const IDMap &im) //功能菜单
+int Menu(const IDMap &im, Traveller &traveller) //功能菜单  返回一个操作代码
 {
     cout << "输入对应数字获取功能：" << endl;
     cout << "1、预定行程" << endl;
@@ -68,58 +81,145 @@ inline void Menu(const IDMap &im) //功能菜单
     cout << "3、路线查询" << endl;
     cout << "……" << endl;
     char num;
-    while(1)
+    std::vector<City_id> plan;
+    while (cin >> num)
     {
-        cin>>num;
-        if(num=='1')
+        if (num == '1')
         {
-            cout<<"预定行程"<<endl;
+            cout << "预定行程" << endl;
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(),'\n');
-            Request(im);
-            break;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            plan = Request(im);
+            std::for_each(plan.cbegin(), plan.cend(), [](City_id id) { cout << id << endl; });
+            traveller.set_plan(plan);
+            // 输入旅行策略
+            return num - '0';
         }
-        else if(num=='2')
+        else if (num == '2')
         {
-            cout<<"状态查询"<<endl;
+            cout << "状态查询" << endl;
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(),'\n');
-            break;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return num - '0';
         }
-        else if(num=='3')
+        else if (num == '3')
         {
-            cout<<"路线查询"<<endl;
+            cout << "路线查询" << endl;
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(),'\n');
-            break;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return num - '0';
         }
         else
         {
-            cout<<"请重新输入：";
+            cout << "请重新输入：";
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
     }
 }
 
-inline void Request(const IDMap &im) //预定行程
+std::vector<City_id> Request(const IDMap &im) //预定行程    
+// TODO : 判断输入是否为数字
 {
+    std::vector<City_id> temp_res;
+    std::vector<City_id> res;
+    std::string id;
+    City_id temp_id;
+
     cout << "当前支持的城市有：" << endl;
-    for(int i=0;i<kCityNum;i++)
+    for (int i = 0; i < im.GetCityMapSize(); i++)
     {
-        cout<<i+1<<":"<<im.GetCityStr(i)<<endl;
+        cout << i + 1 << " : " << im.GetCityStr(i) << endl;
     }
+
     cout << "请输入您的当前城市：" << endl;
-    //read();//读取数据
-    cout << "请输入您的目的城市：" << endl;
-    //read();
+    while (1)
+    {
+        if (!cin.good())
+            cin.clear();
+        cin >> id;
+        if (cin.good())
+        {
+            temp_id = std::stoi(id);
+            if (temp_id < im.GetCityMapSize() + 1 || temp_id < 1)
+            {
+                res.push_back(std::stoi(id) - 1);
+                break;
+            }
+            else
+            {
+                ErrorMsg("无效的输入");
+            }
+        }
+    }
+
     cout << "请输入您希望经过的城市(没有可填无)：" << endl;
-    //read();
+    while (1)
+    {
+        if (!cin.good())
+            cin.clear();
+        cin >> id;
+        if (cin.good())
+        {
+            if (id == "q")
+            {
+                if (temp_res.size())
+                    break;
+                else
+                {
+                    ErrorMsg("无有效输入");
+                    continue;
+                }
+            }
+            
+            temp_id = std::stoi(id);
+            if (temp_id > im.GetCityMapSize() || temp_id < 1)
+                ErrorMsg("无效的城市");
+            else if (temp_id == res.front())
+                ErrorMsg("与起点重复");
+            else
+            {
+                temp_res.push_back(temp_id - 1);
+            }
+        }
+    }
+    std::sort(temp_res.begin(), temp_res.end());
+    auto unique_end = unique(temp_res.begin(), temp_res.end());
+    std::copy(temp_res.begin(), unique_end, std::back_inserter(res));
+
+    cout << "请输入您的目的城市：" << endl;
+    while (1)
+    {
+        if (!cin.good())
+            cin.clear();
+        cin >> id;
+        if (cin.good())
+        {
+            temp_id = std::stoi(id);
+            if (std::find(res.begin(), res.end(), temp_id) != res.end())
+            {
+                ErrorMsg("重复的城市");
+            }
+            else if (temp_id > im.GetCityMapSize() || temp_id < 1)
+                ErrorMsg("无效的城市");
+            else
+            {
+                res.push_back(temp_id - 1);
+                break;
+            }
+        }
+    }
+    return res;
 }
 
 inline void Status()
 {
     //traveller.();//关于traveller的输出
+}
+
+void ErrorMsg(const std::string &err_msg)
+{
+    std::cout << err_msg << std::endl;
 }
 
 inline void Mapsearch()
