@@ -21,13 +21,17 @@ int main()
     int opcode = Menu(id_map, traveller);
     switch (opcode)
     {
-    case 1:
+    case SCHEDULE:
         path = traveller.GetPath(city_graph, LEAST_MONEY);
         path.Show();
         break;
-    case 2:
+    case INQUIRE_STATE:
+        //
         break;
-    case 3:
+    case INQUIRE_PATH:
+        //
+        break;
+    case EXIT:
         break;
     default:
         break;
