@@ -518,7 +518,7 @@ Path Traveller::GetPathLeastTime(const CityGraph &graph, const std::vector<City_
 Path Traveller::GetPathLTM(const CityGraph &graph, const std::vector<City_id> &plan, Time start_time, Time limit_time)
 {
   int limit = limit_time.hour_diff(start_time);
-  int leastmoney = 0;
+  int leastmoney = kMaxInt;
   Path path;
   Path temp;
   DFSLTM(graph, plan, path, temp, 0, leastmoney, limit);
@@ -527,25 +527,11 @@ Path Traveller::GetPathLTM(const CityGraph &graph, const std::vector<City_id> &p
 
 void Traveller::DFSLTM(const CityGraph &graph, const std::vector<City_id> &plan, Path &path, Path temp, int layer, int &leastmoney, const int limit)
 {
-  if (temp.GetTotalTime().GetLength() > limit)
-    return;
   if (layer == plan.size() - 1)
   {
-    if (!leastmoney)
-    {
       path = temp;
       leastmoney = path.GetTotalPrice();
-      //path.Show();
-      //std::cout<<leastmoney<<std::endl;
-    }
-    else if (temp.GetTotalPrice() < leastmoney)
-    {
-      path = temp;
-      leastmoney = path.GetTotalPrice();
-      //path.Show();
-      //std::cout<<leastmoney<<std::endl;
-    }
-    return;
+      return;
   }
   int i = plan.at(layer);
   int j = plan.at(layer + 1);
@@ -553,7 +539,8 @@ void Traveller::DFSLTM(const CityGraph &graph, const std::vector<City_id> &plan,
   {
     temp.Append(graph, i, j, k, 1);
     temp.FixTotalTime(graph,init_time_);
-    DFSLTM(graph, plan, path, temp, layer + 1, leastmoney, limit);
+    if (temp.GetTotalPrice() < leastmoney && temp.GetTotalTime().GetLength() <= limit)
+      DFSLTM(graph, plan, path, temp, layer + 1, leastmoney, limit);
     temp.Remove(graph);
   }
 }
