@@ -12,7 +12,7 @@ int depth_counter = 0;
 int main(){
     CityGraph graph;
     Traveller me;
-    vector<City_id> plan{1, 9};
+    vector<City_id> plan{1, 30};
     // plan.push_back(12);
     // plan.push_back(4);
     // plan.push_back(23);
