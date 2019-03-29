@@ -18,13 +18,14 @@
 #include "city_graph.h"
 
 const int kMaxInt = INT32_MAX; // 0x7fffffff
+const std::string save_path = "../data/traveller_data.txt";
+const std::string name_path = "../data/namelist.txt";
+
 #ifdef TEST_GET_PATH
 extern int call_counter_time;
 extern int call_counter_money;
 extern int depth_counter;
 #endif // TEST_GET_PATH
-const std::string save_path = "../data/traveller_data.txt";
-const std::string name_path = "../data/namelist.txt";
 
 struct DFSLeastMoneyParWarp
 {
@@ -49,7 +50,7 @@ class Traveller // 旅行者
 {
 public:
   Traveller() = default;
-  Traveller(std::string id);
+  Traveller(std::string id) : id_(id){};
 
   // 显示旅客id
   const std::string &ShowID() const
@@ -79,13 +80,9 @@ public:
 
   void append_plan(City_id city) { travelling_plan_.push_back(city); }
 
-  void set_path(Path &path)
-  {
-    touring_path_ = path;
-    position_pathnode_ = -1;
-  }
-
   void UpdateState(const CityGraph &graph, Time now);
+
+  void set_path(Path &path) { touring_path_ = path; }
 
 private:
   std::string id_ = "";                  // 旅客id
@@ -104,11 +101,6 @@ private:
   void DFSLeastMoney(const std::vector<std::vector<int>> &price_matrix, std::vector<int> &path, std::vector<int> &temp_path, DFSLeastMoneyParWarp &par_warp);
   void DFSLTM(const CityGraph &graph, const std::vector<City_id> &plan, Path &path, Path temp, int layer, int &leastmoney, const int limit);
 };
-
-Traveller::Traveller(std::string id)
-{
-  id_ = id;
-}
 
 void Traveller::DFSLeastMoney(const std::vector<std::vector<int>> &price_matrix, std::vector<int> &path, std::vector<int> &temp_path, DFSLeastMoneyParWarp &par_warp)
 {
@@ -526,7 +518,7 @@ Path Traveller::GetPathLeastTime(const CityGraph &graph, const std::vector<City_
 Path Traveller::GetPathLTM(const CityGraph &graph, const std::vector<City_id> &plan, Time start_time, Time limit_time)
 {
   int limit = limit_time.hour_diff(start_time);
-  int leastmoney = 0;
+  int leastmoney = kMaxInt;
   Path path;
   Path temp;
   DFSLTM(graph, plan, path, temp, 0, leastmoney, limit);
@@ -535,25 +527,11 @@ Path Traveller::GetPathLTM(const CityGraph &graph, const std::vector<City_id> &p
 
 void Traveller::DFSLTM(const CityGraph &graph, const std::vector<City_id> &plan, Path &path, Path temp, int layer, int &leastmoney, const int limit)
 {
-  if (temp.GetTotalTime().GetLength() > limit)
-    return;
   if (layer == plan.size() - 1)
   {
-    if (!leastmoney)
-    {
       path = temp;
       leastmoney = path.GetTotalPrice();
-      //path.Show();
-      //std::cout<<leastmoney<<std::endl;
-    }
-    else if (temp.GetTotalPrice() < leastmoney)
-    {
-      path = temp;
-      leastmoney = path.GetTotalPrice();
-      //path.Show();
-      //std::cout<<leastmoney<<std::endl;
-    }
-    return;
+      return;
   }
   int i = plan.at(layer);
   int j = plan.at(layer + 1);
@@ -561,68 +539,90 @@ void Traveller::DFSLTM(const CityGraph &graph, const std::vector<City_id> &plan,
   {
     temp.Append(graph, i, j, k, 1);
     temp.FixTotalTime(graph,init_time_);
-    DFSLTM(graph, plan, path, temp, layer + 1, leastmoney, limit);
+    if (temp.GetTotalPrice() < leastmoney && temp.GetTotalTime().GetLength() <= limit)
+      DFSLTM(graph, plan, path, temp, layer + 1, leastmoney, limit);
     temp.Remove(graph);
   }
 }
 
 bool Traveller::SaveData()
 {
-  std::ofstream out_stream(save_path, std::ofstream::app);
-  //int row_of_id = NameCheck(id_);
-  //if (row_of_id == -1)
-  //{
-  //}
-  if (out_stream.is_open())
+  std::vector<std::string> lines;
+  std::string temp;
+  int start_index;
+
+  std::ifstream fis(save_path);
+  if (fis)
   {
-    out_stream << id_ << std::endl; // 第一行,记录id
+    while (getline(fis, temp))
+      lines.push_back(temp);
 
-    // if (state_ == STAY)
-    //   out_stream << "0" << std::endl;
-    // else if (state_ == OFF)
-    //   out_stream << "1" << std::endl;
-    out_stream << state_ << std::endl; // 第二行,记录旅客状态
+    for (start_index = 0; start_index != lines.size(); start_index++)
+      if (lines[start_index] == id_)
+        break;
 
-    // if (strategy_ == LEAST_MONEY)
-    //   out_stream << "0" << std::endl;
-    // else if (strategy_ == LEAST_TIME)
-    //   out_stream << "1" << std::endl;
-    // else if (strategy_ == LIMIT_TIME)
-    //   out_stream << "2" << std::endl;
-    out_stream << strategy_ << std::endl; // 第三行,记录旅行策略
-
-    for (int i = 0; i < travelling_plan_.size(); i++) // 第四行,记录旅行计划
+    if (start_index != lines.size())
     {
-      out_stream << travelling_plan_.at(i) << " ";
+      int i = start_index + 1;
+
+      lines[i++] = std::to_string(state_);
+      lines[i++] = std::to_string(strategy_);
+
+      temp = "";
+      for (int j = 0; j < travelling_plan_.size(); j++)
+        temp += std::to_string(travelling_plan_.at(j)) + " ";
+      lines[i++] = temp;
+
+      temp = "";
+      for (auto j = touring_path_.cbegin(); j != touring_path_.cend(); j++)
+        temp += std::to_string((*j).former_city) + " " + std::to_string((*j).current_city) + " " + std::to_string((*j).kth_way) + " ";
+      lines[i++] = temp;
+
+      lines[i++] = std::to_string(next_city_hour_left_);
+      lines[i++] = std::to_string(position_pathnode_);
     }
-    out_stream << std::endl;
-
-    for (auto i = touring_path_.cbegin(); i != touring_path_.cend(); i++) // 第五行,记录旅行路径
+    else
     {
-      out_stream << (*i).former_city << " " << (*i).current_city << " " << (*i).kth_way << " ";
-    }
-    out_stream << std::endl;
+      lines.push_back(id_);
+      lines.push_back(std::to_string(state_));
+      lines.push_back(std::to_string(strategy_));
 
-    out_stream << next_city_hour_left_ << std::endl; //第六行
+      temp = "";
+      for (int j = 0; j < travelling_plan_.size(); j++)
+        temp += std::to_string(travelling_plan_.at(j)) + " ";
+      lines.push_back(temp);
 
-    out_stream << position_pathnode_ << std::endl; //第七行
+      temp = "";
+      for (auto j = touring_path_.cbegin(); j != touring_path_.cend(); j++)
+        temp += std::to_string((*j).former_city) + " " + std::to_string((*j).current_city) + " " + std::to_string((*j).kth_way) + " ";
+      lines.push_back(temp);
 
-    out_stream.close();
+      lines.push_back(std::to_string(next_city_hour_left_));
+      lines.push_back(std::to_string(position_pathnode_));
 
-    out_stream.open(name_path, std::ofstream::app);
-    if (out_stream.is_open())
-    {
-      out_stream << id_ << std::endl;
-      return true;
+      std::ofstream name_os(name_path, std::ofstream::app);
+      if (name_os)
+        name_os << id_ << std::endl;
+      else
+        return false;
     }
   }
-  return false;
+  else
+    return false;
+
+  std::ofstream fos(save_path);
+  if (fos)
+    std::for_each(lines.begin(), lines.end(), [&fos](const std::string &line) { fos << line << std::endl; });
+  else
+    return false;
+  return true;
 }
 
 bool Traveller::LoadData(int cnt, const CityGraph &graph)
 {
   if (cnt == -1)
     return true;
+
   std::ifstream in_stream(save_path);
   int state_temp;
   int strategy_temp;
@@ -641,12 +641,14 @@ bool Traveller::LoadData(int cnt, const CityGraph &graph)
       state_ = STAY;
     else if (state_temp == 1)
       state_ = OFF;
+
     if (strategy_temp == 0)
       strategy_ = LEAST_MONEY;
     else if (strategy_temp == 1)
       strategy_ = LEAST_TIME;
     else if (strategy_temp == 2)
       strategy_ = LIMIT_TIME;
+
     //std::cout << state_ << std::endl;    /////////////
     //std::cout << strategy_ << std::endl; ///////////
     getline(in_stream, temp); //结束前一行

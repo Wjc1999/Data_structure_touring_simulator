@@ -17,7 +17,7 @@ int main()
     CityGraph city_graph;
     Traveller traveller;
     Path path;
-    traveller.Loaddata(Welcome(),city_graph);
+    traveller.LoadData(Welcome(),city_graph);
     int opcode = Menu(id_map, traveller);
     switch (opcode)
     {
