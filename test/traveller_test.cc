@@ -20,6 +20,7 @@ int main()
         std::cout << "success!" << std::endl;
     else
         std::cout << "干!" << std::endl;
+        
     /*Traveller t("test2");
     std::vector<int> plan;
     plan.push_back(30);
@@ -33,6 +34,7 @@ int main()
         std::cout << "success!" << std::endl;
     else
         std::cout << "干!" << std::endl;*/
+
     /*Traveller t("test");
     if(t.LoadData(1,graph))
     {

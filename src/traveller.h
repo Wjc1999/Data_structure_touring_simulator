@@ -83,7 +83,7 @@ private:
   int next_city_hour_left_ = 0;          // 到下一个城市的剩余多少小时
   int position_pathnode_ = -2;           // 当前在第k个pathnode上, -2代表没有出行计划，-1代表有出行计划但没到出发时间
   //std::vector<PathNode>::iterator next_city_; // 路径中的下一个城市
-  Time init_time_; // 最开始时的时间
+  Time init_time_;                       // 最开始时的时间
   Path GetPathLeastMoney(const CityGraph &graph, const std::vector<City_id> &plan);
   Path GetPathLeastTime(const CityGraph &graph, const std::vector<City_id> &plan, Time now);
   Path GetPathLTM(const CityGraph &graph, const std::vector<City_id> &plan, Time now, Time limit);
@@ -504,8 +504,14 @@ Path Traveller::GetPathLeastTime(const CityGraph &graph, const std::vector<City_
   return path;
 }
 
-Path Traveller::GetPathLTM(const CityGraph &graph, const std::vector<City_id> &plan, Time now, Time limit)
+Path Traveller::GetPathLTM(const CityGraph &graph, const std::vector<City_id> &plan, Time start_time, Time limit_time)
 {
+  int limit = limit_time.hour_diff(start_time);
+  int leastmoney;
+  for(int i=0;i<plan.size()-1;i++)
+  {
+    
+  }
 }
 
 bool Traveller::SaveData()
