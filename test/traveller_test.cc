@@ -1,29 +1,42 @@
-#include "../src/traveller.h"
-#include "../src/io.h"
-#include "../src/path.h"
+#ifndef TEST_TRAVELLER_SAVE
+#define TEST_TRAVELLER_SAVE
+
 #include <vector>
+#include <iostream>
+#include <string>
+
+#include "../src/path.h"
+#include "../src/io.h"
+#include "../src/traveller.h"
 
 int main()
 {
     CityGraph graph;
     IDMap idmap;
-    Traveller t("test");
+    std::string buf;
+    std::cin >> buf;
+    Traveller t(buf);
     std::vector<int> plan;
-    plan.push_back(30);
+    Time ti;
+
+    plan.push_back(1);
     plan.push_back(27);
     plan.push_back(16);
-    Time ti;
+
     Path path = t.GetPath(graph, plan, LEAST_MONEY);
     path.Show();
+
     if (PathConfirm(path, ti))
     {
         t.set_path(path);
+        //t.ShowPath();
+
+        if (t.SaveData())
+            std::cout << "success!" << std::endl;
+        else
+            std::cout << "干!" << std::endl;
     }
-    t.ShowPath();
-    if (t.SaveData())
-        std::cout << "success!" << std::endl;
-    else
-        std::cout << "干!" << std::endl;
+
     /*Traveller t("test2");
     std::vector<int> plan;
     plan.push_back(30);
@@ -46,3 +59,4 @@ int main()
     else std::cout<<"干!"<<std::endl;*/
     return 0;
 }
+#endif // TEST_TRAVELLER_SAVE

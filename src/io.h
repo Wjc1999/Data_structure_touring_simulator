@@ -13,9 +13,10 @@
 #include <iterator>
 #include <fstream>
 
+#include "traveller.h"
 #include "id_map.h"
 #include "user_type.h"
-#include "traveller.h"
+#include "path.h"
 
 extern const std::string name_path;
 extern const int kCityNum;
@@ -28,7 +29,7 @@ using std::string;
 using std::vector;
 
 int Welcome();
-int Menu(const IDMap &im);
+int Menu(const IDMap &im, Traveller &traveller);
 std::vector<City_id> Request(const IDMap &im);
 void ErrorMsg(const std::string &err_msg);
 inline void Status();
