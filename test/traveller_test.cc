@@ -1,13 +1,21 @@
-#include "../src/traveller.h"
-#include "../src/io.h"
-#include "../src/path.h"
+#ifndef TEST_TRAVELLER_SAVE
+#define TEST_TRAVELLER_SAVE
+
 #include <vector>
+#include <iostream>
+#include <string>
+
+#include "../src/path.h"
+#include "../src/io.h"
+#include "../src/traveller.h"
 
 int main()
 {
     CityGraph graph;
     IDMap idmap;
-    Traveller t("test");
+    std::string buf;
+    std::cin >> buf;
+    Traveller t(buf);
     std::vector<int> plan;
     plan.push_back(29);
     plan.push_back(27);
@@ -49,3 +57,4 @@ int main()
     else std::cout<<"干!"<<std::endl;*/
     return 0;
 }
+#endif // TEST_TRAVELLER_SAVE
