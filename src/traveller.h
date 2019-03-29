@@ -49,14 +49,17 @@ class Traveller // 旅行者
 public:
   Traveller() = default;
   Traveller(std::string id);
+
   // 显示旅客id
   const std::string &ShowID() const
   {
     std::cout << id_ << std::endl;
     return id_;
   };
-  // 显示旅客路径
+
+  // 打印旅客路径
   void ShowPath() const { touring_path_.Show(); }
+
   // 为旅客获取一条路径**关键算法**
   Path GetPath(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time t = Time(), Time limit_time = Time());
   Path GetPath(const CityGraph &graph, Strategy s, Time t = Time(), Time limit_time = Time())
@@ -67,10 +70,20 @@ public:
   // 设置旅行路径
   //void set_path(Path path);
   bool SaveData();
+
   bool LoadData(int cnt, const CityGraph &graph);
+
   void set_plan(const std::vector<City_id> &plan) { travelling_plan_ = plan; }
   void set_plan(std::initializer_list<City_id> il) { travelling_plan_ = std::vector<City_id>(il); }
+
   void append_plan(City_id city) { travelling_plan_.push_back(city); }
+
+  void set_path(Path &path)
+  {
+    touring_path_ = path;
+    position_pathnode_ = -1;
+  }
+
   void UpdateState(const CityGraph &graph, Time now);
 
 private:
@@ -505,6 +518,11 @@ Path Traveller::GetPathLeastTime(const CityGraph &graph, const std::vector<City_
 bool Traveller::SaveData()
 {
   std::ofstream out_stream(save_path, std::ofstream::app);
+  int row_of_id = NameCheck(id_);
+  if ( row_of_id == -1)
+  {
+    
+  }
   if (out_stream.is_open())
   {
     out_stream << id_ << std::endl; // 第一行,记录id

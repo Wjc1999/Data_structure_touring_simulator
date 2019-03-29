@@ -1,23 +1,29 @@
 #include "../src/traveller.h"
 #include "../src/io.h"
 #include "../src/path.h"
-#include<vector>
+#include <vector>
 
 int main()
 {
     CityGraph graph;
     IDMap idmap;
     Traveller t("test");
-    std::vector <int> plan;
+    std::vector<int> plan;
     plan.push_back(30);
     plan.push_back(27);
     plan.push_back(16);
     Time ti;
     Path path = t.GetPath(graph, plan, LEAST_MONEY);
-    Confirm(path, ti);
+    path.Show();
+    if (PathConfirm(path, ti))
+    {
+        t.set_path(path);
+    }
     t.ShowPath();
-    if(t.SaveData())std::cout<<"success!"<<std::endl;
-    else std::cout<<"干!"<<std::endl;
+    if (t.SaveData())
+        std::cout << "success!" << std::endl;
+    else
+        std::cout << "干!" << std::endl;
     /*Traveller t("test");
     if(t.Loaddata(0,graph))
     {

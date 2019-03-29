@@ -17,10 +17,16 @@ public:
   Time &add_time(const Time &t);
   Time &add_time(const int hour, const int day = 0);
 
+  // 将当前时间与给定时间相减,返回相减后时间的引用(改变了使用此方法的对象)
+  Time &minus_time(const Time &t);
+  Time &minus_time(const int hour, const int day = 0);
+
   // 获取当前时间与给定时间的差值,返回值为两者相差的小时数(this - t)
   int hour_diff(const Time &) const;
 
+  // 返回当前时间对应的小时数
   int to_hour() const { return day_ * 24 + hour_; }
+
   int GetDay() const { return day_; }
   int GetHour() const { return hour_; }
   void set_hour(int hour) { hour_ = hour; }
@@ -74,6 +80,16 @@ inline int Time::hour_diff(const Time &t) const
 {
   Time temp = time_diff(t);
   return temp.hour_ + temp.day_ * 24;
+}
+
+inline Time &Time::minus_time(const Time &t)
+{
+  return add_time(-t.hour_, -t.day_);
+}
+
+inline Time &Time::minus_time(const int hour, const int day)
+{
+  return add_time(-hour, -day);
 }
 
 #endif // SRC_TIME

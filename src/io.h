@@ -33,10 +33,11 @@ std::vector<City_id> Request(const IDMap &im);
 void ErrorMsg(const std::string &err_msg);
 inline void Status();
 inline void MapSearch();
-inline int NameCheck(string s);
-inline void Confirm(const Path &chosen_path, Time now);
+inline int NameCheck(const string &id);
+inline bool PathConfirm(const Path &chosen_path, Time now);
 
-int Welcome() //欢迎界面
+//欢迎界面
+int Welcome()
 {
     cout << "|----------------------------------------------|" << endl;
     cout << endl;
@@ -96,7 +97,8 @@ int Welcome() //欢迎界面
     }
 }
 
-int Menu(const IDMap &im, Traveller &traveller) //功能菜单  返回一个操作代码
+//功能菜单,返回一个操作代码
+int Menu(const IDMap &im, Traveller &traveller)
 {
     cout << "输入对应数字获取功能：" << endl
          << "1、预定行程" << endl
@@ -117,7 +119,7 @@ int Menu(const IDMap &im, Traveller &traveller) //功能菜单  返回一个操�
             plan = Request(im);
             // std::for_each(plan.cbegin(), plan.cend(), [](City_id id) { cout << id << endl; });
             traveller.set_plan(plan);
-            // 输入旅行策略
+            // TODO : 输入旅行策略
             return operate_code;
         }
         else if (operate_code == INQUIRE_STATE)
@@ -147,8 +149,9 @@ int Menu(const IDMap &im, Traveller &traveller) //功能菜单  返回一个操�
     }
 }
 
-std::vector<City_id> Request(const IDMap &im) //预定行程
+//预定行程
 // TODO : 判断输入是否为数字
+std::vector<City_id> Request(const IDMap &im) 
 {
     std::vector<City_id> temp_res;
     std::vector<City_id> res;
@@ -242,6 +245,8 @@ inline void Status()
     //traveller.();//关于traveller的输出
 }
 
+// 打印错误信息
+// TODO : 同时输出至日志
 void ErrorMsg(const string &err_msg)
 {
     cout << err_msg << endl;
@@ -252,9 +257,10 @@ inline void MapSearch()
     //citygraph.()//关于图的输出
 }
 
-inline int NameCheck(string id)
+// 返回id所在的行数,若id不存在则返回-1
+inline int NameCheck(const string &id)
 {
-    std::vector<string> namelist;
+    std::vector<string> namelist;   // unused parameter
     std::ifstream in_stream(name_path);
     if (in_stream.is_open())
     {
