@@ -29,6 +29,12 @@ public:
 
   int GetDay() const { return day_; }
   int GetHour() const { return hour_; }
+  void Reset()
+  {
+    hour_ = 0;
+    day_ = 0;
+  }
+  int GetLength() const{ return hour_ + day_ * 24; }
   void set_hour(int hour) { hour_ = hour; }
 
 #ifdef TEST_TIME

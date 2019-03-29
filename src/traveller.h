@@ -13,6 +13,7 @@
 
 #include "user_type.h"
 #include "path.h"
+//#include "io.h"
 #include "time_format.h"
 #include "city_graph.h"
 
@@ -98,6 +99,7 @@ private:
   Path GetPathLTM(const CityGraph &graph, const std::vector<City_id> &plan, Time now, Time limit);
   void DFSLeastTime(const CityGraph &graph, const std::vector<City_id> &plan, Path &path, Path &temp_path, DFSLeastTimeParWarp &par_warp);
   void DFSLeastMoney(const std::vector<std::vector<int>> &price_matrix, std::vector<int> &path, std::vector<int> &temp_path, DFSLeastMoneyParWarp &par_warp);
+  void DFSLTM(const CityGraph &graph, const std::vector<City_id> &plan, Path &path, Path temp, int layer, int &leastmoney, const int limit);
 };
 
 void Traveller::DFSLeastMoney(const std::vector<std::vector<int>> &price_matrix, std::vector<int> &path, std::vector<int> &temp_path, DFSLeastMoneyParWarp &par_warp)
@@ -294,9 +296,14 @@ Path Traveller::GetPath(const CityGraph &graph, const std::vector<City_id> &plan
     }
     return res;
   }
-  else // if (s == LIMIT_TIME)
+  else if (s == LIMIT_TIME)
   {
-    // TODO
+    Path a = GetPathLTM(graph, plan, start_time, limit_time);
+    if(a.GetLen()==0)
+    {
+      std::cout<<"未找到符合要求路线"<<std::endl;
+    }
+    return a;
   }
 }
 
@@ -508,8 +515,47 @@ Path Traveller::GetPathLeastTime(const CityGraph &graph, const std::vector<City_
   return path;
 }
 
-Path Traveller::GetPathLTM(const CityGraph &graph, const std::vector<City_id> &plan, Time now, Time limit)
+Path Traveller::GetPathLTM(const CityGraph &graph, const std::vector<City_id> &plan, Time start_time, Time limit_time)
 {
+  int limit = limit_time.hour_diff(start_time);
+  int leastmoney = 0;
+  Path path;
+  Path temp;
+  DFSLTM(graph, plan, path, temp, 0, leastmoney, limit);
+  return path;
+}
+
+void Traveller::DFSLTM(const CityGraph &graph, const std::vector<City_id> &plan, Path &path, Path temp, int layer, int &leastmoney, const int limit)
+{
+  if (temp.GetTotalTime().GetLength() > limit)
+    return;
+  if (layer == plan.size() - 1)
+  {
+    if (!leastmoney)
+    {
+      path = temp;
+      leastmoney = path.GetTotalPrice();
+      //path.Show();
+      //std::cout<<leastmoney<<std::endl;
+    }
+    else if (temp.GetTotalPrice() < leastmoney)
+    {
+      path = temp;
+      leastmoney = path.GetTotalPrice();
+      //path.Show();
+      //std::cout<<leastmoney<<std::endl;
+    }
+    return;
+  }
+  int i = plan.at(layer);
+  int j = plan.at(layer + 1);
+  for (int k = 0; k < graph.Getsize(i, j); k++)
+  {
+    temp.Append(graph, i, j, k, 1);
+    temp.FixTotalTime(graph,init_time_);
+    DFSLTM(graph, plan, path, temp, layer + 1, leastmoney, limit);
+    temp.Remove(graph);
+  }
 }
 
 bool Traveller::SaveData()
