@@ -33,7 +33,7 @@ public:
   Path() = default;
 
   // 添加一个PathNode到路径首个元素之前,并且更改总价与总时间、长度
-  void Append(const CityGraph &graph, City_id former_city, City_id current_city, int k); //通过ijk添加一个节点
+  void Append(const CityGraph &graph, City_id former_city, City_id current_city, int k, int back=0); //通过ijk添加一个节点
   void Append(const CityGraph &graph, City_id i, City_id j, int k, Time wait_time);
   Path &Append(const Path &path);
 
@@ -89,14 +89,15 @@ private:
   Time total_timecost_;         //总时间
 };
 
-inline void Path::Append(const CityGraph &graph, City_id i, City_id j, int k)
+inline void Path::Append(const CityGraph &graph, City_id i, City_id j, int k, int back=0)
 { //用ijk给每一种方式编号，通过ijk获得所有数据。
   //std::cout << i << '\t' << j << '\t' << k << std::endl;
   PathNode temp = {i, j, k};
   if (!(len_++))
     end_city_ = j;
   start_city_ = i;
-  cities_.push_front(temp);
+  if(back)cities_.push_back(temp);
+  else cities_.push_front(temp);
   total_price_ += graph.GetRoute(i, j, k).price;
   // total_timecost_.add_time(graph.GetRoute(i, j, k).end_time.time_diff(graph.GetRoute(i, j, k).start_time));  // 只计算路途上的时间,不计等候时间
 }
