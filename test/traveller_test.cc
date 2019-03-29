@@ -1,7 +1,7 @@
 #include "../src/traveller.h"
 #include "../src/io.h"
 #include "../src/path.h"
-#include<vector>
+#include <vector>
 
 int main()
 {
@@ -13,8 +13,12 @@ int main()
     plan.push_back(27);
     plan.push_back(16);
     Time ti;
-    Path a = t.GetPath(graph, plan, LEAST_MONEY, ti);
-    t.set_path(a);
+    Path path = t.GetPath(graph, plan, LEAST_MONEY);
+    path.Show();
+    if (PathConfirm(path, ti))
+    {
+        t.set_path(path);
+    }
     t.ShowPath();
     if (t.SaveData())
         std::cout << "success!" << std::endl;

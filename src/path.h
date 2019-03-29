@@ -31,29 +31,39 @@ class Path // 路径
 {
 public:
   Path() = default;
+
   // 添加一个PathNode到路径首个元素之前,并且更改总价与总时间、长度
   void Append(const CityGraph &graph, City_id former_city, City_id current_city, int k, int back=0); //通过ijk添加一个节点
   void Append(const CityGraph &graph, City_id i, City_id j, int k, Time wait_time);
   Path &Append(const Path &path);
+
   // 固定路径的出发与结束点
   void Fix();
+
   // 根据路径设置总时间
   void FixTotalTime(const CityGraph &graph, const Time &start_time = Time());
+
   //将cities向量反转
   void Reverse();
+
   //打印这条路径
   void Show() const;
+
   //获取路径长度
   int GetLen() const { return len_; }
+
   //获取路径总价
   int GetTotalPrice() const { return total_price_; }
+
   //获取总时间
   const Time &GetTotalTime() const { return total_timecost_; }
+
   // 返回指向路径第首个元素的迭代器
   std::deque<PathNode>::const_iterator cbegin() { return cities_.cbegin(); }
 
   // 返回指向路径尾后元素的迭代器
   std::deque<PathNode>::const_iterator cend() { return cities_.cend(); }
+
   //返回节点
   PathNode GetNode(int k){return cities_.at(k);}
 
