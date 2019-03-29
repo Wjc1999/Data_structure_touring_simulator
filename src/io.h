@@ -28,7 +28,7 @@ using std::string;
 using std::vector;
 
 int Welcome();
-int Menu(const IDMap &im);
+int Menu(const IDMap &im, Traveller &traveller);
 std::vector<City_id> Request(const IDMap &im);
 void ErrorMsg(const std::string &err_msg);
 inline void Status();

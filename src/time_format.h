@@ -34,6 +34,7 @@ public:
     hour_ = 0;
     day_ = 0;
   }
+  int GetLength() const{ return hour_ + day_ * 24; }
   void set_hour(int hour) { hour_ = hour; }
 
 #ifdef TEST_TIME

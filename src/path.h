@@ -33,7 +33,7 @@ public:
   Path() = default;
 
   // 添加一个PathNode到路径首个元素之前,并且更改总价与总时间、长度
-  void Append(const CityGraph &graph, City_id former_city, City_id current_city, int k, int back = 0); //通过ijk添加一个节点
+  void Append(const CityGraph &graph, City_id i, City_id j, int k, int back = 0); //通过ijk添加一个节点
   void Append(const CityGraph &graph, City_id i, City_id j, int k, Time wait_time);
   Path &Append(const Path &path);
   void Remove(const CityGraph &graph);
@@ -111,12 +111,16 @@ inline void Path::Remove(const CityGraph &graph)
     int j = cities_.at(len_).current_city;
     int k = cities_.at(len_).kth_way;
     total_price_ -= graph.GetRoute(i, j, k).price;
-
+    int fi = cities_.at(len_-1).former_city;
+    int fj = cities_.at(len_-1).current_city;
+    int fk = cities_.at(len_-1).kth_way;
+    Time temp = graph.GetRoute(i, j, k).end_time.time_diff(graph.GetRoute(fi,fj,fk).end_time);
+    total_timecost_.minus_time(temp);
     cities_.pop_back();
   }
 }
 
-inline void Path::Append(const CityGraph &graph, City_id i, City_id j, int k, int back = 0)
+inline void Path::Append(const CityGraph &graph, City_id i, City_id j, int k, int back)
 { //用ijk给每一种方式编号，通过ijk获得所有数据。
   //std::cout << i << '\t' << j << '\t' << k << std::endl;
   PathNode temp = {i, j, k};
