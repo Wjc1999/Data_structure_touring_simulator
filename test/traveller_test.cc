@@ -9,22 +9,23 @@ int main()
     IDMap idmap;
     Traveller t("test");
     std::vector<int> plan;
-    plan.push_back(30);
+    plan.push_back(29);
     plan.push_back(27);
     plan.push_back(16);
-    Time ti;
-    Path path = t.GetPath(graph, plan, LEAST_MONEY);
-    path.Show();
-    if (PathConfirm(path, ti))
+    Time now(1, 7);
+    Time limit(1, 17);
+    Path path = t.GetPath(graph, plan, LIMIT_TIME, now, limit);
+    /*path.Show();
+    if (PathConfirm(path, now))
     {
         t.set_path(path);
-    }
+    }*/
     t.ShowPath();
     if (t.SaveData())
         std::cout << "success!" << std::endl;
     else
         std::cout << "干!" << std::endl;
-        
+
     /*Traveller t("test2");
     std::vector<int> plan;
     plan.push_back(30);
