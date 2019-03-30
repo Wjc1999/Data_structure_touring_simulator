@@ -51,6 +51,7 @@ int main()
             PrintPath(city_graph, id_map, path);
             break;
         case SIMULATE:
+            traveller.InitState(city_graph);
             InitializeSimulator(traveller.get_init_time());
             Simulate(traveller, city_graph, id_map);
             break;
@@ -64,8 +65,6 @@ int main()
     return 0;
 }
 /*
-1
-2 3 4 2 2 3 4 5 6 2 3 5 6 4 2 1 35 2 q
-9
+
 */
 #endif // TEST_MAIN

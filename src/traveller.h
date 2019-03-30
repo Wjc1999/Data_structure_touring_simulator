@@ -68,7 +68,11 @@ public:
   }
 
   // 设置旅行路径
-  void set_path(Path &path) { touring_path_ = path, position_pathnode_ = -1; }
+  void set_path(Path &path)
+  {
+    touring_path_ = path;
+    position_pathnode_ = -1;
+  }
 
   // 打印旅客计划
   void PrintPlan() const
@@ -91,6 +95,8 @@ public:
   int get_position() const { return position_pathnode_; }
 
   int get_left_hour() const { return next_city_hour_left_; }
+
+  void InitState(const CityGraph &graph);
 
   void UpdateState(const CityGraph &graph, Time now);
   TravellerState get_state() const { return state_; }
@@ -757,14 +763,17 @@ inline void Traveller::UpdateState(const CityGraph &graph, Time now)
         Route route = graph.GetRoute(node.former_city, node.current_city, node.kth_way);
         PathNode nodebefore = touring_path_.GetNode(position_pathnode_ - 1);
         Route preroute = graph.GetRoute(nodebefore.former_city, nodebefore.current_city, nodebefore.kth_way);
-        if (!route.start_time.hour_diff(preroute.end_time))
+        int diff_hour = route.start_time.hour_diff(Time(1, preroute.end_time.GetHour()));
+        if (diff_hour < 0)
+          diff_hour += 24;
+        if (!diff_hour)
         {
-          next_city_hour_left_ = route.start_time.hour_diff(route.end_time);
+          next_city_hour_left_ = route.end_time.hour_diff(route.start_time);
         }
         else
         {
           state_ = STAY;
-          next_city_hour_left_ = route.start_time.hour_diff(preroute.end_time);
+          next_city_hour_left_ = diff_hour;
         }
       }
     }
@@ -777,9 +786,9 @@ inline void Traveller::UpdateState(const CityGraph &graph, Time now)
     {
       if (next_city_hour_left_ == 1)
       {
-        int i = touring_path_.GetNode(position_pathnode_ + 1).former_city;
-        int j = touring_path_.GetNode(position_pathnode_ + 1).current_city;
-        int k = touring_path_.GetNode(position_pathnode_ + 1).kth_way;
+        int i = touring_path_.GetNode(position_pathnode_).former_city;
+        int j = touring_path_.GetNode(position_pathnode_).current_city;
+        int k = touring_path_.GetNode(position_pathnode_).kth_way;
         state_ = OFF;
         Route route = graph.GetRoute(i, j, k);
         next_city_hour_left_ = route.end_time.hour_diff(route.start_time);
@@ -790,4 +799,23 @@ inline void Traveller::UpdateState(const CityGraph &graph, Time now)
   }
 }
 
+inline void Traveller::InitState(const CityGraph &graph)
+{
+  auto path_begin = touring_path_.cbegin();
+  Route route = graph.GetRoute((*path_begin).former_city, (*path_begin).current_city, (*path_begin).kth_way);
+  int left_hour = route.start_time.hour_diff(init_time_);
+  position_pathnode_ = 0;
+  if (left_hour < 0)
+    left_hour += 24;
+  if (left_hour)
+  {
+    state_ = STAY;
+    next_city_hour_left_ = left_hour;
+  }
+  else
+  {
+    state_ = OFF;
+    next_city_hour_left_ = route.end_time.hour_diff(route.start_time);
+  }
+}
 #endif // SRC_TRAVELLER
