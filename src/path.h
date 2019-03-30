@@ -31,29 +31,43 @@ class Path // 路径
 {
 public:
   Path() = default;
+
   // 添加一个PathNode到路径首个元素之前,并且更改总价与总时间、长度
-  void Append(const CityGraph &graph, City_id former_city, City_id current_city, int k); //通过ijk添加一个节点
+  void Append(const CityGraph &graph, City_id former_city, City_id current_city, int k, int back = 0); //通过ijk添加一个节点
   void Append(const CityGraph &graph, City_id i, City_id j, int k, Time wait_time);
   Path &Append(const Path &path);
+  void Remove(const CityGraph &graph);
   // 固定路径的出发与结束点
   void Fix();
+
   // 根据路径设置总时间
   void FixTotalTime(const CityGraph &graph, const Time &start_time = Time());
+
   //将cities向量反转
   void Reverse();
+
   //打印这条路径
   void Show() const;
+  //用中文打印路径
+  void ShowPath(const CityGraph &graph, const IDMap &idmap, const int index) const;
+
   //获取路径长度
   int GetLen() const { return len_; }
+
   //获取路径总价
   int GetTotalPrice() const { return total_price_; }
+
   //获取总时间
   const Time &GetTotalTime() const { return total_timecost_; }
+
   // 返回指向路径第首个元素的迭代器
   std::deque<PathNode>::const_iterator cbegin() { return cities_.cbegin(); }
 
   // 返回指向路径尾后元素的迭代器
   std::deque<PathNode>::const_iterator cend() { return cities_.cend(); }
+
+  //返回节点
+  PathNode GetNode(int k) { return cities_.at(k); }
 
 #ifdef TEST_PATH
 
@@ -77,14 +91,48 @@ private:
   Time total_timecost_;         //总时间
 };
 
-inline void Path::Append(const CityGraph &graph, City_id i, City_id j, int k)
+inline void Path::Remove(const CityGraph &graph)
+{
+  if (len_ == 1)
+  {
+    cities_.pop_back();
+    start_city_ = 0;
+    end_city_ = 0;
+    len_ = 0;
+    total_price_ = 0;
+    total_timecost_.Reset();
+  }
+  if (!len_)
+    return;
+
+  else
+  {
+    len_--;
+    end_city_ = cities_.at(len_ - 1).current_city;
+    int i = cities_.at(len_).former_city;
+    int j = cities_.at(len_).current_city;
+    int k = cities_.at(len_).kth_way;
+    total_price_ -= graph.GetRoute(i, j, k).price;
+    int fi = cities_.at(len_ - 1).former_city;
+    int fj = cities_.at(len_ - 1).current_city;
+    int fk = cities_.at(len_ - 1).kth_way;
+    Time temp = graph.GetRoute(i, j, k).end_time.time_diff(graph.GetRoute(fi, fj, fk).end_time);
+    total_timecost_.minus_time(temp);
+    cities_.pop_back();
+  }
+}
+
+inline void Path::Append(const CityGraph &graph, City_id i, City_id j, int k, int back)
 { //用ijk给每一种方式编号，通过ijk获得所有数据。
   //std::cout << i << '\t' << j << '\t' << k << std::endl;
   PathNode temp = {i, j, k};
   if (!(len_++))
     end_city_ = j;
   start_city_ = i;
-  cities_.push_front(temp);
+  if (back)
+    cities_.push_back(temp);
+  else
+    cities_.push_front(temp);
   total_price_ += graph.GetRoute(i, j, k).price;
   // total_timecost_.add_time(graph.GetRoute(i, j, k).end_time.time_diff(graph.GetRoute(i, j, k).start_time));  // 只计算路途上的时间,不计等候时间
 }
@@ -117,7 +165,7 @@ inline Path &Path::Append(const Path &path)
   // if (diff.GetDay() < 0)
   //     diff.add_time(0, 1);
   // total_timecost_.add_time(path.total_timecost_); // 只计算路途上的时间,不计等候时间
-  for (const auto &node: path.cities_)
+  for (const auto &node : path.cities_)
     cities_.push_back(node);
   return *this;
 }
@@ -138,7 +186,6 @@ inline void Path::FixTotalTime(const CityGraph &graph, const Time &start_time)
   }
 }
 
-
 inline void Path::Reverse()
 {
   reverse(cities_.begin(), cities_.end());
@@ -154,12 +201,49 @@ inline void Path::Fix()
   }
 }
 
-
 void Path::Show() const
 {
   for (auto path_node : cities_)
     std::cout << path_node.former_city << '\t'
               << path_node.current_city << '\t'
               << path_node.kth_way << std::endl;
+}
+
+void Path::ShowPath(const CityGraph &graph, const IDMap &idmap, const int index) const
+{
+  std::cout << "为你定制的路线为：" << std::endl;
+  std::cout << "始发地" << '\t'
+            << "目的地" << '\t'
+            << "方式" << '\t'
+            << "出发时间" << '\t'
+            << "到达时间" << '\t'
+            << "价格" << '\t'
+            << "完成" << '\t' << std::endl;
+  for (int path_node = 0; path_node < index; path_node++)
+  {
+    int i = cities_.at(path_node).former_city;
+    int j = cities_.at(path_node).current_city;
+    int k = cities_.at(path_node).kth_way;
+    Route route = graph.GetRoute(i, j, k);
+    std::cout << idmap.GetCityStr(i) << '\t'
+              << idmap.GetCityStr(j) << '\t'
+              << idmap.GetTransStr(route.transport_type) << '\t';
+    route.start_time.RouteShow(route.end_time);
+    std::cout << route.price << '\t'
+              << "O" << '\t' << std::endl;
+  }
+  for (int path_node = index; path_node < cities_.size(); path_node++)
+  {
+    int i = cities_.at(path_node).former_city;
+    int j = cities_.at(path_node).current_city;
+    int k = cities_.at(path_node).kth_way;
+    Route route = graph.GetRoute(i, j, k);
+    std::cout << idmap.GetCityStr(i) << '\t'
+              << idmap.GetCityStr(j) << '\t'
+              << idmap.GetTransStr(route.transport_type) << '\t';
+    route.start_time.RouteShow(route.end_time);
+    std::cout << route.price << '\t'
+              << "X" << '\t' << std::endl;
+  }
 }
 #endif // SRC_PATH
