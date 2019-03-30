@@ -146,7 +146,8 @@ int Menu(const IDMap &im, Traveller &traveller)
          << "1、预定行程" << endl
          << "2、状态查询" << endl
          << "3、路线查询" << endl
-         << "4、退出程序" << endl;
+         << "4、模拟旅行" << endl
+         << "5、退出程序" << endl;
 
     char num;
     std::vector<City_id> plan;
@@ -176,6 +177,10 @@ int Menu(const IDMap &im, Traveller &traveller)
             cout << "路线查询" << endl;
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return operate_code;
+        }
+        else if (operate_code == SIMULATE)
+        {
             return operate_code;
         }
         else if (operate_code == EXIT)
@@ -453,7 +458,7 @@ void PrintTravellerInfo(const CityGraph &graph, const IDMap &id_map, const Time 
                 }
                 std::cout << std::endl;
             }
-            PrintPath(graph, id_map, path, 1);
+            PrintPath(graph, id_map, path, 0);
         }
         else
         {

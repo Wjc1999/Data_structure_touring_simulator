@@ -48,10 +48,14 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
     while (traveller.get_position() != traveller.get_path().GetLen() - 1)
     {
         Timer();
+#ifdef _WIN32
         system("cls");
+#elif __linux__
+        system("clear");
+#endif
         std::cout << "当前时间 : " << current_time.GetDay() << " 日 " << current_time.GetHour() << "时" << std::endl;
         traveller.UpdateState(city_graph, current_time);
-        PrintPath(city_graph, id_map, traveller.get_path());
+        PrintPath(city_graph, id_map, traveller.get_path(), traveller.get_position());
         auto duration = Timer();
         Sleep(duration.count());
     }

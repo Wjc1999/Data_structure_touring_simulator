@@ -10,6 +10,7 @@
 #include "../src/time_format.h"
 #include "../src/log.h"
 #include "../src/path.h"
+#include "../src/simulation.h"
 
 int main()
 {
@@ -48,6 +49,10 @@ int main()
             break;
         case INQUIRE_PATH:
             PrintPath(city_graph, id_map, path);
+            break;
+        case SIMULATE:
+            InitializeSimulator(traveller.get_init_time());
+            Simulate(traveller, city_graph, id_map);
             break;
         case EXIT:
             exit(0);
