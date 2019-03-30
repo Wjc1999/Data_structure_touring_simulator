@@ -36,15 +36,18 @@ int main()
             strategy = InputStrategy();
             // TODO : 指定开始时间
 
-            path = traveller.GetPath(city_graph, strategy);
+            path = traveller.SchedulePath(city_graph, strategy);
 
             // path.Show();
-            PrintPath(std::cout, id_map, city_graph, path);
+            PrintPath(city_graph, id_map, path);
+            if (PathConfirm())
+                traveller.set_path(path);
             break;
         case INQUIRE_STATE:
-            //
+            PrintTravellerInfo(city_graph, id_map, traveller.get_init_time(), traveller);
             break;
         case INQUIRE_PATH:
+            PrintPath(city_graph, id_map, path);
             break;
         case EXIT:
             exit(0);

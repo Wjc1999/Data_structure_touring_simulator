@@ -53,45 +53,70 @@ public:
   Traveller(std::string id) : id_(id){};
 
   // 显示旅客id
-  const std::string &ShowID() const
-  {
-    std::cout << id_ << std::endl;
-    return id_;
-  };
+  void PrintID() const { std::cout << id_ << std::endl; }
+  const std::string &get_ID() const { return id_; }
 
   // 打印旅客路径
   void ShowPath() const { touring_path_.Show(); }
+  const Path &get_path() const { return touring_path_; }
 
-  // 打印旅客计划
-  void ShowPlan() const
+  // 为旅客计划一条路径
+  Path SchedulePath(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time t = Time(), Time limit = Time());
+  Path SchedulePath(const CityGraph &graph, Strategy s, Time t = Time(), Time limit = Time())
   {
-    std::for_each(travelling_plan_.begin(), travelling_plan_.end(), [](City_id city) { std::cout << city << " "; });
-    std::cout << std::endl;
-  }
-
-  // 为旅客获取一条路径**关键算法**
-  Path GetPath(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time t = Time(), Time limit = Time());
-  Path GetPath(const CityGraph &graph, Strategy s, Time t = Time(), Time limit = Time())
-  {
-    return GetPath(graph, travelling_plan_, s, t, limit);
+    return SchedulePath(graph, travelling_plan_, s, t, limit);
   }
 
   // 设置旅行路径
   void set_path(Path &path) { touring_path_ = path, position_pathnode_ = -1; }
+
+  // 打印旅客计划
+  void PrintPlan() const
+  {
+    std::for_each(travelling_plan_.begin(), travelling_plan_.end(), [](City_id city) { std::cout << city << " "; });
+    std::cout << std::endl;
+  }
+  const std::vector<City_id> &get_plan() const { return travelling_plan_; }
+
+  void set_plan(const std::vector<City_id> &plan) { travelling_plan_ = plan; }
+  void set_plan(std::initializer_list<City_id> il) { travelling_plan_ = std::vector<City_id>(il); }
 
   // 保存当前旅客信息
   bool SaveData() const;
 
   bool LoadData(int cnt, const CityGraph &graph);
 
-  void set_plan(const std::vector<City_id> &plan) { travelling_plan_ = plan; }
-  void set_plan(std::initializer_list<City_id> il) { travelling_plan_ = std::vector<City_id>(il); }
-
   void append_plan(City_id city) { travelling_plan_.push_back(city); }
 
-  void UpdateState(const CityGraph &graph, Time now);
+  int get_position() const { return position_pathnode_; }
 
-  void ShowState(const CityGraph &graph, const IDMap &idmap, const Time &now);
+  int get_left_hour() const { return next_city_hour_left_; }
+
+  void UpdateState(const CityGraph &graph, Time now);
+  TravellerState get_state() const { return state_; }
+
+  void set_strategy(Strategy strategy) { strategy_ = strategy; }
+  bool set_strategy(int strategy)
+  {
+    switch (strategy)
+    {
+    case 0:
+      strategy_ = LEAST_MONEY;
+      break;
+    case 1:
+      strategy_ = LEAST_TIME;
+      break;
+    case 2:
+      strategy_ = LIMIT_TIME;
+      break;
+    default:
+      return false;
+    }
+    return true;
+  }
+
+  void set_init_time(const Time &t) { init_time_ = t; }
+  const Time &get_init_time() const { return init_time_; }
 
 private:
   std::string id_ = "";                  // 旅客id
@@ -205,7 +230,7 @@ void Traveller::DFSLeastTime(const CityGraph &graph, const std::vector<City_id> 
   }
 }
 
-Path Traveller::GetPath(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time start_time, Time limit)
+Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time start_time, Time limit)
 {
   init_time_ = start_time;
   strategy_ = s;
@@ -534,13 +559,14 @@ Path Traveller::GetPathLTM(const CityGraph &graph, const std::vector<City_id> &p
   DFSLTM(graph, plan, path, temp, 0, least_money, limit);
   std::random_device rd;
   std::mt19937 g(rd());
-  for (int i = 0; i < 5; i++)
-  {
-    shuffle(temp_plan_shuffle.begin() + 1, temp_plan_shuffle.end() - 1, g);
-    while (std::equal(plan.begin(), plan.end(), temp_plan_shuffle.begin()))
+  if (plan.size() > 3)
+    for (int i = 0; i < 5; i++)
+    {
       shuffle(temp_plan_shuffle.begin() + 1, temp_plan_shuffle.end() - 1, g);
-    DFSLTM(graph, temp_plan_shuffle, path, temp, 0, least_money, limit);
-  }
+      while (std::equal(plan.begin(), plan.end(), temp_plan_shuffle.begin()))
+        shuffle(temp_plan_shuffle.begin() + 1, temp_plan_shuffle.end() - 1, g);
+      DFSLTM(graph, temp_plan_shuffle, path, temp, 0, least_money, limit);
+    }
   return path;
 }
 
@@ -704,7 +730,7 @@ bool Traveller::LoadData(int cnt, const CityGraph &graph)
 
     in_stream >> next_city_hour_left_;
     //std::cout << next_city_hour_left_ << std::endl;///////////
-    
+
     in_stream >> position_pathnode_;
     //std::cout << position_pathnode_ << std::endl;///////////
     return true;
@@ -764,40 +790,4 @@ inline void Traveller::UpdateState(const CityGraph &graph, Time now)
   }
 }
 
-void Traveller::ShowState(const CityGraph &graph, const IDMap &idmap, const Time &now)
-{
-  std::cout << id_ << std::endl;
-  if (state_ == STAY)
-  {
-    if (position_pathnode_ == -2)
-      std::cout << "当前无出行计划" << std::endl;
-    else if (position_pathnode_ == -1)
-    {
-      std::cout << std::endl;
-      std::cout << "你的始发地是：" << idmap.GetCityStr(travelling_plan_.at(0)) << std::endl;
-      std::cout << "你的目的地是：" << idmap.GetCityStr(travelling_plan_.at(travelling_plan_.size() - 1)) << std::endl;
-      if (travelling_plan_.size() > 2)
-      {
-        std::cout << "你的途经城市有：";
-        for (int i = 1; i < travelling_plan_.size() - 1; i++)
-        {
-          std::cout << idmap.GetCityStr(travelling_plan_.at(i)) << " ";
-        }
-        std::cout << std::endl;
-      }
-      touring_path_.ShowPath(graph, idmap, 0);
-    }
-    else
-    {
-      touring_path_.ShowPath(graph, idmap, position_pathnode_);
-      std::cout << "当前在：" << idmap.GetCityStr(touring_path_.GetNode(position_pathnode_).former_city) << std::endl;
-      std::cout << "离出发还有：" << next_city_hour_left_ << "h" << std::endl;
-    }
-  }
-  else
-  {
-    touring_path_.ShowPath(graph, idmap, position_pathnode_);
-    std::cout << "距目的地" << idmap.GetCityStr(touring_path_.GetNode(position_pathnode_).current_city) << "还有：" << next_city_hour_left_ << "h" << std::endl;
-  }
-}
 #endif // SRC_TRAVELLER

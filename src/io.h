@@ -66,13 +66,17 @@ void MapSearch();
 int AccountCheck(const string &id);
 
 // 提供界面供用户选择是否采用该路线
-bool PathConfirm(const Path &chosen_path, Time now);
+bool PathConfirm();
 
 // 给出界面让用户选择策略
 Strategy InputStrategy();
 
+// 打印用户的信息
+void PrintTravellerInfo(const CityGraph &graph, const IDMap &id_map, const Time &now, const Traveller &traveller);
+
 // 打印界面友好的路径
-std::ostream &PrintPath(std::ostream &os, const IDMap &id_map, const CityGraph &city_graph, const Path &path);
+std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, std::ostream &os = std::cout);
+std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, const int index, std::ostream &os = std::cout);
 
 int Welcome()
 {
@@ -331,7 +335,7 @@ inline bool ShowNameList()
         return false;
 }
 
-inline bool PathConfirm(const Path &chosen_path, Time now)
+inline bool PathConfirm()
 {
     char option;
     std::cout << "是否选择该条路线?[Y/N]" << std::endl;
@@ -378,14 +382,92 @@ inline Strategy InputStrategy()
     }
 }
 
-std::ostream &PrintPath(std::ostream &os, const IDMap &id_map, const CityGraph &city_graph, const Path &path)
+std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, std::ostream &os)
 {
-    int i;
-    for (i = 0; i != path.GetLen() - 1; ++i)
-        os << id_map.GetCityStr(path.GetNode(i).former_city) << " -> ";
-    os << id_map.GetCityStr(path.GetNode(i).former_city) << " -> "  << id_map.GetCityStr(path.GetNode(i).current_city) <<std::endl;
-    os << "总耗时 : " << path.GetTotalTime().GetDay() << "天" << path.GetTotalTime().GetHour() << "小时" << std::endl;
-    os << "总花费 : " << path.GetTotalPrice() << "元" << std::endl;
+    return PrintPath(graph, id_map, path, path.GetLen());
+}
+
+std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, const int index, std::ostream &os)
+{
+    std::cout << "为你定制的路线为：" << std::endl;
+    std::cout << "始发地" << '\t'
+              << "目的地" << '\t'
+              << "方式" << '\t'
+              << "出发时间" << '\t'
+              << "到达时间" << '\t'
+              << "价格" << '\t'
+              << "完成" << '\t' << std::endl;
+    for (int path_node = 0; path_node < index; path_node++)
+    {
+        int i = path.GetNode(path_node).former_city;
+        int j = path.GetNode(path_node).current_city;
+        int k = path.GetNode(path_node).kth_way;
+        Route route = graph.GetRoute(i, j, k);
+        std::cout << id_map.GetCityStr(i) << '\t'
+                  << id_map.GetCityStr(j) << '\t'
+                  << id_map.GetTransStr(route.transport_type) << '\t';
+        RouteShow(route.start_time, route.end_time);
+        std::cout << route.price << '\t'
+                  << "O" << '\t' << std::endl;
+    }
+
+    for (int path_node = index; path_node < path.GetLen(); path_node++)
+    {
+        int i = path.GetNode(path_node).former_city;
+        int j = path.GetNode(path_node).current_city;
+        int k = path.GetNode(path_node).kth_way;
+        Route route = graph.GetRoute(i, j, k);
+        std::cout << id_map.GetCityStr(i) << '\t'
+                  << id_map.GetCityStr(j) << '\t'
+                  << id_map.GetTransStr(route.transport_type) << '\t';
+        RouteShow(route.start_time, route.end_time);
+        std::cout << route.price << '\t'
+                  << "X" << '\t' << std::endl;
+    }
     return os;
 }
+
+void PrintTravellerInfo(const CityGraph &graph, const IDMap &id_map, const Time &now, const Traveller &traveller)
+{
+    auto plan = traveller.get_plan();
+    auto path = traveller.get_path();
+    auto position = traveller.get_position();
+
+    std::cout << traveller.get_ID() << std::endl;
+    if (traveller.get_state() == STAY)
+    {
+        if (position == -2)
+            std::cout << "当前无出行计划" << std::endl;
+        else if (position == -1)
+        {
+            std::cout << std::endl;
+            std::cout << "你的始发地是：" << id_map.GetCityStr(plan.front()) << std::endl;
+            std::cout << "你的目的地是：" << id_map.GetCityStr(plan.back()) << std::endl;
+
+            if (plan.size() > 2)
+            {
+                std::cout << "你的途经城市有：";
+                for (int i = 1; i < plan.size() - 1; i++)
+                {
+                    std::cout << id_map.GetCityStr(plan.at(i)) << " ";
+                }
+                std::cout << std::endl;
+            }
+            PrintPath(graph, id_map, path, 1);
+        }
+        else
+        {
+            PrintPath(graph, id_map, path, position);
+            std::cout << "当前在：" << id_map.GetCityStr(path.GetNode(position).former_city) << std::endl;
+            std::cout << "离出发还有：" << traveller.get_left_hour() << "h" << std::endl;
+        }
+    }
+    else
+    {
+        PrintPath(graph, id_map, path, position);
+        std::cout << "距目的地" << id_map.GetCityStr(path.GetNode(position).current_city) << "还有：" << traveller.get_left_hour() << "h" << std::endl;
+    }
+}
+
+
 #endif //SRC_IO

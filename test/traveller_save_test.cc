@@ -12,7 +12,7 @@
 int main()
 {
     CityGraph graph;
-    IDMap idmap;
+    IDMap id_map;
     std::string buf;
     std::cin >> buf;
     Traveller t(buf);
@@ -24,14 +24,14 @@ int main()
     plan.push_back(16);
     Time now(1, 7);
     Time limit(1, 24);
-    Path path = t.GetPath(graph, plan, LIMIT_TIME, now, limit);
+    Path path = t.SchedulePath(graph, plan, LIMIT_TIME, now, limit);
     /*path.Show();
     if (PathConfirm(path, now))
     {
         t.set_path(path);
     }*/
     t.set_path(path);
-    t.ShowState(graph, idmap, now);
+    PrintTravellerInfo(graph, id_map, now, t);
 
     if (AddAccount(t))
         std::cout << "success!" << std::endl;

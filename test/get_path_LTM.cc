@@ -37,7 +37,7 @@ int main()
     // plan.push_back(27);
     Time now(1, 7);
     Time limit(5, 23);
-    Path path = t.GetPath(graph, plan, LIMIT_TIME, now, limit);
+    Path path = t.SchedulePath(graph, plan, LIMIT_TIME, now, limit);
     path.Show();
     cout << path.GetTotalPrice() << '\t' << endl;
     path.GetTotalTime().print() << endl;
