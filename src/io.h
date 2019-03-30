@@ -469,5 +469,4 @@ void PrintTravellerInfo(const CityGraph &graph, const IDMap &id_map, const Time 
     }
 }
 
-
 #endif //SRC_IO
