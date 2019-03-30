@@ -48,6 +48,8 @@ public:
 
   //打印这条路径
   void Show() const;
+  //用中文打印路径
+  void ShowPath(const CityGraph &graph, const IDMap &idmap, const int index) const;
 
   //获取路径长度
   int GetLen() const { return len_; }
@@ -111,10 +113,10 @@ inline void Path::Remove(const CityGraph &graph)
     int j = cities_.at(len_).current_city;
     int k = cities_.at(len_).kth_way;
     total_price_ -= graph.GetRoute(i, j, k).price;
-    int fi = cities_.at(len_-1).former_city;
-    int fj = cities_.at(len_-1).current_city;
-    int fk = cities_.at(len_-1).kth_way;
-    Time temp = graph.GetRoute(i, j, k).end_time.time_diff(graph.GetRoute(fi,fj,fk).end_time);
+    int fi = cities_.at(len_ - 1).former_city;
+    int fj = cities_.at(len_ - 1).current_city;
+    int fk = cities_.at(len_ - 1).kth_way;
+    Time temp = graph.GetRoute(i, j, k).end_time.time_diff(graph.GetRoute(fi, fj, fk).end_time);
     total_timecost_.minus_time(temp);
     cities_.pop_back();
   }
@@ -205,5 +207,43 @@ void Path::Show() const
     std::cout << path_node.former_city << '\t'
               << path_node.current_city << '\t'
               << path_node.kth_way << std::endl;
+}
+
+void Path::ShowPath(const CityGraph &graph, const IDMap &idmap, const int index) const
+{
+  std::cout << "为你定制的路线为：" << std::endl;
+  std::cout << "始发地" << '\t'
+            << "目的地" << '\t'
+            << "方式" << '\t'
+            << "出发时间" << '\t'
+            << "到达时间" << '\t'
+            << "价格" << '\t'
+            << "完成" << '\t' << std::endl;
+  for (int path_node = 0; path_node < index; path_node++)
+  {
+    int i = cities_.at(path_node).former_city;
+    int j = cities_.at(path_node).current_city;
+    int k = cities_.at(path_node).kth_way;
+    Route route = graph.GetRoute(i, j, k);
+    std::cout << idmap.GetCityStr(i) << '\t'
+              << idmap.GetCityStr(j) << '\t'
+              << idmap.GetTransStr(route.transport_type) << '\t';
+    route.start_time.RouteShow(route.end_time);
+    std::cout << route.price << '\t'
+              << "O" << '\t' << std::endl;
+  }
+  for (int path_node = index; path_node < cities_.size(); path_node++)
+  {
+    int i = cities_.at(path_node).former_city;
+    int j = cities_.at(path_node).current_city;
+    int k = cities_.at(path_node).kth_way;
+    Route route = graph.GetRoute(i, j, k);
+    std::cout << idmap.GetCityStr(i) << '\t'
+              << idmap.GetCityStr(j) << '\t'
+              << idmap.GetTransStr(route.transport_type) << '\t';
+    route.start_time.RouteShow(route.end_time);
+    std::cout << route.price << '\t'
+              << "X" << '\t' << std::endl;
+  }
 }
 #endif // SRC_PATH

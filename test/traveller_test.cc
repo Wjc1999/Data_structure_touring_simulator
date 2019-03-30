@@ -21,14 +21,15 @@ int main()
     plan.push_back(27);
     plan.push_back(16);
     Time now(1, 7);
-    Time limit(1, 17);
+    Time limit(1, 24);
     Path path = t.GetPath(graph, plan, LIMIT_TIME, now, limit);
     /*path.Show();
     if (PathConfirm(path, now))
     {
         t.set_path(path);
     }*/
-    t.ShowPath();
+    t.set_path(path);
+    t.ShowState(graph,idmap,now);
     if (t.SaveData())
         std::cout << "success!" << std::endl;
     else

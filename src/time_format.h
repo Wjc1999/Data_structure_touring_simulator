@@ -29,9 +29,10 @@ public:
 
   int GetDay() const { return day_; }
   int GetHour() const { return hour_; }
-  void Reset() { hour_ = 0, day_ = 0; }
-  int GetLength() const { return hour_ + day_ * 24; }
+  void Reset() { hour_ = 0, day_ = 0; }               //重置
+  int GetLength() const { return hour_ + day_ * 24; } //获得总时长
   void set_hour(int hour) { hour_ = hour; }
+  void RouteShow(const Time &arrive);
 
 #ifdef TEST_TIME
 #include <iostream>
@@ -92,6 +93,16 @@ inline Time &Time::minus_time(const Time &t)
 inline Time &Time::minus_time(const int hour, const int day)
 {
   return add_time(-hour, -day);
+}
+
+void Time::RouteShow(const Time &arrive)
+{
+  std::cout << hour_ << ":00" << '\t'
+            << arrive.GetHour() << ":00";
+  if (arrive.GetDay() > 1)
+    std::cout << "+" << arrive.GetDay() - 1 << '\t';
+  else
+    std::cout << '\t';
 }
 
 #endif // SRC_TIME
