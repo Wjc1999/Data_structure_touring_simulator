@@ -48,7 +48,7 @@ int main()
             PrintTravellerInfo(city_graph, id_map, traveller.get_init_time(), traveller);
             break;
         case INQUIRE_PATH:
-            PrintPath(city_graph, id_map, path);
+            PrintPath(city_graph, id_map, path, 0);
             break;
         case SIMULATE:
             traveller.InitState(city_graph);

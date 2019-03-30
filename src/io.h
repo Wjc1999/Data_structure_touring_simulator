@@ -394,9 +394,11 @@ std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path 
 
 std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, const int index, std::ostream &os)
 {
+    std::string comp("有四个字");
+    std::string wrap[] = {"\t\t", "\t"};
     std::cout << "为你定制的路线为：" << std::endl;
-    std::cout << "始发地" << '\t'
-              << "目的地" << '\t'
+    std::cout << "始发地" << "\t\t"
+              << "目的地" << "\t\t"
               << "方式" << '\t'
               << "出发时间" << '\t'
               << "到达时间" << '\t'
@@ -408,8 +410,10 @@ std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path 
         int j = path.GetNode(path_node).current_city;
         int k = path.GetNode(path_node).kth_way;
         Route route = graph.GetRoute(i, j, k);
-        std::cout << id_map.GetCityStr(i) << '\t'
-                  << id_map.GetCityStr(j) << '\t'
+        auto former_city_str = id_map.GetCityStr(i);
+        auto current_city_str = id_map.GetCityStr(j);
+        std::cout << former_city_str << wrap[former_city_str.size() >= comp.size()]
+                  << current_city_str << wrap[current_city_str.size() >= comp.size()]
                   << id_map.GetTransStr(route.transport_type) << '\t';
         RouteShow(route.start_time, route.end_time);
         std::cout << route.price << '\t'
@@ -422,8 +426,10 @@ std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path 
         int j = path.GetNode(path_node).current_city;
         int k = path.GetNode(path_node).kth_way;
         Route route = graph.GetRoute(i, j, k);
-        std::cout << id_map.GetCityStr(i) << '\t'
-                  << id_map.GetCityStr(j) << '\t'
+        auto former_city_str = id_map.GetCityStr(i);
+        auto current_city_str = id_map.GetCityStr(j);
+        std::cout << former_city_str << wrap[former_city_str.size() >= comp.size()]
+                  << current_city_str << wrap[current_city_str.size() >= comp.size()]
                   << id_map.GetTransStr(route.transport_type) << '\t';
         RouteShow(route.start_time, route.end_time);
         std::cout << route.price << '\t'

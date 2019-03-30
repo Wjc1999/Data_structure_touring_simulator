@@ -96,12 +96,12 @@ inline Time &Time::minus_time(const int hour, const int day)
 
 void RouteShow(const Time &leave, const Time &arrive)
 {
-  std::cout << leave.GetHour() << ":00" << '\t'
+  std::cout << leave.GetHour() << ":00" << "\t\t"
             << arrive.GetHour() << ":00";
   if (arrive.GetDay() > 1)
-    std::cout << "+" << arrive.GetDay() - 1 << '\t';
+    std::cout << "+" << arrive.GetDay() - 1 << "\t\t";
   else
-    std::cout << '\t';
+    std::cout << "\t\t";
 }
 
 #endif // SRC_TIME
