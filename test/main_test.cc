@@ -17,24 +17,41 @@ int main()
     CityGraph city_graph;
     Traveller traveller;
     Path path;
-    traveller.LoadData(Welcome(),city_graph);
-    int opcode = Menu(id_map, traveller);
-    switch (opcode)
+    std::vector<City_id> plan;
+    Strategy strategy;
+
+    int account_name_line = Welcome();
+
+    traveller.LoadData(account_name_line, city_graph);
+
+    while (1)
     {
-    case SCHEDULE:
-        path = traveller.GetPath(city_graph, LEAST_MONEY);
-        path.Show();
-        break;
-    case INQUIRE_STATE:
-        //
-        break;
-    case INQUIRE_PATH:
-        //
-        break;
-    case EXIT:
-        break;
-    default:
-        break;
+        int opcode = Menu(id_map, traveller);
+        switch (opcode)
+        {
+        case SCHEDULE:
+            plan = Request(id_map);
+            traveller.set_plan(plan);
+            // traveller.ShowPlan();
+            strategy = InputStrategy();
+            // TODO : 指定开始时间
+
+            path = traveller.GetPath(city_graph, strategy);
+
+            // path.Show();
+            PrintPath(std::cout, id_map, city_graph, path);
+            break;
+        case INQUIRE_STATE:
+            //
+            break;
+        case INQUIRE_PATH:
+            break;
+        case EXIT:
+            exit(0);
+            break;
+        default:
+            break;
+        }
     }
     return 0;
 }

@@ -65,7 +65,7 @@ public:
   std::deque<PathNode>::const_iterator cend() const { return cities_.cend(); }
 
   //返回节点
-  PathNode GetNode(int k) { return cities_.at(k); }
+  const PathNode &GetNode(int k) const { return cities_.at(k); }
 
 #ifdef TEST_PATH
 

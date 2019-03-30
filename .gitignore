@@ -50,3 +50,5 @@ test/get_path_LTM
 test/traveller_load_test
 test/traveller_save_test
 test/traveller_test
+test/slp.cc
+test/slp
