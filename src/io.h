@@ -28,16 +28,37 @@ using std::streamsize;
 using std::string;
 using std::vector;
 
-int Welcome();
-int Menu(const IDMap &im, Traveller &traveller);
-std::vector<City_id> Request(const IDMap &im);
-void ErrorMsg(const std::string &err_msg);
-inline void Status();
-inline void MapSearch();
-inline int NameCheck(const string &id);
-inline bool PathConfirm(const Path &chosen_path, Time now);
-
 //欢迎界面
+int Welcome();
+
+//功能菜单,返回一个操作代码
+int Menu(const IDMap &im, Traveller &traveller);
+
+//预定行程
+std::vector<City_id> Request(const IDMap &im);
+
+// 打印错误信息
+void ErrorMsg(const std::string &err_msg);
+
+// 打印账户列表
+bool ShowNameList();
+
+
+void Status();
+
+// 添加账号
+inline bool AddAccount(const Traveller &traveller) { return traveller.SaveData(); }
+
+void MapSearch();
+
+// 返回账户名称所在的行数,若账户名称不存在则返回-1
+int AccountCheck(const string &id);
+
+// 提供界面供用户选择是否采用该路线
+bool PathConfirm(const Path &chosen_path, Time now);
+
+
+
 int Welcome()
 {
     cout << "|----------------------------------------------|" << endl;
@@ -61,7 +82,7 @@ int Welcome()
             cout << "请输入你想注册的账号：";
             string name;
             cin >> name;
-            while (NameCheck(name) == -1)
+            while (AccountCheck(name) == -1)
             {
                 cout << "该账号已被注册，请重新输入：";
                 cin.clear();
@@ -76,14 +97,14 @@ int Welcome()
             cout << "请输入你的账号：";
             string name;
             cin >> name;
-            while (NameCheck(name) == -1)
+            while (AccountCheck(name) == -1)
             {
                 cout << "输入账号有误，请重新输入：";
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cin >> name;
             }
-            return NameCheck(name);
+            return AccountCheck(name);
         }
         else if (sorl == 'q' || sorl == 'Q')
         {
@@ -258,8 +279,8 @@ inline void MapSearch()
     //citygraph.()//关于图的输出
 }
 
-// 返回id所在的行数,若id不存在则返回-1
-inline int NameCheck(const string &id)
+// 返回账户名称所在的行数,若账户名称不存在则返回-1
+inline int AccountCheck(const string &id)
 {
     std::vector<string> namelist;   // unused parameter
     std::ifstream in_stream(name_path);
@@ -277,6 +298,21 @@ inline int NameCheck(const string &id)
         }
     }
     return -1;
+}
+
+// 打印账户列表
+inline bool ShowNameList() 
+{
+    std::string line_buf;
+    std::ifstream fis(name_path);
+    if (fis)
+    {
+        while(std::getline(fis, line_buf))
+            std::cout << line_buf << std::endl;
+        return true;
+    }
+    else
+        return false;
 }
 
 inline bool PathConfirm(const Path &chosen_path, Time now)

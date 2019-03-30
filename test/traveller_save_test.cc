@@ -20,7 +20,7 @@ int main()
     Time ti;
 
     plan.push_back(1);
-    plan.push_back(27);
+    plan.push_back(7);
     plan.push_back(16);
 
     Path path = t.GetPath(graph, plan, LEAST_MONEY);
@@ -31,7 +31,7 @@ int main()
         t.set_path(path);
         //t.ShowPath();
 
-        if (t.SaveData())
+        if (AddAccount(t))
             std::cout << "success!" << std::endl;
         else
             std::cout << "干!" << std::endl;
