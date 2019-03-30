@@ -77,7 +77,7 @@ public:
   }
 
   // 设置旅行路径
-  void set_path(Path &path) { touring_path_ = path; }
+  void set_path(Path &path) { touring_path_ = path, position_pathnode_ = -1; }
 
   // 保存当前旅客信息
   bool SaveData() const;
@@ -90,6 +90,8 @@ public:
   void append_plan(City_id city) { travelling_plan_.push_back(city); }
 
   void UpdateState(const CityGraph &graph, Time now);
+
+  void ShowState(const CityGraph &graph, const IDMap &idmap, const Time &now);
 
 private:
   std::string id_ = "";                  // 旅客id
@@ -727,7 +729,17 @@ inline void Traveller::UpdateState(const CityGraph &graph, Time now)
         position_pathnode_++;
         PathNode node = touring_path_.GetNode(position_pathnode_);
         Route route = graph.GetRoute(node.former_city, node.current_city, node.kth_way);
-        next_city_hour_left_ = route.start_time.hour_diff(route.end_time);
+        PathNode nodebefore = touring_path_.GetNode(position_pathnode_ - 1);
+        Route preroute = graph.GetRoute(nodebefore.former_city, nodebefore.current_city, nodebefore.kth_way);
+        if (!route.start_time.hour_diff(preroute.end_time))
+        {
+          next_city_hour_left_ = route.start_time.hour_diff(route.end_time);
+        }
+        else
+        {
+          state_ = STAY;
+          next_city_hour_left_ = route.start_time.hour_diff(preroute.end_time);
+        }
       }
     }
     else
@@ -735,18 +747,57 @@ inline void Traveller::UpdateState(const CityGraph &graph, Time now)
   }
   else
   {
-
-    if (position_pathnode_ == -1)
+    if (position_pathnode_ != -2)
     {
-      /*if(now, init_time_)
+      if (next_city_hour_left_ == 1)
       {
-        state_=OFF;
-        PathNode node = touring_path_.GetNode(0);
-        Route route = graph.GetRoute(node.former_city, node.current_city, node.kth_way);
-        next_city_hour_left_ = route.start_time.hour_diff(route.end_time);
-        position_pathnode_++;
-      } 这里做一个时间判断如果到出发时间就更新*/
+        int i = touring_path_.GetNode(position_pathnode_ + 1).former_city;
+        int j = touring_path_.GetNode(position_pathnode_ + 1).current_city;
+        int k = touring_path_.GetNode(position_pathnode_ + 1).kth_way;
+        state_ = OFF;
+        Route route = graph.GetRoute(i, j, k);
+        next_city_hour_left_ = route.end_time.hour_diff(route.start_time);
+      }
+      else
+        next_city_hour_left_--;
     }
+  }
+}
+
+void Traveller::ShowState(const CityGraph &graph, const IDMap &idmap, const Time &now)
+{
+  std::cout << id_ << std::endl;
+  if (state_ == STAY)
+  {
+    if (position_pathnode_ == -2)
+      std::cout << "当前无出行计划" << std::endl;
+    else if (position_pathnode_ == -1)
+    {
+      std::cout << std::endl;
+      std::cout << "你的始发地是：" << idmap.GetCityStr(travelling_plan_.at(0)) << std::endl;
+      std::cout << "你的目的地是：" << idmap.GetCityStr(travelling_plan_.at(travelling_plan_.size() - 1)) << std::endl;
+      if (travelling_plan_.size() > 2)
+      {
+        std::cout << "你的途经城市有：";
+        for (int i = 1; i < travelling_plan_.size() - 1; i++)
+        {
+          std::cout << idmap.GetCityStr(travelling_plan_.at(i)) << " ";
+        }
+        std::cout << std::endl;
+      }
+      touring_path_.ShowPath(graph, idmap, 0);
+    }
+    else
+    {
+      touring_path_.ShowPath(graph, idmap, position_pathnode_);
+      std::cout << "当前在：" << idmap.GetCityStr(touring_path_.GetNode(position_pathnode_).former_city) << std::endl;
+      std::cout << "离出发还有：" << next_city_hour_left_ << "h" << std::endl;
+    }
+  }
+  else
+  {
+    touring_path_.ShowPath(graph, idmap, position_pathnode_);
+    std::cout << "距目的地" << idmap.GetCityStr(touring_path_.GetNode(position_pathnode_).current_city) << "还有：" << next_city_hour_left_ << "h" << std::endl;
   }
 }
 #endif // SRC_TRAVELLER

@@ -22,20 +22,21 @@ int main()
     plan.push_back(1);
     plan.push_back(7);
     plan.push_back(16);
-
-    Path path = t.GetPath(graph, plan, LEAST_MONEY);
-    path.Show();
-
-    if (PathConfirm(path, ti))
+    Time now(1, 7);
+    Time limit(1, 24);
+    Path path = t.GetPath(graph, plan, LIMIT_TIME, now, limit);
+    /*path.Show();
+    if (PathConfirm(path, now))
     {
         t.set_path(path);
-        //t.ShowPath();
+    }*/
+    t.set_path(path);
+    t.ShowState(graph, idmap, now);
 
-        if (AddAccount(t))
-            std::cout << "success!" << std::endl;
-        else
-            std::cout << "干!" << std::endl;
-    }
+    if (AddAccount(t))
+        std::cout << "success!" << std::endl;
+    else
+        std::cout << "干!" << std::endl;
     /*Traveller t("test2");
     std::vector<int> plan;
     plan.push_back(30);
