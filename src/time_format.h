@@ -98,8 +98,8 @@ void RouteShow(const Time &leave, const Time &arrive)
 {
   std::cout << leave.GetHour() << ":00" << "\t\t"
             << arrive.GetHour() << ":00";
-  if (arrive.GetDay() > 1)
-    std::cout << "+" << arrive.GetDay() - 1 << "\t\t";
+  if (arrive.GetDay())
+    std::cout << "+" << arrive.GetDay() << "\t\t";
   else
     std::cout << "\t\t";
 }
