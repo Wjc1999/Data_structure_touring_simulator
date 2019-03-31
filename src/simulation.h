@@ -48,15 +48,13 @@ void InitializeSimulator(const Time &start_time)
 
 void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id_map)
 {
-    while (traveller.get_position() != -2)
+    while (traveller.get_position() != -1)
     {
         //char click;
         Timer();
-#ifdef _WIN32
-        system("cls");
-#elif __linux__
-        system("clear");
-#endif
+
+        ClearScreen();
+
         std::cout << "当前时间 : " << current_time.GetDay() << " 日 " << current_time.GetHour() << "时" << std::endl;
         PrintPath(city_graph, id_map, traveller.get_path(), traveller.get_position());
         traveller.UpdateState(city_graph, current_time);
@@ -66,11 +64,8 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
         Sleep(duration.count());
         // std::cin >> click;
     }
-#ifdef _WIN32
-    system("cls");
-#elif __linux__
-    system("clear");
-#endif
+
+    ClearScreen();
     std::cout << "当前时间 : " << current_time.GetDay() << " 日 " << current_time.GetHour() << "时" << std::endl;
     PrintPath(city_graph, id_map, traveller.get_path());
 }

@@ -41,7 +41,7 @@ std::vector<City_id> Request(const IDMap &im);
 void ErrorMsg(const std::string &err_msg);
 
 // 打印账户列表
-bool ShowNameList();
+bool PrintNameList();
 
 void Status();
 
@@ -78,6 +78,42 @@ void PrintTravellerInfo(const CityGraph &graph, const IDMap &id_map, const Time 
 std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, std::ostream &os = std::cout);
 std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, const int index, std::ostream &os = std::cout);
 
+// 验证账户名称是否合法
+inline bool IsValidName(const std::string &name_str)
+{
+    for (auto i = name_str.begin(); i != name_str.end(); ++i)
+        if (!std::isalnum(*i))
+            return false;
+    return true;
+}
+
+// 返回给定字符串中第一个数字,如果没有数字,则返回一个不是数字的字符
+char FindFirstDigit(const std::string &op_str)
+{
+    for (auto i = op_str.begin(); i != op_str.end(); ++i)
+        if (std::isdigit(*i))
+            return *i;
+    return 'A';
+}
+
+// 返回给定字符串中第一个字母,如果没有字母,则返回一个不是字母的字符
+char FindFirstAlpha(const std::string &op_str)
+{
+    for (auto i = op_str.begin(); i != op_str.end(); ++i)
+        if (std::isalpha(*i))
+            return *i;
+    return '0';
+}
+
+inline void ClearScreen()
+{
+#ifdef _WIN32
+    system("cls");
+#elif __linux__
+    system("clear");
+#endif
+}
+
 int Welcome()
 {
     cout << "|----------------------------------------------|" << endl;
@@ -92,49 +128,72 @@ int Welcome()
     cout << endl;
     cout << "选择注册还是已有账号登陆？" << endl;
     cout << "注册：S           登陆：L" << endl;
-    char sorl;
+    std::string option_str;
+    char option;
     while (1)
     {
-        cin >> sorl;
-        if (sorl == 'S' || sorl == 's')
+        std::getline(std::cin, option_str);
+        option = FindFirstAlpha(option_str);
+
+        if (option == 'S' || option == 's')
         {
             cout << "请输入你想注册的账号：";
             string accout_name;
             cin >> accout_name;
+
+            while (!IsValidName(accout_name))
+            {
+                ErrorMsg("非法的用户名");
+                std::cin >> accout_name;
+            }
+
             while (AccountCheck(accout_name) != -1)
             {
                 cout << "该账号已被注册，请重新输入：";
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cin >> accout_name;
+
+                while (!IsValidName(accout_name))
+                {
+                    ErrorMsg("非法的用户名");
+                    std::cin >> accout_name;
+                }
             }
             AddAccount(accout_name);
             cout << "你已注册账号：" << accout_name << endl;
             return -1;
         }
-        else if (sorl == 'l' || sorl == 'L')
+        else if (option == 'l' || option == 'L')
         {
             cout << "请输入你的账号：";
             string accout_name;
             cin >> accout_name;
+
+            while (!IsValidName(accout_name))
+            {
+                ErrorMsg("非法的用户名");
+                std::cin >> accout_name;
+            }
+
             while (AccountCheck(accout_name) == -1)
             {
                 cout << "输入账号有误，请重新输入：";
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cin >> accout_name;
+
+                while (!IsValidName(accout_name))
+                {
+                    ErrorMsg("非法的用户名");
+                    std::cin >> accout_name;
+                }
             }
             return AccountCheck(accout_name);
         }
-        else if (sorl == 'q' || sorl == 'Q')
+        else if (option == 'q' || option == 'Q')
         {
             exit(0);
         }
         else
         {
             cout << "请重新输入：";
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
     }
 }
@@ -148,39 +207,40 @@ int Menu(const IDMap &im, Traveller &traveller)
          << "3、路线查询" << endl
          << "4、模拟旅行" << endl
          << "5、退出程序" << endl;
-
+    std::string buf;
     char num;
     std::vector<City_id> plan;
-    while (cin >> num)
+    while (std::getline(std::cin, buf))
     {
+        if (!buf.size())
+        {
+            // std::cout << "!!!" << std::endl;
+            continue;
+        }
+        num = FindFirstDigit(buf);
         int operate_code = num - '0';
+
         if (operate_code == SCHEDULE)
         {
+            ClearScreen();
             cout << "预定行程" << endl;
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-            // std::for_each(plan.cbegin(), plan.cend(), [](City_id id) { cout << id << endl; });
-
-            // TODO : 输入旅行策略
             return operate_code;
         }
         else if (operate_code == INQUIRE_STATE)
         {
+            ClearScreen();
             cout << "状态查询" << endl;
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             return operate_code;
         }
         else if (operate_code == INQUIRE_PATH)
         {
+            ClearScreen();
             cout << "路线查询" << endl;
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             return operate_code;
         }
         else if (operate_code == SIMULATE)
         {
+            ClearScreen();
             return operate_code;
         }
         else if (operate_code == EXIT)
@@ -190,10 +250,9 @@ int Menu(const IDMap &im, Traveller &traveller)
         else
         {
             cout << "请重新输入：";
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
     }
+    std::cin.clear();
 }
 
 //预定行程
@@ -326,7 +385,7 @@ inline int AccountCheck(const string &id)
 }
 
 // 打印账户列表
-inline bool ShowNameList()
+inline bool PrintNameList()
 {
     std::string line_buf;
     std::ifstream fis(name_path);
@@ -342,28 +401,26 @@ inline bool ShowNameList()
 
 inline bool PathConfirm()
 {
-    char option;
+    std::string option;
     std::cout << "是否选择该条路线?[Y/N]" << std::endl;
-    /*if(now,init_time_)
-  {
-    state_ = OFF
-  }  ***这里做一个当前时间和出发时间的判断*/
     while (1)
     {
-        std::cin >> option;
-        if (option == 'Y')
+        std::getline(std::cin, option);
+        if (option.find_first_of('Y') != std::string::npos)
             return true;
-        else if (option == 'N')
+        else if (option.find_first_of('N') != std::string::npos)
             return false;
         else
         {
             ErrorMsg("无效的输入");
+            std::cin.clear();
         }
     }
 }
 
 inline Strategy InputStrategy()
 {
+    std::string strategy_str;
     int strategy;
     std::cout << "输入旅行策略" << std::endl
               << "1. 最少金钱" << std::endl
@@ -371,7 +428,11 @@ inline Strategy InputStrategy()
               << "3. 限定时间内最少金钱" << std::endl;
     while (1)
     {
-        std::cin >> strategy;
+        std::getline(std::cin, strategy_str);
+        if (!strategy_str.size())
+            continue;
+        strategy = FindFirstDigit(strategy_str) - '0';
+
         switch (strategy - 1)
         {
         case 0:
@@ -394,11 +455,13 @@ std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path 
 
 std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, const int index, std::ostream &os)
 {
-    std::string comp("有四个字");
+    std::string comp("三个字");
     std::string wrap[] = {"\t\t", "\t"};
     std::cout << "为你定制的路线为：" << std::endl;
-    std::cout << "始发地" << "\t\t"
-              << "目的地" << "\t\t"
+    std::cout << "始发地"
+              << "\t\t"
+              << "目的地"
+              << "\t\t"
               << "方式" << '\t'
               << "出发时间" << '\t'
               << "到达时间" << '\t'
@@ -412,8 +475,8 @@ std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path 
         Route route = graph.GetRoute(i, j, k);
         auto former_city_str = id_map.GetCityStr(i);
         auto current_city_str = id_map.GetCityStr(j);
-        std::cout << former_city_str << wrap[former_city_str.size() >= comp.size()]
-                  << current_city_str << wrap[current_city_str.size() >= comp.size()]
+        std::cout << former_city_str << wrap[former_city_str.size() > comp.size()]
+                  << current_city_str << wrap[current_city_str.size() > comp.size()]
                   << id_map.GetTransStr(route.transport_type) << '\t';
         RouteShow(route.start_time, route.end_time);
         std::cout << route.price << '\t'
@@ -428,8 +491,8 @@ std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path 
         Route route = graph.GetRoute(i, j, k);
         auto former_city_str = id_map.GetCityStr(i);
         auto current_city_str = id_map.GetCityStr(j);
-        std::cout << former_city_str << wrap[former_city_str.size() >= comp.size()]
-                  << current_city_str << wrap[current_city_str.size() >= comp.size()]
+        std::cout << former_city_str << wrap[former_city_str.size() > comp.size()]
+                  << current_city_str << wrap[current_city_str.size() > comp.size()]
                   << id_map.GetTransStr(route.transport_type) << '\t';
         RouteShow(route.start_time, route.end_time);
         std::cout << route.price << '\t'
