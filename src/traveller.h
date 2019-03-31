@@ -53,42 +53,76 @@ public:
   Traveller(std::string id) : id_(id){};
 
   // 显示旅客id
-  const std::string &ShowID() const
-  {
-    std::cout << id_ << std::endl;
-    return id_;
-  };
+  void PrintID() const { std::cout << id_ << std::endl; }
+  const std::string &get_ID() const { return id_; }
 
   // 打印旅客路径
   void ShowPath() const { touring_path_.Show(); }
+  const Path &get_path() const { return touring_path_; }
 
-  // 为旅客获取一条路径**关键算法**
-  Path GetPath(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time t = Time(), Time limit_time = Time());
-  Path GetPath(const CityGraph &graph, Strategy s, Time t = Time(), Time limit_time = Time())
+  // 为旅客计划一条路径
+  Path SchedulePath(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time t = Time(), Time limit = Time());
+  Path SchedulePath(const CityGraph &graph, Strategy s, Time t = Time(), Time limit = Time())
   {
-    return GetPath(graph, travelling_plan_, s, t, limit_time);
+    return SchedulePath(graph, travelling_plan_, s, t, limit);
   }
 
   // 设置旅行路径
-  //void set_path(Path path);
-  bool SaveData();
+  void set_path(Path &path)
+  {
+    touring_path_ = path;
+    position_pathnode_ = -1;
+  }
 
-  bool LoadData(int cnt, const CityGraph &graph);
+  // 打印旅客计划
+  void PrintPlan() const
+  {
+    std::for_each(travelling_plan_.begin(), travelling_plan_.end(), [](City_id city) { std::cout << city << " "; });
+    std::cout << std::endl;
+  }
+  const std::vector<City_id> &get_plan() const { return travelling_plan_; }
 
   void set_plan(const std::vector<City_id> &plan) { travelling_plan_ = plan; }
   void set_plan(std::initializer_list<City_id> il) { travelling_plan_ = std::vector<City_id>(il); }
 
+  // 保存当前旅客信息
+  bool SaveData() const;
+
+  bool LoadData(int cnt, const CityGraph &graph);
+
   void append_plan(City_id city) { travelling_plan_.push_back(city); }
 
-  void UpdateState(const CityGraph &graph, Time now);
+  int get_position() const { return position_pathnode_; }
 
-  void set_path(Path &path)
+  int get_left_hour() const { return next_city_hour_left_; }
+
+  void InitState(const CityGraph &graph);
+
+  void UpdateState(const CityGraph &graph, Time now);
+  TravellerState get_state() const { return state_; }
+
+  void set_strategy(Strategy strategy) { strategy_ = strategy; }
+  bool set_strategy(int strategy)
   {
-    position_pathnode_ = -1;
-    touring_path_ = path;
+    switch (strategy)
+    {
+    case 0:
+      strategy_ = LEAST_MONEY;
+      break;
+    case 1:
+      strategy_ = LEAST_TIME;
+      break;
+    case 2:
+      strategy_ = LIMIT_TIME;
+      break;
+    default:
+      return false;
+    }
+    return true;
   }
 
-  void ShowState(const CityGraph &graph, const IDMap &idmap, const Time &now);
+  void set_init_time(const Time &t) { init_time_ = t; }
+  const Time &get_init_time() const { return init_time_; }
 
 private:
   std::string id_ = "";                  // 旅客id
@@ -105,7 +139,7 @@ private:
   Path GetPathLTM(const CityGraph &graph, const std::vector<City_id> &plan, Time now, Time limit);
   void DFSLeastTime(const CityGraph &graph, const std::vector<City_id> &plan, Path &path, Path &temp_path, DFSLeastTimeParWarp &par_warp);
   void DFSLeastMoney(const std::vector<std::vector<int>> &price_matrix, std::vector<int> &path, std::vector<int> &temp_path, DFSLeastMoneyParWarp &par_warp);
-  void DFSLTM(const CityGraph &graph, const std::vector<City_id> &plan, Path &path, Path temp, int layer, int &leastmoney, const int limit);
+  void DFSLTM(const CityGraph &graph, const std::vector<City_id> &plan, Path &path, Path temp, int layer, int &least_money, const int limit);
 };
 
 void Traveller::DFSLeastMoney(const std::vector<std::vector<int>> &price_matrix, std::vector<int> &path, std::vector<int> &temp_path, DFSLeastMoneyParWarp &par_warp)
@@ -202,7 +236,7 @@ void Traveller::DFSLeastTime(const CityGraph &graph, const std::vector<City_id> 
   }
 }
 
-Path Traveller::GetPath(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time start_time, Time limit_time)
+Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time start_time, Time limit)
 {
   init_time_ = start_time;
   strategy_ = s;
@@ -304,7 +338,7 @@ Path Traveller::GetPath(const CityGraph &graph, const std::vector<City_id> &plan
   }
   else if (s == LIMIT_TIME)
   {
-    Path a = GetPathLTM(graph, plan, start_time, limit_time);
+    Path a = GetPathLTM(graph, plan, start_time, limit);
     if (a.GetLen() == 0)
     {
       std::cout << "未找到符合要求路线" << std::endl;
@@ -524,19 +558,30 @@ Path Traveller::GetPathLeastTime(const CityGraph &graph, const std::vector<City_
 Path Traveller::GetPathLTM(const CityGraph &graph, const std::vector<City_id> &plan, Time start_time, Time limit_time)
 {
   int limit = limit_time.hour_diff(start_time);
-  int leastmoney = kMaxInt;
   Path path;
+  int least_money = kMaxInt;
   Path temp;
-  DFSLTM(graph, plan, path, temp, 0, leastmoney, limit);
+  auto temp_plan_shuffle = plan;
+  DFSLTM(graph, plan, path, temp, 0, least_money, limit);
+  std::random_device rd;
+  std::mt19937 g(rd());
+  if (plan.size() > 3)
+    for (int i = 0; i < 5; i++)
+    {
+      shuffle(temp_plan_shuffle.begin() + 1, temp_plan_shuffle.end() - 1, g);
+      while (std::equal(plan.begin(), plan.end(), temp_plan_shuffle.begin()))
+        shuffle(temp_plan_shuffle.begin() + 1, temp_plan_shuffle.end() - 1, g);
+      DFSLTM(graph, temp_plan_shuffle, path, temp, 0, least_money, limit);
+    }
   return path;
 }
 
-void Traveller::DFSLTM(const CityGraph &graph, const std::vector<City_id> &plan, Path &path, Path temp, int layer, int &leastmoney, const int limit)
+void Traveller::DFSLTM(const CityGraph &graph, const std::vector<City_id> &plan, Path &path, Path temp, int layer, int &least_money, const int limit)
 {
   if (layer == plan.size() - 1)
   {
     path = temp;
-    leastmoney = path.GetTotalPrice();
+    least_money = path.GetTotalPrice();
     return;
   }
   int i = plan.at(layer);
@@ -545,17 +590,30 @@ void Traveller::DFSLTM(const CityGraph &graph, const std::vector<City_id> &plan,
   {
     temp.Append(graph, i, j, k, 1);
     temp.FixTotalTime(graph, init_time_);
-    if (temp.GetTotalPrice() < leastmoney && temp.GetTotalTime().GetLength() <= limit)
-      DFSLTM(graph, plan, path, temp, layer + 1, leastmoney, limit);
+    if (temp.GetTotalPrice() < least_money && temp.GetTotalTime().GetLength() <= limit && temp.GetTotalTime().GetLength() + plan.size() - layer - 1 <= limit)
+      DFSLTM(graph, plan, path, temp, layer + 1, least_money, limit);
     temp.Remove(graph);
   }
 }
 
-bool Traveller::SaveData()
+bool Traveller::SaveData() const
 {
   std::vector<std::string> lines;
   std::string temp;
-  int start_index;
+  int start_index = 0;
+
+  std::ofstream create_name_flie(name_path, std::ofstream::app); // 防止文件不存在导致的打开失败
+  std::ofstream create_file(save_path, std::ofstream::app);      // 防止文件不存在导致的打开失败
+
+  std::ifstream name_fis(name_path);
+  if (name_fis)
+  {
+    while (getline(name_fis, temp))
+      if (temp == id_)
+        break;
+      else
+        start_index++;
+  }
 
   std::ifstream fis(save_path);
   if (fis)
@@ -563,11 +621,9 @@ bool Traveller::SaveData()
     while (getline(fis, temp))
       lines.push_back(temp);
 
-    for (start_index = 0; start_index != lines.size(); start_index++)
-      if (lines[start_index] == id_)
-        break;
+    start_index *= 7;
 
-    if (start_index != lines.size())
+    if (start_index < lines.size())
     {
       int i = start_index + 1;
 
@@ -627,21 +683,21 @@ bool Traveller::SaveData()
 bool Traveller::LoadData(int cnt, const CityGraph &graph)
 {
   if (cnt == -1)
-    return true;
+    return false;
 
-  std::ifstream in_stream(save_path);
   int state_temp;
   int strategy_temp;
+  std::string temp;
+
+  std::ifstream in_stream(save_path);
   if (in_stream.is_open())
   {
-    std::string temp;
     for (int i = 0; i < cnt * 7; i++)
-      getline(in_stream, temp); //找位置
+      getline(in_stream, temp); // 找位置
 
-    in_stream >> id_; //第一行
-    //std::cout << id_ << std::endl; //////////////
-    in_stream >> state_temp;    //第二行
-    in_stream >> strategy_temp; //第三行
+    in_stream >> id_;           // 第一行
+    in_stream >> state_temp;    // 第二行
+    in_stream >> strategy_temp; // 第三行
 
     if (state_temp == 0)
       state_ = STAY;
@@ -655,30 +711,32 @@ bool Traveller::LoadData(int cnt, const CityGraph &graph)
     else if (strategy_temp == 2)
       strategy_ = LIMIT_TIME;
 
-    //std::cout << state_ << std::endl;    /////////////
-    //std::cout << strategy_ << std::endl; ///////////
-    getline(in_stream, temp); //结束前一行
-    getline(in_stream, temp); //第四行
-    std::istringstream s(temp);
+    getline(in_stream, temp); // 结束前一行
+
+    getline(in_stream, temp); // 第四行
+    std::istringstream sis(temp);
     int plantemp;
-    while (s >> plantemp)
+    while (sis >> plantemp)
     {
-      //std::cout << plantemp << " "; ///////////
+      // std::cout << plantemp << " "; ///////////
       travelling_plan_.push_back(plantemp);
     }
-    std::cout << std::endl;
-    getline(in_stream, temp); //第五行
-    std::istringstream ss(temp);
+    // std::cout << std::endl;
+
+    getline(in_stream, temp); // 第五行
+    sis.str(temp);
     City_id former_city, current_city, k;
-    while (ss >> former_city)
+    while (sis >> former_city)
     {
-      ss >> current_city;
-      ss >> k;
+      sis >> current_city;
+      sis >> k;
       //std::cout << former_city << " " << current_city << " " << k << std::endl; ////////////
       touring_path_.Append(graph, former_city, current_city, k, 1);
     }
+
     in_stream >> next_city_hour_left_;
     //std::cout << next_city_hour_left_ << std::endl;///////////
+
     in_stream >> position_pathnode_;
     //std::cout << position_pathnode_ << std::endl;///////////
     return true;
@@ -705,14 +763,17 @@ inline void Traveller::UpdateState(const CityGraph &graph, Time now)
         Route route = graph.GetRoute(node.former_city, node.current_city, node.kth_way);
         PathNode nodebefore = touring_path_.GetNode(position_pathnode_ - 1);
         Route preroute = graph.GetRoute(nodebefore.former_city, nodebefore.current_city, nodebefore.kth_way);
-        if (!route.start_time.hour_diff(preroute.end_time))
+        int diff_hour = route.start_time.hour_diff(Time(1, preroute.end_time.GetHour()));
+        if (diff_hour < 0)
+          diff_hour += 24;
+        if (!diff_hour)
         {
-          next_city_hour_left_ = route.start_time.hour_diff(route.end_time);
+          next_city_hour_left_ = route.end_time.hour_diff(route.start_time);
         }
         else
         {
           state_ = STAY;
-          next_city_hour_left_ = route.start_time.hour_diff(preroute.end_time);
+          next_city_hour_left_ = diff_hour;
         }
       }
     }
@@ -725,9 +786,9 @@ inline void Traveller::UpdateState(const CityGraph &graph, Time now)
     {
       if (next_city_hour_left_ == 1)
       {
-        int i = touring_path_.GetNode(position_pathnode_ + 1).former_city;
-        int j = touring_path_.GetNode(position_pathnode_ + 1).current_city;
-        int k = touring_path_.GetNode(position_pathnode_ + 1).kth_way;
+        int i = touring_path_.GetNode(position_pathnode_).former_city;
+        int j = touring_path_.GetNode(position_pathnode_).current_city;
+        int k = touring_path_.GetNode(position_pathnode_).kth_way;
         state_ = OFF;
         Route route = graph.GetRoute(i, j, k);
         next_city_hour_left_ = route.end_time.hour_diff(route.start_time);
@@ -738,40 +799,23 @@ inline void Traveller::UpdateState(const CityGraph &graph, Time now)
   }
 }
 
-void Traveller::ShowState(const CityGraph &graph, const IDMap &idmap, const Time &now)
+inline void Traveller::InitState(const CityGraph &graph)
 {
-  std::cout << id_ << std::endl;
-  if (state_ == STAY)
+  auto path_begin = touring_path_.cbegin();
+  Route route = graph.GetRoute((*path_begin).former_city, (*path_begin).current_city, (*path_begin).kth_way);
+  int left_hour = route.start_time.hour_diff(init_time_);
+  position_pathnode_ = 0;
+  if (left_hour < 0)
+    left_hour += 24;
+  if (left_hour)
   {
-    if (position_pathnode_ == -2)
-      std::cout << "当前无出行计划" << std::endl;
-    else if (position_pathnode_ == -1)
-    {
-      std::cout << std::endl;
-      std::cout << "你的始发地是：" << idmap.GetCityStr(travelling_plan_.at(0)) << std::endl;
-      std::cout << "你的目的地是：" << idmap.GetCityStr(travelling_plan_.at(travelling_plan_.size() - 1)) << std::endl;
-      if (travelling_plan_.size() > 2)
-      {
-        std::cout << "你的途经城市有：";
-        for (int i = 1; i < travelling_plan_.size() - 1; i++)
-        {
-          std::cout << idmap.GetCityStr(travelling_plan_.at(i)) << " ";
-        }
-        std::cout << std::endl;
-      }
-      touring_path_.ShowPath(graph, idmap, 0);
-    }
-    else
-    {
-      touring_path_.ShowPath(graph, idmap, position_pathnode_);
-      std::cout << "当前在：" << idmap.GetCityStr(touring_path_.GetNode(position_pathnode_).former_city) << std::endl;
-      std::cout << "离出发还有：" << next_city_hour_left_ << "h" << std::endl;
-    }
+    state_ = STAY;
+    next_city_hour_left_ = left_hour;
   }
   else
   {
-    touring_path_.ShowPath(graph, idmap, position_pathnode_);
-    std::cout << "距目的地" << idmap.GetCityStr(touring_path_.GetNode(position_pathnode_).current_city) << "还有：" << next_city_hour_left_ << "h" << std::endl;
+    state_ = OFF;
+    next_city_hour_left_ = route.end_time.hour_diff(route.start_time);
   }
 }
 #endif // SRC_TRAVELLER
