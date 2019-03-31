@@ -19,17 +19,20 @@ static Time current_time;
 std::chrono::duration<double, std::milli> Timer()
 {
     static int count = 0;
-    static auto start_time = std::chrono::system_clock::now();
-    static auto end_time = std::chrono::system_clock::now();
-    if (count++ % 2)
+    static std::chrono::time_point<std::chrono::system_clock> start_time;
+    static std::chrono::time_point<std::chrono::system_clock> end_time;
+    if (count % 2)
     {
-        start_time = std::chrono::system_clock::now();
-        return start_time - start_time;
+        end_time = std::chrono::system_clock::now();
+        count++;
+        return end_time - start_time;
     }
     else
     {
-        end_time = std::chrono::system_clock::now();
-        return end_time - start_time;
+
+        start_time = std::chrono::system_clock::now();
+        count++;
+        return start_time - start_time;
     }
 }
 
@@ -45,30 +48,26 @@ void InitializeSimulator(const Time &start_time)
 
 void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id_map)
 {
-    while (traveller.get_position() != -2)
+    while (traveller.get_position() != -1)
     {
         //char click;
         Timer();
-#ifdef _WIN32
-        system("cls");
-#elif __linux__
-        system("clear");
-#endif
+
+        ClearScreen();
+
         std::cout << "当前时间 : " << current_time.GetDay() << " 日 " << current_time.GetHour() << "时" << std::endl;
         PrintPath(city_graph, id_map, traveller.get_path(), traveller.get_position());
         traveller.UpdateState(city_graph, current_time);
         current_time.add_time(1);
         auto duration = Timer();
+        // std::cout << duration.count();
         Sleep(duration.count());
-        //std::cin >> click;
+        // std::cin >> click;
     }
-#ifdef _WIN32
-    system("cls");
-#elif __linux__
-    system("clear");
-#endif
+
+    ClearScreen();
     std::cout << "当前时间 : " << current_time.GetDay() << " 日 " << current_time.GetHour() << "时" << std::endl;
-    PrintPath(city_graph, id_map, traveller.get_path());
+    PrintPath(city_graph, id_map, traveller.get_path(), traveller.get_path().GetLen());
 }
 
 #endif // SRC_SIMULATE

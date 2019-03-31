@@ -23,13 +23,17 @@ int main()
     Time limit_time;
     Time init_time;
 
+    ClearScreen();
     int account_name_line = Welcome(traveller);
-
+    ClearScreen();
+    
     traveller.LoadData(account_name_line, city_graph);
 
     while (1)
     {
         int opcode = Menu(id_map, traveller);
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
         switch (opcode)
         {
         case SCHEDULE:
@@ -44,6 +48,7 @@ int main()
             PrintPath(city_graph, id_map, path);
             if (PathConfirm())
                 traveller.set_path(path);
+            ClearScreen();
             break;
         case INQUIRE_STATE:
             PrintTravellerInfo(city_graph, id_map, traveller.get_init_time(), traveller);

@@ -754,7 +754,7 @@ inline void Traveller::UpdateState(const CityGraph &graph, Time now)
       if (position_pathnode_ == touring_path_.GetLen() - 1)
       {
         state_ = STAY;
-        position_pathnode_ = -2;
+        position_pathnode_ = -1;
         return;
       }
       else
@@ -783,7 +783,7 @@ inline void Traveller::UpdateState(const CityGraph &graph, Time now)
   }
   else
   {
-    if (position_pathnode_ != -2)
+    if (position_pathnode_ != -1)
     {
       if (next_city_hour_left_ == 1)
       {
