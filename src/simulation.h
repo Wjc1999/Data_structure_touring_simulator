@@ -67,7 +67,7 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
 
     ClearScreen();
     std::cout << "当前时间 : " << current_time.GetDay() << " 日 " << current_time.GetHour() << "时" << std::endl;
-    PrintPath(city_graph, id_map, traveller.get_path());
+    PrintPath(city_graph, id_map, traveller.get_path(), traveller.get_path().GetLen());
 }
 
 #endif // SRC_SIMULATE
