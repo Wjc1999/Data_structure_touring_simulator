@@ -19,7 +19,7 @@ static const std::string log_ext(".log");
 enum WriteTplt
 {
   USER_INPUT,
-  ERROR,
+  ERROR
   // 待补充
 };
 static const std::string kTemplateString[] =
@@ -36,13 +36,21 @@ class Log
 {
 public:
   Log(); // 根据给定的文件路径打开日志文件
+  ~Log(); // 程序结束时记录程序的运行状况
 
-  //  向日志文件中写入log_str
-  void WriteLog(const std::string &log_str);
+  // 提供错误行为的日志
+  bool ErrorLog(ErrorCode err_code);
 
-  // 根据给定的模式串以及补充信息向日志文件中添加日志
-  void WriteLog(WriteTplt tplt_str, const std::string &supply_str);
+  // 记录用户操作
+  bool OperationLog(/*待补充*/);
 
+  // 记录各部件加载情况
+  bool LoadingSuccessLog(/*待补充*/);
+
+  // 记录程序的运行结果
+  bool ResultLog(/*待补充*/);
+
+  //  for debug
   const std::string &get_log_path() const { return log_path_; }
 
 private:
@@ -50,6 +58,9 @@ private:
   std::string log_path_;
   std::string GetCurrentTimestamp() const;
   std::string GetCurrentTime() const;
+
+  //  向日志文件中写入log_str
+  bool WriteLog(const std::string &log_str);
 };
 
 Log::Log()
@@ -60,9 +71,17 @@ Log::Log()
     throw "日志文件创建失败";
 }
 
-void Log::WriteLog(const std::string &log_str)
+inline bool Log::WriteLog(const std::string &log_str)
 {
-  log_stream_ << GetCurrentTime() << "  " << log_str << std::endl;
+  if (log_stream_)
+  {
+    log_stream_ << GetCurrentTime() << "  " << log_str << std::endl;
+    return true;
+  }
+  else
+  {
+    return false;
+  }
 }
 
 static std::string RemoveAllPunct(const std::string &time_str)

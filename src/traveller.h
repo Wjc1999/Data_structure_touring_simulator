@@ -55,7 +55,7 @@ public:
   // 显示旅客id
   void PrintID() const { std::cout << id_ << std::endl; }
   const std::string &get_ID() const { return id_; }
-  void set_id(std::string name) {id_ = name;}
+  void set_id(std::string name) { id_ = name; }
 
   // 打印旅客路径
   void ShowPath() const { touring_path_.Show(); }

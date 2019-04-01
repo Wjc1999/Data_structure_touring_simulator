@@ -22,11 +22,15 @@ enum TravellerState
 };
 enum OPCODE
 {
-    FILL,   // 占位
+    FILL,          // 占位
     SCHEDULE,      // 预定行程
     INQUIRE_STATE, // 状态查询
     INQUIRE_PATH,  // 路线查询
     SIMULATE,      // 模拟
     EXIT           // 退出程序
+};
+enum ErrorCode
+{
+    /*待补充*/
 };
 #endif // SRC_USER_TYPE

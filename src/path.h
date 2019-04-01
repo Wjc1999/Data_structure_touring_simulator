@@ -207,5 +207,4 @@ void Path::Show() const
               << path_node.kth_way << std::endl;
 }
 
-
 #endif // SRC_PATH
