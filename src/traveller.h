@@ -9,6 +9,7 @@
 #include <random>
 #include <fstream>
 #include <sstream>
+#include <memory>
 #include <initializer_list>
 
 #include "user_type.h"
@@ -267,7 +268,7 @@ Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> 
     }
 
     size_t sz = plan.size();
-    bool *isMeet = new bool[sz];
+    bool *isMeet = new bool[sz]();
     std::vector<City_id> temp_plan{0, 1};
 
     for (int i = 0; i != sz; ++i)
@@ -325,7 +326,7 @@ Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> 
       return res;
     else
     {
-      bool *isMeet = new bool[sz];
+      bool *isMeet = new bool[sz]();
       Path temp_path;
       std::vector<City_id> buf;
       for (i = 1; i != sz; ++i)

@@ -29,8 +29,4 @@ enum OPCODE
     SIMULATE,      // 模拟
     EXIT           // 退出程序
 };
-enum ErrorCode
-{
-    /*待补充*/
-};
 #endif // SRC_USER_TYPE

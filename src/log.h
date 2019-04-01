@@ -16,6 +16,11 @@
 static const std::string log_doc("../data/"); // log文件的文件目录
 static const std::string log_ext(".log");
 
+enum ErrorCode
+{
+    /*待补充*/
+};
+
 enum WriteTplt
 {
   USER_INPUT,
