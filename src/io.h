@@ -464,10 +464,10 @@ inline Strategy InputStrategy(Time &init_time, Time &limit_time)
     }
 }
 
-std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, std::ostream &os)
-{
-    return PrintPath(graph, id_map, path, 0);
-}
+// std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, std::ostream &os)
+// {
+//     return PrintPath(graph, id_map, path, 0);
+// }
 
 std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, const int index, std::ostream &os)
 {
