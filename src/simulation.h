@@ -72,9 +72,25 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
         Timer(count++);
 
         ClearScreen();
+        Path path = traveller.get_path();
+        int position = traveller.get_position();
+
+        City_id current_city = path.GetNode(position).former_city;
+        City_id next_city = path.GetNode(position).current_city;
+        int route_index = path.GetNode(position).kth_way;
+        Trans_id transport_type = city_graph.GetRoute(current_city, next_city, route_index).transport_type;
 
         std::cout << "当前时间 : " << current_time.GetDay() << " 日 " << current_time.GetHour() << "时" << std::endl;
-        PrintPath(city_graph, id_map, traveller.get_path(), traveller.get_position());
+
+        if (traveller.get_state() == OFF)
+            std::cout << "您当前在从 " << id_map.GetCityStr(current_city) << " 前往 "
+                      << id_map.GetCityStr(next_city) << " 的" << id_map.GetTransStr(transport_type) << "上" << std::endl;
+        else
+            std::cout << "您当前在等待从 " << id_map.GetCityStr(current_city) << " 前往 "
+                      << id_map.GetCityStr(next_city) << "的" << id_map.GetTransStr(transport_type) << std::endl;
+
+        PrintPath(city_graph, id_map, path, position);
+
         traveller.UpdateState(city_graph, current_time);
         current_time.add_time(1);
         auto duration = Timer(count++);
@@ -85,6 +101,7 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
 
     ClearScreen();
     std::cout << "当前时间 : " << current_time.GetDay() << " 日 " << current_time.GetHour() << "时" << std::endl;
+    std::cout << "到达目的地" << std::endl;
     PrintPath(city_graph, id_map, traveller.get_path(), traveller.get_path().GetLen());
 }
 
