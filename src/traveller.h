@@ -726,12 +726,12 @@ bool Traveller::LoadData(int cnt, const CityGraph &graph)
     // std::cout << std::endl;
 
     getline(in_stream, temp); // 第五行
-    sis.str(temp);
+    std::istringstream sis2(temp);
     City_id former_city, current_city, k;
-    while (sis >> former_city)
+    while (sis2 >> former_city)
     {
-      sis >> current_city;
-      sis >> k;
+      sis2 >> current_city;
+      sis2 >> k;
       //std::cout << former_city << " " << current_city << " " << k << std::endl; ////////////
       touring_path_.Append(graph, former_city, current_city, k, 1);
     }

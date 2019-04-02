@@ -357,10 +357,10 @@ std::vector<City_id> Request(const IDMap &im)
     return res;
 }
 
-inline void Status()
+/*inline void Status()
 {
     //traveller.();//关于traveller的输出
-}
+}*/
 
 // 打印错误信息
 // TODO : 同时输出至日志
@@ -369,10 +369,10 @@ void ErrorMsg(const std::string &err_msg)
     std::cout << err_msg << std::endl;
 }
 
-inline void MapSearch()
+/*inline void MapSearch()
 {
     //citygraph.()//关于图的输出
-}
+}*/
 
 // 返回账户名称所在的行数,若账户名称不存在则返回-1
 inline int AccountCheck(const std::string &id)
@@ -546,6 +546,8 @@ void PrintTravellerInfo(const CityGraph &graph, const IDMap &id_map, const Time 
                 std::cout << std::endl;
             }
             PrintPath(graph, id_map, path, 0);
+            std::cout << "总价格花费：" << path.GetTotalPrice() << std::endl;
+            std::cout << "总时间花费：" << path.GetTotalTime().GetLength() << "h" << std::endl;
         }
         else
         {
