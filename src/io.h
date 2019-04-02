@@ -267,7 +267,6 @@ int Menu(const IDMap &im, Traveller &traveller)
 // TODO : 判断输入是否为数字
 std::vector<City_id> Request(const IDMap &im)
 {
-    std::vector<City_id> temp_res;
     std::vector<City_id> res;
     std::string id;
     City_id temp_id;
@@ -300,7 +299,7 @@ std::vector<City_id> Request(const IDMap &im)
         }
     }
 
-    std::cout << "请输入您希望经过的城市(没有可填无)：";
+    std::cout << "请输入您希望经过的城市(以q结束)：";
     while (1)
     {
         if (!std::cin.good())
@@ -318,18 +317,17 @@ std::vector<City_id> Request(const IDMap &im)
                 ErrorMsg("无效的城市");
             else if (temp_id == res.front())
                 ErrorMsg("与起点重复");
-            else if (IsInplan(temp_res, temp_id))
+            else if (IsInplan(res, temp_id))
                 ErrorMsg("已存在于计划中");
             else
             {
-                std::cout << "你选择经过的城市是：" << im.GetCityStr(temp_id) << std::endl;
-                temp_res.push_back(temp_id);
+                res.push_back(temp_id);
             }
         }
     }
-    std::sort(temp_res.begin(), temp_res.end());
-    auto unique_end = unique(temp_res.begin(), temp_res.end());
-    std::copy(temp_res.begin(), unique_end, std::back_inserter(res));
+    std::cout << "你选择经过的城市是：";
+    std::for_each(res.begin(), res.end(), [&](City_id city_id) { std::cout << im.GetCityStr(city_id) << " "; });
+    std::cout << std::endl;
 
     std::cout << "请输入您的目的城市：";
     while (1)
@@ -531,7 +529,7 @@ void PrintTravellerInfo(const CityGraph &graph, const IDMap &id_map, const Time 
     auto path = traveller.get_path();
     auto position = traveller.get_position();
 
-    //std::cout << traveller.get_ID() << std::endl;
+    //std::cout << "用户名: " <<traveller.get_ID() << std::endl;
     if (traveller.get_state() == STAY)
     {
         if (position == -2)
