@@ -717,7 +717,7 @@ Time InputInitTime()
         if (std::cin.good())
         {
             hour = std::stoi(info);
-            if (hour >= 1 && hour < 24)
+            if (hour >= 0 && hour < 24)
             {
                 std::cout << "输入预计出发时间为：" << hour << ":00" << std::endl;
                 break;

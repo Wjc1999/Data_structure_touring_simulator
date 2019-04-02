@@ -58,10 +58,10 @@ public:
   //获取总时间
   const Time &GetTotalTime() const { return total_timecost_; }
 
-  // 返回指向路径第首个元素的迭代器
+  // 返回指向路径第首个元素的迭代器(危险,必须确保使用时该对象依然存在)
   std::deque<PathNode>::const_iterator cbegin() const { return cities_.cbegin(); }
 
-  // 返回指向路径尾后元素的迭代器
+  // 返回指向路径尾后元素的迭代器(危险,必须确保使用时该对象依然存在)
   std::deque<PathNode>::const_iterator cend() const { return cities_.cend(); }
 
   //返回节点

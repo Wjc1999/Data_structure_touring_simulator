@@ -14,7 +14,7 @@ int main()
     CityGraph graph;
     Traveller t;
     std::string name;
-    ShowNameList();
+    PrintNameList();
     int cnt;
     do
     {
@@ -25,8 +25,8 @@ int main()
     if (t.LoadData(cnt, graph))
     {
         std::cout << "success!" << std::endl;
-        t.ShowID();
-        t.ShowPlan();
+        t.PrintID();
+        t.PrintPlan();
         t.ShowPath();
     }
 
