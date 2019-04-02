@@ -51,6 +51,7 @@ int main()
             ClearScreen();
             break;
         case INQUIRE_STATE:
+            std::cout << "用户名: " <<traveller.get_ID() << std::endl;
             PrintTravellerInfo(city_graph, id_map, traveller.get_init_time(), traveller);
             break;
         case INQUIRE_PATH:

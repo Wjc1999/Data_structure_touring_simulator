@@ -81,16 +81,8 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
         Trans_id transport_type = city_graph.GetRoute(current_city, next_city, route_index).transport_type;
 
         std::cout << "当前时间 : " << current_time.GetDay() << " 日 " << current_time.GetHour() << "时" << std::endl;
-
-        if (traveller.get_state() == OFF)
-            std::cout << "您当前在从 " << id_map.GetCityStr(current_city) << " 前往 "
-                      << id_map.GetCityStr(next_city) << " 的" << id_map.GetTransStr(transport_type) << "上" << std::endl;
-        else
-            std::cout << "您当前在等待从 " << id_map.GetCityStr(current_city) << " 前往 "
-                      << id_map.GetCityStr(next_city) << "的" << id_map.GetTransStr(transport_type) << std::endl;
-
-        PrintPath(city_graph, id_map, path, position);
-
+        //PrintPath(city_graph, id_map, traveller.get_path(), traveller.get_position());
+        PrintTravellerInfo(city_graph, id_map, current_time, traveller);
         traveller.UpdateState(city_graph, current_time);
         current_time.add_time(1);
         auto duration = Timer(count++);
