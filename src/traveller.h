@@ -21,6 +21,7 @@
 const int kMaxInt = INT32_MAX; // 0x7fffffff
 const std::string save_path = "../data/traveller_data.txt";
 const std::string name_path = "../data/namelist.txt";
+const int SaveLines = 8;
 
 #ifdef TEST_GET_PATH
 extern int call_counter_time;
@@ -135,7 +136,7 @@ private:
   int next_city_hour_left_ = 0;          // 到下一个城市的剩余多少小时
   int position_pathnode_ = -2;           // 当前在第k个pathnode上, -2代表没有出行计划，-1代表有出行计划但没到出发时间
   //std::vector<PathNode>::iterator next_city_; // 路径中的下一个城市
-  Time init_time_; // 最开始时的时间
+  Time init_time_;                       // 最开始时的时间
   Path GetPathLeastMoney(const CityGraph &graph, const std::vector<City_id> &plan);
   Path GetPathLeastTime(const CityGraph &graph, const std::vector<City_id> &plan, Time now);
   Path GetPathLTM(const CityGraph &graph, const std::vector<City_id> &plan, Time now, Time limit);
@@ -623,7 +624,7 @@ bool Traveller::SaveData() const
     while (getline(fis, temp))
       lines.push_back(temp);
 
-    start_index *= 7;
+    start_index *= SaveLines;
 
     if (start_index < lines.size())
     {
@@ -644,6 +645,7 @@ bool Traveller::SaveData() const
 
       lines[i++] = std::to_string(next_city_hour_left_);
       lines[i++] = std::to_string(position_pathnode_);
+      lines[i++] = std::to_string(init_time_.GetHour());
     }
     else
     {
@@ -663,6 +665,7 @@ bool Traveller::SaveData() const
 
       lines.push_back(std::to_string(next_city_hour_left_));
       lines.push_back(std::to_string(position_pathnode_));
+      lines.push_back(std::to_string(init_time_.GetHour()));
     }
   }
   else
@@ -688,7 +691,7 @@ bool Traveller::LoadData(int cnt, const CityGraph &graph)
   std::ifstream in_stream(save_path);
   if (in_stream.is_open())
   {
-    for (int i = 0; i < cnt * 7; i++)
+    for (int i = 0; i < cnt * SaveLines; i++)
       getline(in_stream, temp); // 找位置
 
     in_stream >> id_;           // 第一行
@@ -736,6 +739,10 @@ bool Traveller::LoadData(int cnt, const CityGraph &graph)
 
     in_stream >> position_pathnode_;
     //std::cout << position_pathnode_ << std::endl;///////////
+    int hour;
+    in_stream >> hour;
+    init_time_.set_hour(hour);
+    touring_path_.FixTotalTime(graph, init_time_);
     return true;
   }
   return false;

@@ -72,7 +72,7 @@ void PrintTravellerInfo(const CityGraph &graph, const IDMap &id_map, const Time 
 
 // 打印界面友好的路径
 std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, std::ostream &os = std::cout);
-std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, const int index, std::ostream &os = std::cout);
+std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, const int index, bool showtotal = false, std::ostream &os = std::cout);
 
 // 验证账户名称是否合法
 inline bool IsValidName(const std::string &name_str)
@@ -451,6 +451,7 @@ inline Strategy InputStrategy(Time &init_time, Time &limit_time)
         switch (strategy - 1)
         {
         case 0:
+            init_time = InputInitTime();
             return LEAST_MONEY;
         case 1:
             init_time = InputInitTime();
@@ -468,14 +469,14 @@ inline Strategy InputStrategy(Time &init_time, Time &limit_time)
 
 std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, std::ostream &os)
 {
-    return PrintPath(graph, id_map, path, 0);
+    return PrintPath(graph, id_map, path, 0, true);
 }
 
-std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, const int index, std::ostream &os)
+std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, const int index, bool showtotal, std::ostream &os)
 {
     std::string comp("三个字");
     std::string wrap[] = {"\t\t", "\t"};
-    std::cout << "为你定制的路线为：" << std::endl;
+    //std::cout << "为你定制的路线为：" << std::endl;
     std::cout << "始发地"
               << "\t\t"
               << "目的地"
@@ -516,6 +517,11 @@ std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path 
         std::cout << route.price << '\t'
                   << "X" << '\t' << std::endl;
     }
+    if(showtotal)
+    {
+        std::cout << "总价格花费：" << path.GetTotalPrice() << std::endl;
+        std::cout << "总时间花费：" << path.GetTotalTime().GetLength() << "h" << std::endl;
+    }
     return os;
 }
 
@@ -525,7 +531,7 @@ void PrintTravellerInfo(const CityGraph &graph, const IDMap &id_map, const Time 
     auto path = traveller.get_path();
     auto position = traveller.get_position();
 
-    std::cout << traveller.get_ID() << std::endl;
+    //std::cout << traveller.get_ID() << std::endl;
     if (traveller.get_state() == STAY)
     {
         if (position == -2)
@@ -545,9 +551,7 @@ void PrintTravellerInfo(const CityGraph &graph, const IDMap &id_map, const Time 
                 }
                 std::cout << std::endl;
             }
-            PrintPath(graph, id_map, path, 0);
-            std::cout << "总价格花费：" << path.GetTotalPrice() << std::endl;
-            std::cout << "总时间花费：" << path.GetTotalTime().GetLength() << "h" << std::endl;
+            PrintPath(graph, id_map, path);
         }
         else
         {

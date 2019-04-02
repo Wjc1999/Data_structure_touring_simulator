@@ -74,7 +74,8 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
         ClearScreen();
 
         std::cout << "当前时间 : " << current_time.GetDay() << " 日 " << current_time.GetHour() << "时" << std::endl;
-        PrintPath(city_graph, id_map, traveller.get_path(), traveller.get_position());
+        //PrintPath(city_graph, id_map, traveller.get_path(), traveller.get_position());
+        PrintTravellerInfo(city_graph, id_map, current_time, traveller);
         traveller.UpdateState(city_graph, current_time);
         current_time.add_time(1);
         auto duration = Timer(count++);
