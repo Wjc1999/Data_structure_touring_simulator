@@ -9,6 +9,7 @@
 #include <random>
 #include <fstream>
 #include <sstream>
+#include <memory>
 #include <initializer_list>
 
 #include "user_type.h"
@@ -55,7 +56,7 @@ public:
   // 显示旅客id
   void PrintID() const { std::cout << id_ << std::endl; }
   const std::string &get_ID() const { return id_; }
-  void set_id(std::string name) {id_ = name;}
+  void set_id(std::string name) { id_ = name; }
 
   // 打印旅客路径
   void ShowPath() const { touring_path_.Show(); }
@@ -267,7 +268,7 @@ Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> 
     }
 
     size_t sz = plan.size();
-    bool *isMeet = new bool[sz];
+    bool *isMeet = new bool[sz]();
     std::vector<City_id> temp_plan{0, 1};
 
     for (int i = 0; i != sz; ++i)
@@ -325,7 +326,7 @@ Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> 
       return res;
     else
     {
-      bool *isMeet = new bool[sz];
+      bool *isMeet = new bool[sz]();
       Path temp_path;
       std::vector<City_id> buf;
       for (i = 1; i != sz; ++i)

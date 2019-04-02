@@ -27,16 +27,19 @@ struct Route
 
 class CityGraph // 城市图
 {
-  
+
 public:
   CityGraph(); //构造函数
   int get_city_num() const { return kCityNum; }
+
   //打印ijk的存储数据
-  void Show(City_id former_city, City_id current_city, int k) const;                                                 
+  void Show(City_id former_city, City_id current_city, int k) const;
+
   //获得存储在ijk的Route
   const Route &GetRoute(City_id former_city, City_id current_city, int k) const { return city_[former_city][current_city].at(k); }
+  
   //获得city[i][j]的大小
-  int Getsize(City_id i, City_id j) const { return city_[i][j].size(); }                                      
+  int Getsize(City_id i, City_id j) const { return city_[i][j].size(); }
 
 #ifdef TEST_CG
 
@@ -126,10 +129,10 @@ inline void CityGraph::Show(City_id former_city, City_id current_city, int k) co
 {
   if (former_city != current_city)
   {
-    std::cout << former_city << ' ' << current_city << ' ' << k << ' ' 
-              << city_[former_city][current_city].at(k).start_time.GetDay() << ' ' 
+    std::cout << former_city << ' ' << current_city << ' ' << k << ' '
+              << city_[former_city][current_city].at(k).start_time.GetDay() << ' '
               << city_[former_city][current_city].at(k).start_time.GetHour() << ' '
-              << city_[former_city][current_city].at(k).end_time.GetDay() << ' ' 
+              << city_[former_city][current_city].at(k).end_time.GetDay() << ' '
               << city_[former_city][current_city].at(k).end_time.GetHour() << ' '
               << city_[former_city][current_city].at(k).price << std::endl;
   }

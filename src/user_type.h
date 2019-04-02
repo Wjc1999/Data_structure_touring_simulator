@@ -22,7 +22,7 @@ enum TravellerState
 };
 enum OPCODE
 {
-    FILL,   // 占位
+    FILL,          // 占位
     SCHEDULE,      // 预定行程
     INQUIRE_STATE, // 状态查询
     INQUIRE_PATH,  // 路线查询

@@ -635,7 +635,7 @@ void PrintRoutes(const CityGraph &graph, const IDMap &id_map)
         for (int k = 0; k < size; k++)
         {
             Route route = graph.GetRoute(start_city, target_city, k);
-            
+
             std::string cityi = id_map.GetCityStr(start_city);
             std::string cityj = id_map.GetCityStr(target_city);
             std::string method = id_map.GetTransStr(route.transport_type);
