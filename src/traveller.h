@@ -663,12 +663,6 @@ bool Traveller::SaveData() const
 
       lines.push_back(std::to_string(next_city_hour_left_));
       lines.push_back(std::to_string(position_pathnode_));
-
-      std::ofstream name_os(name_path, std::ofstream::app);
-      if (name_os)
-        name_os << id_ << std::endl;
-      else
-        return false;
     }
   }
   else
@@ -727,6 +721,7 @@ bool Traveller::LoadData(int cnt, const CityGraph &graph)
 
     getline(in_stream, temp); // 第五行
     sis.str(temp);
+    sis.clear();
     City_id former_city, current_city, k;
     while (sis >> former_city)
     {
