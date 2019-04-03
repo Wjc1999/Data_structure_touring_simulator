@@ -11,6 +11,8 @@
 #include "../src/log.h"
 #include "../src/path.h"
 #include "../src/simulation.h"
+#include "../src/save_at_exit.h"
+
 
 int main()
 {
@@ -28,7 +30,8 @@ int main()
     ClearScreen();
     
     traveller.LoadData(account_name_line, city_graph);
-
+    setTravellerPtr(&traveller);
+    setSignalHandlers();
     while (1)
     {
         int opcode = Menu(id_map, traveller);
@@ -64,8 +67,7 @@ int main()
             Simulate(traveller, city_graph, id_map);
             break;
         case EXIT:
-            traveller.SaveData();
-            exit(0);
+            std::exit(0);
             break;
         default:
             break;

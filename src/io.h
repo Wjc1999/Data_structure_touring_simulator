@@ -2,7 +2,6 @@
 #define SRC_IO
 
 #include <cctype>
-
 #include <iostream>
 #include <limits>
 #include <string>
@@ -18,11 +17,12 @@
 #include "user_type.h"
 #include "path.h"
 
+#if defined(_WIN32) || (defined(__CYGWIN__) && !defined(_WIN32)) || defined(__MINGW32__) || defined(__MINGW64__)
+#include <windows.h>
+#endif // _WIN32
+
 extern const std::string name_path;
 extern const int kCityNum;
-using std::numeric_limits;
-using std::streamsize;
-using std::string;
 
 //欢迎界面
 int Welcome(Traveller &t);
@@ -103,10 +103,41 @@ char FindFirstAlpha(const std::string &op_str)
 
 inline void ClearScreen()
 {
-#ifdef _WIN32
-    system("cls");
-#elif __linux__
-    system("clear");
+#if defined(_WIN32) || (defined(__CYGWIN__) && !defined(_WIN32)) || defined(__MINGW32__) || defined(__MINGW64__)
+    // https://stackoverflow.com/questions/34842526/update-console-without-flickering-c
+    // Get the Win32 handle representing standard output.
+    // This generally only has to be done once, so we make it static.
+    static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    COORD topLeft = { 0, 0 };
+
+    // std::cout uses a buffer to batch writes to the underlying console.
+    // We need to flush that to the console because we're circumventing
+    // std::cout entirely; after we clear the console, we don't want
+    // stale buffered text to randomly be written out.
+    std::cout.flush();
+
+    // Figure out the current width and height of the console window
+    if (!GetConsoleScreenBufferInfo(hOut, &csbi)) {
+        // TODO: Handle failure!
+        abort();
+    }
+    DWORD length = csbi.dwSize.X * csbi.dwSize.Y;
+
+    DWORD written;
+
+    // Flood-fill the console with spaces to clear it
+    FillConsoleOutputCharacter(hOut, TEXT(' '), length, topLeft, &written);
+
+    // Reset the attributes of every character to the default.
+    // This clears all background colour formatting, if any.
+    // FillConsoleOutputAttribute(hOut, csbi.wAttributes, length, topLeft, &written);
+
+    // Move the cursor back to the top left for the next sequence of writes
+    SetConsoleCursorPosition(hOut, topLeft);
+#elif defined(__linux__)
+    std::cout << "\x1B[2J\x1B[H";
 #endif
 }
 
@@ -326,7 +357,7 @@ std::vector<City_id> Request(const IDMap &im)
         }
     }
     std::cout << "你选择经过的城市是：";
-    std::for_each(res.begin(), res.end(), [&](City_id city_id) { std::cout << im.GetCityStr(city_id) << " "; });
+    std::for_each(++res.begin(), res.end(), [&](City_id city_id) { std::cout << im.GetCityStr(city_id) << " "; });
     std::cout << std::endl;
 
     std::cout << "请输入您的目的城市：";
@@ -515,7 +546,7 @@ std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path 
         std::cout << route.price << '\t'
                   << "X" << '\t' << std::endl;
     }
-    if(showtotal)
+    if (showtotal)
     {
         std::cout << "总价格花费：" << path.GetTotalPrice() << std::endl;
         std::cout << "总时间花费：" << path.GetTotalTime().GetLength() << "h" << std::endl;

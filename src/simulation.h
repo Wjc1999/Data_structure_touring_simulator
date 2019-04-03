@@ -6,6 +6,7 @@
 #include <chrono>
 #include <thread>
 
+
 #include "io.h"
 #include "traveller.h"
 #include "city_graph.h"
@@ -53,7 +54,7 @@ std::chrono::duration<double, std::milli> Timer(int count)
     }
 }
 
-void Sleep(int millseconds)
+void SleepFor(int millseconds)
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(500 - millseconds));
 }
@@ -66,12 +67,13 @@ void InitializeSimulator(const Time &start_time)
 void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id_map)
 {
     int count = 0;
+
     while (traveller.get_position() != -1)
     {
         //char click;
         Timer(count++);
-
         ClearScreen();
+        
         Path path = traveller.get_path();
         int position = traveller.get_position();
 
@@ -79,7 +81,6 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
         City_id next_city = path.GetNode(position).current_city;
         int route_index = path.GetNode(position).kth_way;
         Trans_id transport_type = city_graph.GetRoute(current_city, next_city, route_index).transport_type;
-
         std::cout << "当前时间 : " << current_time.GetDay() << " 日 " << current_time.GetHour() << "时" << std::endl;
         //PrintPath(city_graph, id_map, traveller.get_path(), traveller.get_position());
         PrintTravellerInfo(city_graph, id_map, current_time, traveller);
@@ -87,7 +88,7 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
         current_time.add_time(1);
         auto duration = Timer(count++);
         // std::cout << duration.count();
-        Sleep(duration.count());
+        SleepFor(duration.count());
         // std::cin >> click;
     }
 
