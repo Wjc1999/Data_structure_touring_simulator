@@ -12,7 +12,7 @@
 static Traveller *p_traveller = nullptr;
 static bool saved = false;
 
-void set_traveller_ptr(Traveller *traveller)
+void setTravellerPtr(Traveller *traveller)
 {
     p_traveller = traveller;
 }
@@ -39,14 +39,12 @@ void SaveDataOnExit(int sig)
     std::exit(EXIT_FAILURE);
 }
 
-void set_signal_handles()
+void setSignalHandlers()
 {
     std::signal(SIGABRT, SaveDataOnExit);
     std::signal(SIGINT, SaveDataOnExit);
     std::signal(SIGTERM, SaveDataOnExit);
     std::atexit(SaveDataOnExit);
 }
-
-#include "traveller.h"
 
 #endif // SAVE_AT_EXIT

@@ -30,8 +30,8 @@ int main()
     ClearScreen();
     
     traveller.LoadData(account_name_line, city_graph);
-    set_traveller_ptr(&traveller);
-    set_signal_handles();
+    setTravellerPtr(&traveller);
+    setSignalHandlers();
     while (1)
     {
         int opcode = Menu(id_map, traveller);
