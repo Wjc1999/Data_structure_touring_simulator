@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <chrono>
 #include <thread>
-
+#include <memory>
 
 #include "io.h"
 #include "traveller.h"
@@ -16,6 +16,8 @@
 #include "id_map.h"
 
 static Time current_time;
+
+
 // 返回每两次调用间的间隔毫秒数
 std::chrono::duration<double, std::milli> Timer()
 {
@@ -64,8 +66,83 @@ void InitializeSimulator(const Time &start_time)
     current_time = start_time;
 }
 
+#if defined(_WIN32) || (defined(__CYGWIN__) && !defined(_WIN32)) || defined(__MINGW32__) || defined(__MINGW64__)
+
+static HANDLE InitOutBuf()
+{
+    HANDLE hTempOutBuf = CreateConsoleScreenBuffer(
+        GENERIC_READ | GENERIC_WRITE,
+        FILE_SHARE_READ | FILE_SHARE_WRITE,
+        NULL,
+        CONSOLE_TEXTMODE_BUFFER,
+        NULL);
+    CONSOLE_CURSOR_INFO cci;
+    cci.bVisible = 0;
+    SetConsoleCursorInfo(hTempOutBuf, &cci);
+    return hTempOutBuf;
+}
+
 void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id_map)
 {
+    static bool out_buf_inited = false;
+    static HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    static HANDLE hOutBuf;
+
+    if (!out_buf_inited)
+    {
+        hOutBuf = InitOutBuf();
+        out_buf_inited = true;
+    }
+
+    SetConsoleActiveScreenBuffer(hOutBuf);
+
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(hStdOut, &csbi);
+    SMALL_RECT srctRect = csbi.srWindow;
+    COORD coordBufSize = csbi.dwSize;
+    COORD coordBufCoord = {0, 0};
+    CHAR_INFO *data_buffer = new CHAR_INFO[coordBufSize.X * coordBufSize.Y];
+
+    int count = 0;
+    while (traveller.get_position() != -1)
+    {
+        Timer(count++);
+        ClearScreen();
+
+        Path path = traveller.get_path();
+        int position = traveller.get_position();
+
+        City_id current_city = path.GetNode(position).former_city;
+        City_id next_city = path.GetNode(position).current_city;
+        int route_index = path.GetNode(position).kth_way;
+        Trans_id transport_type = city_graph.GetRoute(current_city, next_city, route_index).transport_type;
+        std::cout << "当前时间 : " << current_time.GetDay() << " 日 " << current_time.GetHour() << "时" << std::endl;
+        //PrintPath(city_graph, id_map, traveller.get_path(), traveller.get_position());
+        PrintTravellerInfo(city_graph, id_map, current_time, traveller);
+
+        ReadConsoleOutput(hStdOut, data_buffer, coordBufSize, coordBufCoord, &srctRect);
+        WriteConsoleOutput(hOutBuf, data_buffer, coordBufSize, coordBufCoord, &srctRect);
+
+        traveller.UpdateState(city_graph, current_time);
+        current_time.add_time(1);
+        auto duration = Timer(count++);
+        // std::cout << duration.count();
+        SleepFor(duration.count());
+        // std::cin >> click;
+    }
+    ClearScreen();
+    std::cout << "当前时间 : " << current_time.GetDay() << " 日 " << current_time.GetHour() << "时" << std::endl;
+    std::cout << "到达目的地" << std::endl;
+    PrintPath(city_graph, id_map, traveller.get_path(), traveller.get_path().GetLen());
+
+    SetConsoleActiveScreenBuffer(hStdOut);
+}
+
+#elif
+
+void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id_map)
+{
+
     int count = 0;
 
     while (traveller.get_position() != -1)
@@ -73,7 +150,7 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
         //char click;
         Timer(count++);
         ClearScreen();
-        
+
         Path path = traveller.get_path();
         int position = traveller.get_position();
 
@@ -97,5 +174,5 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
     std::cout << "到达目的地" << std::endl;
     PrintPath(city_graph, id_map, traveller.get_path(), traveller.get_path().GetLen());
 }
-
+#endif
 #endif // SRC_SIMULATE
