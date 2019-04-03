@@ -16,7 +16,7 @@
 #include "id_map.h"
 
 static Time current_time;
-
+static int sleep_millsecs = 500;
 
 // 返回每两次调用间的间隔毫秒数
 std::chrono::duration<double, std::milli> Timer()
@@ -56,9 +56,14 @@ std::chrono::duration<double, std::milli> Timer(int count)
     }
 }
 
+void setSleepMillsecs(int sleep_ms)
+{
+    sleep_millsecs = sleep_ms;
+}
+
 void SleepFor(int millseconds)
 {
-    std::this_thread::sleep_for(std::chrono::milliseconds(500 - millseconds));
+    std::this_thread::sleep_for(std::chrono::milliseconds(sleep_millsecs - millseconds));
 }
 
 void InitializeSimulator(const Time &start_time)
@@ -138,7 +143,7 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
     SetConsoleActiveScreenBuffer(hStdOut);
 }
 
-#elif
+#else
 
 void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id_map)
 {

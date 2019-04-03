@@ -66,6 +66,9 @@ int main()
             InitializeSimulator(traveller.get_init_time());
             Simulate(traveller, city_graph, id_map);
             break;
+        case SETTINGS:;
+            setSleepMillsecs(getSimulateSpeed());
+            break;
         case EXIT:
             std::exit(0);
             break;

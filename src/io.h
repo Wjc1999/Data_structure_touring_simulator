@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <iterator>
 #include <fstream>
+#include <exception>
 
 #include "traveller.h"
 #include "id_map.h"
@@ -74,6 +75,9 @@ void PrintTravellerInfo(const CityGraph &graph, const IDMap &id_map, const Time 
 std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, std::ostream &os = std::cout);
 std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, const int index, bool showtotal = false, std::ostream &os = std::cout);
 
+// 改变模拟的速度
+double getSimulateSpeed();
+
 // 验证账户名称是否合法
 inline bool IsValidName(const std::string &name_str)
 {
@@ -104,38 +108,23 @@ char FindFirstAlpha(const std::string &op_str)
 inline void ClearScreen()
 {
 #if defined(_WIN32) || (defined(__CYGWIN__) && !defined(_WIN32)) || defined(__MINGW32__) || defined(__MINGW64__)
-    // https://stackoverflow.com/questions/34842526/update-console-without-flickering-c
-    // Get the Win32 handle representing standard output.
-    // This generally only has to be done once, so we make it static.
     static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     COORD topLeft = {0, 0};
 
-    // std::cout uses a buffer to batch writes to the underlying console.
-    // We need to flush that to the console because we're circumventing
-    // std::cout entirely; after we clear the console, we don't want
-    // stale buffered text to randomly be written out.
     std::cout.flush();
 
-    // Figure out the current width and height of the console window
     if (!GetConsoleScreenBufferInfo(hOut, &csbi))
     {
-        // TODO: Handle failure!
         abort();
     }
     DWORD length = csbi.dwSize.X * csbi.dwSize.Y;
 
     DWORD written;
 
-    // Flood-fill the console with spaces to clear it
     FillConsoleOutputCharacter(hOut, TEXT(' '), length, topLeft, &written);
 
-    // Reset the attributes of every character to the default.
-    // This clears all background colour formatting, if any.
-    // FillConsoleOutputAttribute(hOut, csbi.wAttributes, length, topLeft, &written);
-
-    // Move the cursor back to the top left for the next sequence of writes
     SetConsoleCursorPosition(hOut, topLeft);
 #elif defined(__linux__)
     std::cout << "\x1B[2J\x1B[H";
@@ -270,7 +259,8 @@ int Menu(const IDMap &im, Traveller &traveller)
               << "2、状态查询" << std::endl
               << "3、路线查询" << std::endl
               << "4、模拟旅行" << std::endl
-              << "5、退出程序" << std::endl;
+              << "5、改变模拟速度" << std::endl
+              << "6、退出程序" << std::endl;
     std::string buf;
     char num;
     std::vector<City_id> plan;
@@ -307,6 +297,11 @@ int Menu(const IDMap &im, Traveller &traveller)
             ClearScreen();
             return operate_code;
         }
+        else if (operate_code == SETTINGS)
+        {
+            ClearScreen();
+            return operate_code;
+        }
         else if (operate_code == EXIT)
         {
             return operate_code;
@@ -320,7 +315,11 @@ int Menu(const IDMap &im, Traveller &traveller)
 }
 
 //预定行程
-// TODO : 判断输入是否为数字
+//
+//
+//
+//
+// TODO: 判断输入是否为数字
 std::vector<City_id> Request(const IDMap &im)
 {
     std::vector<City_id> res;
@@ -794,5 +793,35 @@ Time InputInitTime()
 inline bool IsInplan(const std::vector<City_id> &plan, City_id city)
 {
     return std::find(plan.begin(), plan.end(), city) != plan.end();
+}
+
+double getSimulateSpeed()
+{
+    std::cout << "请输入两次模拟的间隔时间(在0.5秒和10秒之间)：";
+    std::string line;
+    double sleep_ms;
+    std::exception excpt;
+
+    while (1)
+    {
+        try
+        {
+            getline(std::cin, line);
+            if (!line.size())
+                continue;
+            else
+            {
+                sleep_ms = std::stod(line);
+                if (sleep_ms < 0.5 || sleep_ms > 10)
+                    throw excpt;
+                break;
+            }
+        }
+        catch (std::exception excpt)
+        {
+            std::cout << "输入有误，请重新输入" << std::endl;
+        }
+    }
+    return 1000 * sleep_ms;
 }
 #endif //SRC_IO
