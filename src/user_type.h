@@ -27,6 +27,7 @@ enum OPCODE
     INQUIRE_STATE, // 状态查询
     INQUIRE_PATH,  // 路线查询
     SIMULATE,      // 模拟
+    SETTINGS,      // 设置
     EXIT           // 退出程序
 };
 #endif // SRC_USER_TYPE

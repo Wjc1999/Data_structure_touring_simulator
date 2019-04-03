@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <iterator>
 #include <fstream>
+#include <exception>
 
 #include "traveller.h"
 #include "id_map.h"
@@ -74,6 +75,9 @@ void PrintTravellerInfo(const CityGraph &graph, const IDMap &id_map, const Time 
 std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, std::ostream &os = std::cout);
 std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, const int index, bool showtotal = false, std::ostream &os = std::cout);
 
+// 改变模拟的速度
+double getSimulateSpeed();
+
 // 验证账户名称是否合法
 inline bool IsValidName(const std::string &name_str)
 {
@@ -104,37 +108,23 @@ char FindFirstAlpha(const std::string &op_str)
 inline void ClearScreen()
 {
 #if defined(_WIN32) || (defined(__CYGWIN__) && !defined(_WIN32)) || defined(__MINGW32__) || defined(__MINGW64__)
-    // https://stackoverflow.com/questions/34842526/update-console-without-flickering-c
-    // Get the Win32 handle representing standard output.
-    // This generally only has to be done once, so we make it static.
     static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 
     CONSOLE_SCREEN_BUFFER_INFO csbi;
-    COORD topLeft = { 0, 0 };
+    COORD topLeft = {0, 0};
 
-    // std::cout uses a buffer to batch writes to the underlying console.
-    // We need to flush that to the console because we're circumventing
-    // std::cout entirely; after we clear the console, we don't want
-    // stale buffered text to randomly be written out.
     std::cout.flush();
 
-    // Figure out the current width and height of the console window
-    if (!GetConsoleScreenBufferInfo(hOut, &csbi)) {
-        // TODO: Handle failure!
+    if (!GetConsoleScreenBufferInfo(hOut, &csbi))
+    {
         abort();
     }
     DWORD length = csbi.dwSize.X * csbi.dwSize.Y;
 
     DWORD written;
 
-    // Flood-fill the console with spaces to clear it
     FillConsoleOutputCharacter(hOut, TEXT(' '), length, topLeft, &written);
 
-    // Reset the attributes of every character to the default.
-    // This clears all background colour formatting, if any.
-    // FillConsoleOutputAttribute(hOut, csbi.wAttributes, length, topLeft, &written);
-
-    // Move the cursor back to the top left for the next sequence of writes
     SetConsoleCursorPosition(hOut, topLeft);
 #elif defined(__linux__)
     std::cout << "\x1B[2J\x1B[H";
@@ -176,23 +166,23 @@ int Welcome(Traveller &traveller)
         {
             std::cout << "请输入你想注册的账号：";
             std::string accout_name;
-            std::cin >> accout_name;
+            getline(std::cin, accout_name);
 
             while (!IsValidName(accout_name))
             {
-                ErrorMsg("非法的用户名");
-                std::cin >> accout_name;
+                ErrorMsg("非法的用户名，请重新输入：");
+                getline(std::cin, accout_name);
             }
 
             while (AccountCheck(accout_name) != -1)
             {
                 std::cout << "该账号已被注册，请重新输入：";
-                std::cin >> accout_name;
+                getline(std::cin, accout_name);
 
                 while (!IsValidName(accout_name))
                 {
-                    ErrorMsg("非法的用户名");
-                    std::cin >> accout_name;
+                    ErrorMsg("非法的用户名，请重新输入：");
+                    getline(std::cin, accout_name);
                 }
             }
             AddAccount(accout_name);
@@ -202,25 +192,49 @@ int Welcome(Traveller &traveller)
         }
         else if (option == 'l' || option == 'L')
         {
-            std::cout << "请输入你的账号：";
+            std::cout << "已注册的账号列表如下：" << std::endl;
+            PrintNameList();
+
+            std::cout << "请输入您的账号：";
             std::string accout_name;
-            std::cin >> accout_name;
+            getline(std::cin, accout_name);
 
             while (!IsValidName(accout_name))
             {
-                ErrorMsg("非法的用户名");
-                std::cin >> accout_name;
+                ErrorMsg("非法的用户名,请重新输入");
+                getline(std::cin, accout_name);
             }
 
             while (AccountCheck(accout_name) == -1)
             {
-                std::cout << "输入账号有误，请重新输入：";
-                std::cin >> accout_name;
+                std::string option_str;
+                char option;
 
-                while (!IsValidName(accout_name))
+                std::cout << "该账号不存在，是否需要注册该账号?[Y/N]" << std::endl;
+
+                std::getline(std::cin, option_str);
+                option = FindFirstAlpha(option_str);
+                while (option != 'Y' && option != 'N')
                 {
-                    ErrorMsg("非法的用户名");
-                    std::cin >> accout_name;
+                    std::cout << "无效的选项，请重新输入" << std::endl;
+                    std::getline(std::cin, option_str);
+                    option = FindFirstAlpha(option_str);
+                }
+                if (option == 'Y')
+                {
+                    AddAccount(accout_name);
+                    traveller.set_id(accout_name);
+                    return -1;
+                }
+                else if (option == 'N')
+                {
+                    std::cout << "请重新输入您的账号：";
+                    getline(std::cin, accout_name);
+                    while (!IsValidName(accout_name))
+                    {
+                        ErrorMsg("非法的用户名，请重新输入：");
+                        getline(std::cin, accout_name);
+                    }
                 }
             }
             return AccountCheck(accout_name);
@@ -231,7 +245,7 @@ int Welcome(Traveller &traveller)
         }
         else
         {
-            std::cout << "请重新输入：";
+            std::cout << "无效的选项，请重新输入：";
         }
     }
 }
@@ -245,7 +259,8 @@ int Menu(const IDMap &im, Traveller &traveller)
               << "2、状态查询" << std::endl
               << "3、路线查询" << std::endl
               << "4、模拟旅行" << std::endl
-              << "5、退出程序" << std::endl;
+              << "5、改变模拟速度" << std::endl
+              << "6、退出程序" << std::endl;
     std::string buf;
     char num;
     std::vector<City_id> plan;
@@ -282,20 +297,29 @@ int Menu(const IDMap &im, Traveller &traveller)
             ClearScreen();
             return operate_code;
         }
+        else if (operate_code == SETTINGS)
+        {
+            ClearScreen();
+            return operate_code;
+        }
         else if (operate_code == EXIT)
         {
             return operate_code;
         }
         else
         {
-            std::cout << "请重新输入：";
+            std::cout << "无效的选项，请重新输入：";
         }
     }
     std::cin.clear();
 }
 
 //预定行程
-// TODO : 判断输入是否为数字
+//
+//
+//
+//
+// TODO: 判断输入是否为数字
 std::vector<City_id> Request(const IDMap &im)
 {
     std::vector<City_id> res;
@@ -325,7 +349,7 @@ std::vector<City_id> Request(const IDMap &im)
             }
             else
             {
-                ErrorMsg("无效的输入");
+                ErrorMsg("无效的输入，请重新输入");
             }
         }
     }
@@ -345,11 +369,11 @@ std::vector<City_id> Request(const IDMap &im)
 
             temp_id = std::stoi(id) - 1;
             if (temp_id >= im.GetCityMapSize() || temp_id < 0)
-                ErrorMsg("无效的城市");
+                ErrorMsg("无效的城市，请重新输入");
             else if (temp_id == res.front())
-                ErrorMsg("与起点重复");
+                ErrorMsg("与起点重复，请重新输入");
             else if (IsInplan(res, temp_id))
-                ErrorMsg("已存在于计划中");
+                ErrorMsg("已存在于计划中，请重新输入");
             else
             {
                 res.push_back(temp_id);
@@ -371,10 +395,10 @@ std::vector<City_id> Request(const IDMap &im)
             temp_id = std::stoi(id) - 1;
             if (std::find(res.begin(), res.end(), temp_id) != res.end())
             {
-                ErrorMsg("重复的城市");
+                ErrorMsg("重复的城市，请重新输入");
             }
             else if (temp_id >= im.GetCityMapSize() || temp_id < 0)
-                ErrorMsg("无效的城市");
+                ErrorMsg("无效的城市，请重新输入");
             else
             {
                 std::cout << "你选择的目的城市是：" << im.GetCityStr(temp_id) << std::endl;
@@ -456,7 +480,7 @@ inline bool PathConfirm()
             return false;
         else
         {
-            ErrorMsg("无效的输入");
+            ErrorMsg("无效的输入，请重新输入");
             std::cin.clear();
         }
     }
@@ -490,7 +514,7 @@ inline Strategy InputStrategy(Time &init_time, Time &limit_time)
             limit_time = InputLimitTime();
             return LIMIT_TIME;
         default:
-            ErrorMsg("无效的输入");
+            ErrorMsg("无效的输入，请重新输入");
             break;
         }
     }
@@ -592,7 +616,7 @@ void PrintTravellerInfo(const CityGraph &graph, const IDMap &id_map, const Time 
     else
     {
         PrintPath(graph, id_map, path, position);
-        std::cout << "距目的地" << id_map.GetCityStr(path.GetNode(position).current_city) << "还有：" << traveller.get_left_hour() << "h" << std::endl;
+        std::cout << "距目的地 " << id_map.GetCityStr(path.GetNode(position).current_city) << " 还有：" << traveller.get_left_hour() << "h" << std::endl;
     }
 }
 
@@ -708,14 +732,14 @@ Time InputLimitTime()
             }
             else
             {
-                ErrorMsg("无效的输入");
+                ErrorMsg("无效的输入，请重新输入");
             }
         }
     }
 
     while (1)
     {
-        std::cout << "输入你希望到达时刻(输入数字)：";
+        std::cout << "输入你希望到达时刻(输入小时数)：";
         if (!std::cin.good())
             std::cin.clear();
 
@@ -730,7 +754,7 @@ Time InputLimitTime()
             }
             else
             {
-                ErrorMsg("无效的输入");
+                ErrorMsg("无效的输入，请重新输入");
             }
         }
     }
@@ -744,7 +768,7 @@ Time InputInitTime()
 
     while (1)
     {
-        std::cout << "输入预计出发时间开始查找(输入数字)：";
+        std::cout << "输入预计出发时间开始查找(输入小时数)：";
         if (!std::cin.good())
             std::cin.clear();
 
@@ -759,7 +783,7 @@ Time InputInitTime()
             }
             else
             {
-                ErrorMsg("无效的输入");
+                ErrorMsg("无效的输入，请重新输入");
             }
         }
     }
@@ -769,5 +793,35 @@ Time InputInitTime()
 inline bool IsInplan(const std::vector<City_id> &plan, City_id city)
 {
     return std::find(plan.begin(), plan.end(), city) != plan.end();
+}
+
+double getSimulateSpeed()
+{
+    std::cout << "请输入两次模拟的间隔时间(在0.5秒和10秒之间)：";
+    std::string line;
+    double sleep_ms;
+    std::exception excpt;
+
+    while (1)
+    {
+        try
+        {
+            getline(std::cin, line);
+            if (!line.size())
+                continue;
+            else
+            {
+                sleep_ms = std::stod(line);
+                if (sleep_ms < 0.5 || sleep_ms > 10)
+                    throw excpt;
+                break;
+            }
+        }
+        catch (std::exception excpt)
+        {
+            std::cout << "输入有误，请重新输入" << std::endl;
+        }
+    }
+    return 1000 * sleep_ms;
 }
 #endif //SRC_IO
