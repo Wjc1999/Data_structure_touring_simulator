@@ -21,19 +21,6 @@ enum ErrorCode
     /*待补充*/
 };
 
-enum WriteTplt
-{
-  USER_INPUT,
-  ERROR
-  // 待补充
-};
-static const std::string kTemplateString[] =
-    {
-        "用户输入了" //  USER_INPUT 后接输入的内容
-        "发生错误"   //  ERROR 后接具体错误
-                     //待补充
-};
-
 // 去除字符串内所有非数字字符, 返回一个去除之后的字符串
 static std::string RemoveAllPunct(const std::string &time_str);
 
