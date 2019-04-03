@@ -23,9 +23,6 @@
 
 extern const std::string name_path;
 extern const int kCityNum;
-using std::numeric_limits;
-using std::streamsize;
-using std::string;
 
 //欢迎界面
 int Welcome(Traveller &t);
