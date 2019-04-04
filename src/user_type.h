@@ -30,4 +30,10 @@ enum OPCODE
     SETTINGS,      // 设置
     EXIT           // 退出程序
 };
+
+enum eSettings
+{
+    SIMULATION_SPEED,
+    CONSOLE_FONT_SIZE
+};
 #endif // SRC_USER_TYPE

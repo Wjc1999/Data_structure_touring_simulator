@@ -25,6 +25,8 @@ int main()
     Time limit_time;
     Time init_time;
 
+    eSettings settings_option;
+
     ClearScreen();
     int account_name_line = Welcome(traveller);
     ClearScreen();
@@ -66,8 +68,18 @@ int main()
             InitializeSimulator(traveller.get_init_time());
             Simulate(traveller, city_graph, id_map);
             break;
-        case SETTINGS:;
-            setSleepMillsecs(getSimulateSpeed());
+        case SETTINGS:
+            ClearScreen();
+            settings_option = SettingsMenu();
+            switch (settings_option)
+            {
+            case SIMULATION_SPEED:
+                setSleepMillsecs(getSimulateSpeed());
+                break;
+            case CONSOLE_FONT_SIZE:
+                SetConsoleFontSize();
+            }
+            
             break;
         case EXIT:
             std::exit(0);

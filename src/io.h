@@ -78,6 +78,12 @@ std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path 
 // 改变模拟的速度
 double getSimulateSpeed();
 
+// 提供设置选项菜单
+eSettings SettingsMenu();
+
+// 设置控制台字体大小
+bool SetConsoleFontSize();
+
 // 验证账户名称是否合法
 inline bool IsValidName(const std::string &name_str)
 {
@@ -271,7 +277,7 @@ int Menu(const IDMap &im, Traveller &traveller)
               << "2、状态查询" << std::endl
               << "3、路线查询" << std::endl
               << "4、模拟旅行" << std::endl
-              << "5、改变模拟速度" << std::endl
+              << "5、设    置" << std::endl
               << "6、退出程序" << std::endl;
     std::string buf;
     char num;
@@ -881,5 +887,62 @@ double getSimulateSpeed()
         }
     }
     return 1000 * sleep_ms;
+}
+
+eSettings SettingsMenu()
+{
+    std::cout << "输入对应数字获取功能：" << std::endl
+              << "1、改变模拟速度" << std::endl
+              << "2、改变控制台字体大小(Windows Only)" << std::endl;
+    std::string line;
+    int option;
+    while (1)
+    {
+        getline(std::cin, line);
+        std::cin.clear();
+
+        if (!line.size())
+            continue;
+
+        option = FindFirstDigit(line);
+
+        if (option == '1')
+            return SIMULATION_SPEED;
+        else if (option == '2')
+            return CONSOLE_FONT_SIZE;
+        else
+        {
+            std::cout << "无效的输入，请重新输入" << std::endl;
+        }
+    }
+}
+
+bool SetConsoleFontSize()
+{
+#if defined(_WIN32) || (defined(__CYGWIN__) && !defined(_WIN32)) || defined(__MINGW32__) || defined(__MINGW64__)
+    static HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    static CONSOLE_FONT_INFOEX cfiStdOut;
+    SHORT sNewX, sNewY;
+    cfiStdOut.cbSize = sizeof(CONSOLE_FONT_INFOEX);
+
+    GetCurrentConsoleFontEx(hStdOut, FALSE, &cfiStdOut);
+    GetConsoleFontSize(hStdOut, cfiStdOut.nFont);
+
+    std::cout << cfiStdOut.FaceName << " "
+              << "X: " << cfiStdOut.dwFontSize.X << " Y: " << cfiStdOut.dwFontSize.Y << std::endl;
+
+    std::cout << "请输入新的Y值: ";
+
+    std::cin >>  sNewY;
+    std::cin.clear();
+
+    // cfiStdOut.dwFontSize.X = sNewX;
+    cfiStdOut.dwFontSize.Y = sNewY;
+
+    SetCurrentConsoleFontEx(hStdOut, FALSE, &cfiStdOut);
+
+#else
+    std::cout << "该设置目前仅支持Windows系统" << std::endl;
+#endif
 }
 #endif //SRC_IO
