@@ -928,14 +928,21 @@ bool SetConsoleFontSize()
     GetCurrentConsoleFontEx(hStdOut, FALSE, &cfiStdOut);
     GetConsoleFontSize(hStdOut, cfiStdOut.nFont);
 
-    std::cout << cfiStdOut.FaceName << " "
-              << "X: " << cfiStdOut.dwFontSize.X << " Y: " << cfiStdOut.dwFontSize.Y << std::endl;
-
-    std::cout << "请输入新的Y值: ";
-
-    std::cin >>  sNewY;
-    std::cin.clear();
-
+    // std::cout << cfiStdOut.FaceName << " "
+    //           << "X: " << cfiStdOut.dwFontSize.X << " Y: " << cfiStdOut.dwFontSize.Y << std::endl;
+    std::cout << "当前字体大小: " << cfiStdOut.dwFontSize.Y << std::endl;
+    std::cout << "请输入新的字体大小: ";
+    while (1)
+    {
+        std::cin >> sNewY;
+        std::cin.clear();
+        if (sNewY < 1)
+        {
+            std::cout << "输入有误，请重新输入" << std::endl;
+        }
+        else
+            break;
+    }
     // cfiStdOut.dwFontSize.X = sNewX;
     cfiStdOut.dwFontSize.Y = sNewY;
 
