@@ -91,6 +91,11 @@ static HANDLE InitOutBuf()
 // 利用双缓冲进行模拟,避免闪屏
 void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id_map)
 {
+    if (traveller.get_position() == -2)
+    {
+        ErrorMsg("当前没有出行计划");
+        return;
+    }
     static bool out_buf_inited = false;
     static HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
     static HANDLE hOutBuf;
@@ -143,14 +148,19 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
     PrintPath(city_graph, id_map, traveller.get_path(), traveller.get_path().GetLen());
 
     SetConsoleActiveScreenBuffer(hStdOut); // 切换控制台使用的缓冲区为标准输出
-    delete[] data_buffer;   // 释放内存
+    delete[] data_buffer;                  // 释放内存
 }
 
 #else
 
 void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id_map)
 {
-
+   
+    if (traveller.get_position() == -2)
+    {
+        ErrorMsg("当前没有出行计划");
+        return;
+    }
     int count = 0;
 
     while (traveller.get_position() != -1)
@@ -158,7 +168,7 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
         //char click;
         Timer(count++);
         ClearScreen();
-
+        std::cout << traveller.get_position() << std::endl;
         Path path = traveller.get_path();
         int position = traveller.get_position();
 
