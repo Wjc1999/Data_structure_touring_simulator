@@ -34,7 +34,7 @@ void SaveDataOnExit()
 
 void SaveDataOnExit(int sig)
 {
-    std::cout << "Receiving signal " << sig << std::endl;
+    std::cout << "Receive signal " << sig << std::endl;
     SaveDataOnExit();
     std::exit(EXIT_FAILURE);
 }

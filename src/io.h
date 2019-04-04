@@ -78,6 +78,12 @@ std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path 
 // 改变模拟的速度
 double getSimulateSpeed();
 
+// 提供设置选项菜单
+eSettings SettingsMenu();
+
+// 设置控制台字体大小
+bool SetConsoleFontSize();
+
 // 验证账户名称是否合法
 inline bool IsValidName(const std::string &name_str)
 {
@@ -160,6 +166,7 @@ int Welcome(Traveller &traveller)
     while (1)
     {
         std::getline(std::cin, option_str);
+        std::cin.clear();
         option = FindFirstAlpha(option_str);
 
         if (option == 'S' || option == 's')
@@ -167,22 +174,26 @@ int Welcome(Traveller &traveller)
             std::cout << "请输入你想注册的账号：";
             std::string accout_name;
             getline(std::cin, accout_name);
+            std::cin.clear();
 
             while (!IsValidName(accout_name))
             {
                 ErrorMsg("非法的用户名，请重新输入：");
                 getline(std::cin, accout_name);
+                std::cin.clear();
             }
 
             while (AccountCheck(accout_name) != -1)
             {
                 std::cout << "该账号已被注册，请重新输入：";
                 getline(std::cin, accout_name);
+                std::cin.clear();
 
                 while (!IsValidName(accout_name))
                 {
                     ErrorMsg("非法的用户名，请重新输入：");
                     getline(std::cin, accout_name);
+                    std::cin.clear();
                 }
             }
             AddAccount(accout_name);
@@ -198,11 +209,13 @@ int Welcome(Traveller &traveller)
             std::cout << "请输入您的账号：";
             std::string accout_name;
             getline(std::cin, accout_name);
+            std::cin.clear();
 
             while (!IsValidName(accout_name))
             {
                 ErrorMsg("非法的用户名,请重新输入");
                 getline(std::cin, accout_name);
+                std::cin.clear();
             }
 
             while (AccountCheck(accout_name) == -1)
@@ -213,11 +226,13 @@ int Welcome(Traveller &traveller)
                 std::cout << "该账号不存在，是否需要注册该账号?[Y/N]" << std::endl;
 
                 std::getline(std::cin, option_str);
+                std::cin.clear();
                 option = FindFirstAlpha(option_str);
                 while (option != 'Y' && option != 'N')
                 {
                     std::cout << "无效的选项，请重新输入" << std::endl;
                     std::getline(std::cin, option_str);
+                    std::cin.clear();
                     option = FindFirstAlpha(option_str);
                 }
                 if (option == 'Y')
@@ -230,10 +245,13 @@ int Welcome(Traveller &traveller)
                 {
                     std::cout << "请重新输入您的账号：";
                     getline(std::cin, accout_name);
+                    std::cin.clear();
+
                     while (!IsValidName(accout_name))
                     {
                         ErrorMsg("非法的用户名，请重新输入：");
                         getline(std::cin, accout_name);
+                        std::cin.clear();
                     }
                 }
             }
@@ -259,7 +277,7 @@ int Menu(const IDMap &im, Traveller &traveller)
               << "2、状态查询" << std::endl
               << "3、路线查询" << std::endl
               << "4、模拟旅行" << std::endl
-              << "5、改变模拟速度" << std::endl
+              << "5、设    置" << std::endl
               << "6、退出程序" << std::endl;
     std::string buf;
     char num;
@@ -340,7 +358,21 @@ std::vector<City_id> Request(const IDMap &im)
         std::cin >> id;
         if (std::cin.good())
         {
-            temp_id = std::stoi(id) - 1;
+            while (1)
+            {
+                try
+                {
+                    temp_id = std::stoi(id) - 1;
+                    break;
+                }
+                catch (const std::exception &e)
+                {
+                    std::cout << "请输入数字：";
+                }
+                std::cin >> id;
+                std::cin.clear();
+            }
+
             if (temp_id < im.GetCityMapSize() && temp_id >= 0)
             {
                 std::cout << "你选择的当前城市是：" << im.GetCityStr(temp_id) << std::endl;
@@ -362,12 +394,27 @@ std::vector<City_id> Request(const IDMap &im)
         std::cin >> id;
         if (std::cin.good())
         {
-            if (id == "q")
+            while (1)
             {
-                break;
+                try
+                {
+                    if (id == "q")
+                        break;
+
+                    temp_id = std::stoi(id) - 1;
+                    break;
+                }
+                catch (const std::exception &e)
+                {
+                    std::cout << "请输入数字或q：";
+                }
+                std::cin >> id;
+                std::cin.clear();
             }
 
-            temp_id = std::stoi(id) - 1;
+            if (id == "q")
+                break;
+
             if (temp_id >= im.GetCityMapSize() || temp_id < 0)
                 ErrorMsg("无效的城市，请重新输入");
             else if (temp_id == res.front())
@@ -392,7 +439,21 @@ std::vector<City_id> Request(const IDMap &im)
         std::cin >> id;
         if (std::cin.good())
         {
-            temp_id = std::stoi(id) - 1;
+            while (1)
+            {
+                try
+                {
+                    temp_id = std::stoi(id) - 1;
+                    break;
+                }
+                catch (const std::exception &e)
+                {
+                    std::cout << "请输入数字：";
+                }
+                std::cin >> id;
+                std::cin.clear();
+            }
+
             if (std::find(res.begin(), res.end(), temp_id) != res.end())
             {
                 ErrorMsg("重复的城市，请重新输入");
@@ -471,6 +532,7 @@ inline bool PathConfirm()
     while (1)
     {
         std::getline(std::cin, option_str);
+
         if (!option_str.size())
             continue;
         option = FindFirstAlpha(option_str);
@@ -497,6 +559,7 @@ inline Strategy InputStrategy(Time &init_time, Time &limit_time)
     while (1)
     {
         std::getline(std::cin, strategy_str);
+        std::cin.clear();
         if (!strategy_str.size())
             continue;
         strategy = FindFirstDigit(strategy_str) - '0';
@@ -807,6 +870,7 @@ double getSimulateSpeed()
         try
         {
             getline(std::cin, line);
+            std::cin.clear();
             if (!line.size())
                 continue;
             else
@@ -823,5 +887,69 @@ double getSimulateSpeed()
         }
     }
     return 1000 * sleep_ms;
+}
+
+eSettings SettingsMenu()
+{
+    std::cout << "输入对应数字获取功能：" << std::endl
+              << "1、改变模拟速度" << std::endl
+              << "2、改变控制台字体大小(Windows Only)" << std::endl;
+    std::string line;
+    int option;
+    while (1)
+    {
+        getline(std::cin, line);
+        std::cin.clear();
+
+        if (!line.size())
+            continue;
+
+        option = FindFirstDigit(line);
+
+        if (option == '1')
+            return SIMULATION_SPEED;
+        else if (option == '2')
+            return CONSOLE_FONT_SIZE;
+        else
+        {
+            std::cout << "无效的输入，请重新输入" << std::endl;
+        }
+    }
+}
+
+bool SetConsoleFontSize()
+{
+#if defined(_WIN32) || (defined(__CYGWIN__) && !defined(_WIN32)) || defined(__MINGW32__) || defined(__MINGW64__)
+    static HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    static CONSOLE_FONT_INFOEX cfiStdOut;
+    SHORT sNewX, sNewY;
+    cfiStdOut.cbSize = sizeof(CONSOLE_FONT_INFOEX);
+
+    GetCurrentConsoleFontEx(hStdOut, FALSE, &cfiStdOut);
+    GetConsoleFontSize(hStdOut, cfiStdOut.nFont);
+
+    // std::cout << cfiStdOut.FaceName << " "
+    //           << "X: " << cfiStdOut.dwFontSize.X << " Y: " << cfiStdOut.dwFontSize.Y << std::endl;
+    std::cout << "当前字体大小: " << cfiStdOut.dwFontSize.Y << std::endl;
+    std::cout << "请输入新的字体大小: ";
+    while (1)
+    {
+        std::cin >> sNewY;
+        std::cin.clear();
+        if (sNewY < 1)
+        {
+            std::cout << "输入有误，请重新输入" << std::endl;
+        }
+        else
+            break;
+    }
+    // cfiStdOut.dwFontSize.X = sNewX;
+    cfiStdOut.dwFontSize.Y = sNewY;
+
+    SetCurrentConsoleFontEx(hStdOut, FALSE, &cfiStdOut);
+
+#else
+    std::cout << "该设置目前仅支持Windows系统" << std::endl;
+#endif
 }
 #endif //SRC_IO
