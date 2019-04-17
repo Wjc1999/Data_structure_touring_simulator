@@ -111,41 +111,29 @@ char FindFirstAlpha(const std::string &op_str)
     return '0';
 }
 
-// 清除屏幕上的信息
-inline bool ClearScreen()
+inline void ClearScreen()
 {
 #if defined(_WIN32) || (defined(__CYGWIN__) && !defined(_WIN32)) || defined(__MINGW32__) || defined(__MINGW64__)
+    static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    static const HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE); // 获得标准输出流的句柄
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    COORD topLeft = {0, 0};
 
-    CONSOLE_SCREEN_BUFFER_INFO csbiStdOut; // 用于接收标准输出流的缓存的信息
-    COORD topLeft = {0, 0};                // 设置光标最后位于终端的坐标
+    std::cout.flush();
 
-    std::cout.flush(); // 刷新缓冲区,防止数据残留,避免清屏后出现清屏前的信息
-
-    if (!GetConsoleScreenBufferInfo(hStdOut, &csbiStdOut))
+    if (!GetConsoleScreenBufferInfo(hOut, &csbi))
     {
         abort();
     }
-    DWORD length = csbiStdOut.dwSize.X * csbiStdOut.dwSize.Y; // 写入缓冲区的长度,等于标准输出流缓冲区的size大小
+    DWORD length = csbi.dwSize.X * csbi.dwSize.Y;
 
     DWORD written;
 
-    bool bWirteSuccess = FillConsoleOutputCharacter(
-        hStdOut,   // 指定标准输出为要写入的流
-        TEXT(' '), // 用空格覆盖标准输出流控制台的每一个字符
-        length,    // 写入的长度
-        topLeft,   // 从何处开始写入
-        &written   // 写入了多少字符
-    );
+    FillConsoleOutputCharacter(hOut, TEXT(' '), length, topLeft, &written);
 
-    SetConsoleCursorPosition(hStdOut, topLeft); // 设置标准输出流所在控制台的光标位置
-
-    return bWirteSuccess;
-
+    SetConsoleCursorPosition(hOut, topLeft);
 #elif defined(__linux__)
     std::cout << "\x1B[2J\x1B[H";
-    return true;
 #endif
 }
 
@@ -439,7 +427,7 @@ std::vector<City_id> Request(const IDMap &im)
             }
         }
     }
-    if(!res.size()){std::cout << "您选择不经过任何城市" << std::endl;}
+    if(res.size() == 1){std::cout << "您选择不经过任何城市" << std::endl;}
     else
     {
         std::cout << "您选择经过的城市是：";
@@ -935,14 +923,13 @@ eSettings SettingsMenu()
 bool SetConsoleFontSize()
 {
 #if defined(_WIN32) || (defined(__CYGWIN__) && !defined(_WIN32)) || defined(__MINGW32__) || defined(__MINGW64__)
-
-    static HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE); // 获取标准输出流的句柄
-    static CONSOLE_FONT_INFOEX cfiStdOut;                    // 记录标准输出所使用的字体的信息
+    static HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    static CONSOLE_FONT_INFOEX cfiStdOut;
     SHORT sNewX, sNewY;
-    cfiStdOut.cbSize = sizeof(CONSOLE_FONT_INFOEX); // 必须设置cbSize为CONSOLE_FONT_SIZE的大小以满足GetCurrentConsoleFontEx()的要求
+    cfiStdOut.cbSize = sizeof(CONSOLE_FONT_INFOEX);
 
-    GetCurrentConsoleFontEx(hStdOut, FALSE, &cfiStdOut);    // 获得标准输出所使用的字体的信息
-    GetConsoleFontSize(hStdOut, cfiStdOut.nFont);           // 获得字体大小
+    GetCurrentConsoleFontEx(hStdOut, FALSE, &cfiStdOut);
+    GetConsoleFontSize(hStdOut, cfiStdOut.nFont);
 
     // std::cout << cfiStdOut.FaceName << " "
     //           << "X: " << cfiStdOut.dwFontSize.X << " Y: " << cfiStdOut.dwFontSize.Y << std::endl;
@@ -962,7 +949,7 @@ bool SetConsoleFontSize()
     // cfiStdOut.dwFontSize.X = sNewX;
     cfiStdOut.dwFontSize.Y = sNewY;
 
-    SetCurrentConsoleFontEx(hStdOut, FALSE, &cfiStdOut);    // 设置字体大小
+    SetCurrentConsoleFontEx(hStdOut, FALSE, &cfiStdOut);
 
 #else
     std::cout << "该设置目前仅支持Windows系统" << std::endl;
