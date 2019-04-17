@@ -29,25 +29,25 @@ SOURCES += \
         widget.cpp
 
 HEADERS += \
-    widget.h \
-    src/city_graph.h \
-    src/id_map.h \
-    src/io.h \
-    src/log.h \
-    src/path.h \
-    src/save_at_exit.h \
-    src/simulation.h \
-    src/time_format.h \
-    src/traveller.h \
-    src/user_type.h
+    qt_headers/widget.h \
+    headers/city_graph.h \
+    headers/id_map.h \
+    headers/io.h \
+    headers/log.h \
+    headers/path.h \
+    headers/save_at_exit.h \
+    headers/simulation.h \
+    headers/time_format.h \
+    headers/traveller.h \
+    headers/user_type.h
 
 FORMS += \
-        widget.ui
+        qt_headers/widget.ui
 
 DISTFILES += \
-    data/car_extract_with_id.txt \
-    data/city_id.txt \
-    data/flight_extract_with_id.txt \
-    data/train_extract_with_id.txt \
-    data/train_seat_type_id.txt \
-    data/transport_type_id.txt
+    ../data/car_extract_with_id.txt \
+    ../data/city_id.txt \
+    ../data/flight_extract_with_id.txt \
+    ../data/train_extract_with_id.txt \
+    ../data/train_seat_type_id.txt \
+    ../data/transport_type_id.txt

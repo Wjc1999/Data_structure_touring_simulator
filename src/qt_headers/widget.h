@@ -1,13 +1,13 @@
-#include "src/id_map.h"
-#include "src/city_graph.h"
-#include "src/io.h"
-#include "src/log.h"
-#include "src/path.h"
-#include "src/save_at_exit.h"
-#include "src/simulation.h"
-#include "src/time_format.h"
-#include "src/traveller.h"
-#include "src/user_type.h"
+#include "../headers/id_map.h"
+#include "../headers/city_graph.h"
+#include "../headers/io.h"
+#include "../headers/log.h"
+#include "../headers/path.h"
+#include "../headers/save_at_exit.h"
+#include "../headers/simulation.h"
+#include "../headers/time_format.h"
+#include "../headers/traveller.h"
+#include "../headers/user_type.h"
 
 #ifndef WIDGET_H
 #define WIDGET_H
