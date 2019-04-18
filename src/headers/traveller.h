@@ -39,7 +39,7 @@ class Traveller // 旅行者
 {
 public:
   Traveller() = default;
-  Traveller(std::string id) : id_(id){};
+  Traveller(std::string id) : id_(id){}
 
   // 显示旅客id
   void PrintID() const { std::cout << id_ << std::endl; }

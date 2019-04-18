@@ -26,20 +26,32 @@ class Widget : public QWidget
 public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
+    Traveller traveller_widget;
+    CityGraph citygraph_widget;
+    IDMap idmap_widget;
+    Path path_widget;
+    std::vector <City_id> plan_widget;
+    Strategy strategy_widget;
+    Time limit_time_widget;
+    Time init_time_widget;
 
 private slots:
     void on_pushButton_released();
 
+    void on_pushButton_3_released();
+
+    void on_pushButton_4_released();
+
+    void on_pushButton_5_released();
+
+    void on_pushButton_7_released();
+
+    void on_pushButton_8_released();
+
+    void on_pushButton_9_released();
+
 private:
     Ui::Widget *ui;
-    Traveller traveller;
-    CityGraph citygraph;
-    IDMap idmap;
-    Path path;
-    std::vector<City_id> plan;
-    Strategy strategy;
-    Time limit_time;
-    Time init_time;
 };
 
 #endif // WIDGET_H
