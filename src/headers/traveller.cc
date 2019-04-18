@@ -219,7 +219,7 @@ Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> 
         }
         return res;
     }
-    else if (s == LIMIT_TIME)
+    else // if (s == LIMIT_TIME)
     {
         Path a = GetPathLTM(graph, plan, start_time, limit);
         if (a.GetLen() == 0)
