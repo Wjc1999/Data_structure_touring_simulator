@@ -16,6 +16,15 @@ struct PathNode // 路径节点
   City_id former_city;  //前一个城市id，相当于“i”
   City_id current_city; //节点城市名，相当于“j”
   int kth_way;          //第k种方法，相当于“k”
+
+  /*以下相当于一种交通方法的信息(可以省略)
+  bool is_start_; //规定true为路径的“起点”，false为“其它点”
+  Time depart_time_;         //从前一个城市离开时的时间
+  Time arrive_time_;         //到达该城市时间
+  int price_;                //来此地的花费
+  Trans_id transport_id_;    //乘坐来的方法
+  Train_id train_seat_type_; //如果搭乘火车,记录席别
+  */
 };
 
 class Path // 路径
@@ -72,7 +81,7 @@ public:
 #endif
 
 private:
-  std::deque <PathNode> cities_; //储存节点
+  std::deque<PathNode> cities_; //储存节点
   int start_city_ = 0;          //记录出发城市
   int end_city_ = 0;            //记录到达城市
   int len_ = 0;                 //路径长度

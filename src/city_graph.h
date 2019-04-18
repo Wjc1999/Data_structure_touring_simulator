@@ -59,7 +59,7 @@ public:
 
 private:
   bool LoadCityGraph(const std::string &name, int type); // 加载文件
-  std::vector <Route> city_[kCityNum][kCityNum];
+  std::vector<Route> city_[kCityNum][kCityNum];
 };
 
 inline CityGraph::CityGraph()

@@ -183,7 +183,7 @@ int Welcome(Traveller &traveller)
 
         if (option == 'S' || option == 's')
         {
-            std::cout << "请输入您想注册的账号：";
+            std::cout << "请输入你想注册的账号：";
             std::string accout_name;
             getline(std::cin, accout_name);
             std::cin.clear();
@@ -210,7 +210,7 @@ int Welcome(Traveller &traveller)
             }
             AddAccount(accout_name);
             traveller.set_id(accout_name);
-            std::cout << "您已注册账号：" << accout_name << std::endl;
+            std::cout << "你已注册账号：" << accout_name << std::endl;
             return -1;
         }
         else if (option == 'l' || option == 'L')
@@ -240,20 +240,20 @@ int Welcome(Traveller &traveller)
                 std::getline(std::cin, option_str);
                 std::cin.clear();
                 option = FindFirstAlpha(option_str);
-                while (option != 'Y' && option != 'N' && option != 'n' && option != 'y')
+                while (option != 'Y' && option != 'N')
                 {
                     std::cout << "无效的选项，请重新输入" << std::endl;
                     std::getline(std::cin, option_str);
                     std::cin.clear();
                     option = FindFirstAlpha(option_str);
                 }
-                if (option == 'Y' || option == 'y')
+                if (option == 'Y')
                 {
                     AddAccount(accout_name);
                     traveller.set_id(accout_name);
                     return -1;
                 }
-                else if (option == 'N' || option == 'n')
+                else if (option == 'N')
                 {
                     std::cout << "请重新输入您的账号：";
                     getline(std::cin, accout_name);
@@ -387,7 +387,7 @@ std::vector<City_id> Request(const IDMap &im)
 
             if (temp_id < im.GetCityMapSize() && temp_id >= 0)
             {
-                std::cout << "您选择的当前城市是：" << im.GetCityStr(temp_id) << std::endl;
+                std::cout << "你选择的当前城市是：" << im.GetCityStr(temp_id) << std::endl;
                 res.push_back(temp_id);
                 break;
             }
@@ -439,13 +439,10 @@ std::vector<City_id> Request(const IDMap &im)
             }
         }
     }
-    if(res.size() == 1){std::cout << "您选择不经过任何城市" << std::endl;}
-    else
-    {
-        std::cout << "您选择经过的城市是：";
-        std::for_each(++res.begin(), res.end(), [&](City_id city_id) { std::cout << im.GetCityStr(city_id) << " "; });
-        std::cout << std::endl;
-    }
+    std::cout << "你选择经过的城市是：";
+    std::for_each(++res.begin(), res.end(), [&](City_id city_id) { std::cout << im.GetCityStr(city_id) << " "; });
+    std::cout << std::endl;
+
     std::cout << "请输入您的目的城市：";
     while (1)
     {
@@ -477,7 +474,7 @@ std::vector<City_id> Request(const IDMap &im)
                 ErrorMsg("无效的城市，请重新输入");
             else
             {
-                std::cout << "您选择的目的城市是：" << im.GetCityStr(temp_id) << std::endl;
+                std::cout << "你选择的目的城市是：" << im.GetCityStr(temp_id) << std::endl;
                 res.push_back(temp_id);
                 break;
             }
@@ -607,7 +604,7 @@ std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path 
 {
     std::string comp("三个字");
     std::string wrap[] = {"\t\t", "\t"};
-    //std::cout << "为您定制的路线为：" << std::endl;
+    //std::cout << "为你定制的路线为：" << std::endl;
     std::cout << "始发地"
               << "\t\t"
               << "目的地"
@@ -670,12 +667,12 @@ void PrintTravellerInfo(const CityGraph &graph, const IDMap &id_map, const Time 
         else if (position == -1)
         {
             std::cout << std::endl;
-            std::cout << "您的始发地是：" << id_map.GetCityStr(plan.front()) << std::endl;
-            std::cout << "您的目的地是：" << id_map.GetCityStr(plan.back()) << std::endl;
+            std::cout << "你的始发地是：" << id_map.GetCityStr(plan.front()) << std::endl;
+            std::cout << "你的目的地是：" << id_map.GetCityStr(plan.back()) << std::endl;
 
             if (plan.size() > 2)
             {
-                std::cout << "您的途经城市有：";
+                std::cout << "你的途经城市有：";
                 for (int i = 1; i < plan.size() - 1; i++)
                 {
                     std::cout << id_map.GetCityStr(plan.at(i)) << " ";
@@ -719,7 +716,7 @@ void PrintRoutes(const CityGraph &graph, const IDMap &id_map)
             start_city = std::stoi(id) - 1;
             if (start_city < id_map.GetCityMapSize() && start_city >= 0)
             {
-                std::cout << "您选择的始发城市是：" << id_map.GetCityStr(start_city) << std::endl;
+                std::cout << "你选择的始发城市是：" << id_map.GetCityStr(start_city) << std::endl;
                 break;
             }
             else
@@ -740,7 +737,7 @@ void PrintRoutes(const CityGraph &graph, const IDMap &id_map)
             target_city = std::stoi(id) - 1;
             if (target_city < id_map.GetCityMapSize() && target_city >= 0)
             {
-                std::cout << "您选择的目的城市是：" << id_map.GetCityStr(target_city) << std::endl;
+                std::cout << "你选择的目的城市是：" << id_map.GetCityStr(target_city) << std::endl;
                 break;
             }
             else
@@ -795,7 +792,7 @@ Time InputLimitTime()
 
     while (1)
     {
-        std::cout << "输入您希望第几天内到达(1代表当天)：";
+        std::cout << "输入你希望第几天内到达(1代表当天)：";
         if (!std::cin.good())
             std::cin.clear();
 
@@ -817,7 +814,7 @@ Time InputLimitTime()
 
     while (1)
     {
-        std::cout << "输入您希望到达时刻(输入小时数)：";
+        std::cout << "输入你希望到达时刻(输入小时数)：";
         if (!std::cin.good())
             std::cin.clear();
 
