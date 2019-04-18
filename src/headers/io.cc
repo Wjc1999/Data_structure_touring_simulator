@@ -541,9 +541,9 @@ std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path 
         auto current_city_str = id_map.GetCityStr(j);
         std::cout << former_city_str << wrap[former_city_str.size() > comp.size()]
                   << current_city_str << wrap[current_city_str.size() > comp.size()]
-                  << id_map.GetTransStr(route.transport_type) << '\t';
-        RouteShow(route.start_time, route.end_time);
-        std::cout << route.price << '\t'
+                  << id_map.GetTransStr(route.transport_type) << '\t'
+                  << RouteShow(route.start_time, route.end_time)
+                  << route.price << '\t'
                   << "O" << '\t' << std::endl;
     }
 
@@ -557,9 +557,9 @@ std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path 
         auto current_city_str = id_map.GetCityStr(j);
         std::cout << former_city_str << wrap[former_city_str.size() > comp.size()]
                   << current_city_str << wrap[current_city_str.size() > comp.size()]
-                  << id_map.GetTransStr(route.transport_type) << '\t';
-        RouteShow(route.start_time, route.end_time);
-        std::cout << route.price << '\t'
+                  << id_map.GetTransStr(route.transport_type) << '\t'
+                  << RouteShow(route.start_time, route.end_time)
+                  << route.price << '\t'
                   << "X" << '\t' << std::endl;
     }
     if (showtotal)

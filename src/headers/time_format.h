@@ -1,5 +1,7 @@
 ﻿#ifndef SRC_TIME_H
 #define SRC_TIME_H
+
+#include <string>
 /*  class Time
  *  用于表示时间与处理时间
 */
@@ -48,6 +50,6 @@ private:
   int hour_ = 0;
 };
 
-void RouteShow(const Time &leave, const Time &arrive);
+std::string RouteShow(const Time &leave, const Time &arrive);
 
 #endif // SRC_TIME_H

@@ -51,14 +51,27 @@ Time &Time::minus_time(const int hour, const int day)
   return add_time(-hour, -day);
 }
 
-void RouteShow(const Time &leave, const Time &arrive)
+std::string RouteShow(const Time &leave, const Time &arrive)
 {
-  std::cout << leave.GetHour() << ":00" << "\t\t"
-            << arrive.GetHour() << ":00";
+  std::string temp;
+  temp += std::to_string(leave.GetHour());
+  temp += ":00\t\t";
+  temp += std::to_string(arrive.GetHour());
+  temp += ":00";
+  /*std::cout << leave.GetHour() << ":00" << "\t\t"
+            << arrive.GetHour() << ":00";*/
   if (arrive.GetDay())
-    std::cout << "+" << arrive.GetDay() << "\t\t";
+  {
+      temp += "+" + std::to_string(arrive.GetDay()) + "\t\t";
+      //std::cout << "+" << arrive.GetDay() << "\t\t";
+  }
+
   else
-    std::cout << "\t\t";
+  {
+      temp += "\t\t";
+      //std::cout << "\t\t";
+  }
+  return temp;
 }
 
 #endif //SRC_TIME_CC
