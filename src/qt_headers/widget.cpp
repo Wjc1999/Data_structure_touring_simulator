@@ -22,37 +22,7 @@ Widget::~Widget()
 void Widget::on_LogInButton_released() //登陆
 {
     QString account_name = ui->lineEdit->text();
-    if (!account_name.size())
-    {
-        QMessageBox::warning(this, "Warning!", QString("输入为空"), QMessageBox::Ok);
-        return;
-    }
-    else if (!IsValidName(account_name.toStdString()))
-    {
-        QMessageBox::warning(this, "Warning!", "非法的用户名,请重新输入", QMessageBox::Ok);
-        return;
-    }
-    int account_check = AccountCheck(account_name.toStdString());
-    if (account_check != -1)
-    {
-        traveller_widget.LoadData(account_check, citygraph_widget);
-        ui->stackedWidget->setCurrentWidget(ui->MainPage);
-    }
-    else
-    {
-        QMessageBox::StandardButton sB = QMessageBox::question(this, "", "该账号不存在，是否注册:" + account_name, QMessageBox::Yes | QMessageBox::No);
-        if (sB == QMessageBox::Yes)
-        {
-            AddAccount(account_name.toStdString()); //?
-            traveller_widget.set_id(account_name.toStdString());
-            ui->stackedWidget->setCurrentWidget(ui->MainPage);
-        }
-    }
-}
 
-void Widget::on_SignUpButton_released() //注册
-{
-    QString account_name = ui->lineEdit->text();
     if (!account_name.size())
     {
         QMessageBox::warning(this, "Warning!", "输入为空", QMessageBox::Ok);
@@ -63,7 +33,44 @@ void Widget::on_SignUpButton_released() //注册
         QMessageBox::warning(this, "Warning!", "非法的用户名,请重新输入", QMessageBox::Ok);
         return;
     }
+
     int account_check = AccountCheck(account_name.toStdString());
+
+    if (account_check != -1)
+    {
+        traveller_widget.LoadData(account_check, citygraph_widget);
+        ui->stackedWidget->setCurrentWidget(ui->MainPage);
+    }
+    else
+    {
+        QMessageBox::StandardButton sB = QMessageBox::question(this, "", "该账号不存在，是否注册:" + account_name, QMessageBox::Yes | QMessageBox::No);
+
+        if (sB == QMessageBox::Yes)
+        {
+            AddAccount(account_name.toStdString()); // ?
+            traveller_widget.set_id(account_name.toStdString());
+            ui->stackedWidget->setCurrentWidget(ui->MainPage);
+        }
+    }
+}
+
+void Widget::on_SignUpButton_released() //注册
+{
+    QString account_name = ui->lineEdit->text();
+
+    if (!account_name.size())
+    {
+        QMessageBox::warning(this, "Warning!", "输入为空", QMessageBox::Ok);
+        return;
+    }
+    else if (!IsValidName(account_name.toStdString()))
+    {
+        QMessageBox::warning(this, "Warning!", "非法的用户名,请重新输入", QMessageBox::Ok);
+        return;
+    }
+
+    int account_check = AccountCheck(account_name.toStdString());
+
     if (account_check != -1)
     {
         QMessageBox::warning(this, "Warning!", "该账号已被注册，请重新输入", QMessageBox::Ok);
@@ -104,6 +111,11 @@ void Widget::on_StatePageToMenuButton_released() // 从状态页面回到主菜�
 }
 
 void Widget::on_OrderPageToMenuButton_released() // 从预定页面返回到主菜单
+{
+    ui->stackedWidget->setCurrentWidget(ui->MainPage);
+}
+
+void Widget::on_QueryPageToMenuButton_released() // 从查询路线页面返回到主菜单
 {
     ui->stackedWidget->setCurrentWidget(ui->MainPage);
 }
@@ -155,7 +167,7 @@ void Widget::on_QueryPathButton_released()
             temp += cityj + wrap[cityj.size() > comp.size()];
             temp += method + "\t";
             temp += RouteShow(route.start_time, route.end_time);
-            temp += route.price + "\t";
+            temp += std::to_string(route.price) + "\t";
             /*std::cout << k + 1 << '\t'
                       << cityi << wrap[cityi.size() > comp.size()]
                       << cityj << wrap[cityj.size() > comp.size()]

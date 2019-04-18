@@ -805,5 +805,22 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>ExitButton</sender>
+   <signal>released()</signal>
+   <receiver>Widget</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>502</x>
+     <y>544</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>620</x>
+     <y>859</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
