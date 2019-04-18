@@ -1,51 +1,11 @@
-#ifndef SRC_IO
-#define SRC_IO
+#include "headers/io.h"
 
-#include <cctype>
-#include <iostream>
-#include <limits>
-#include <string>
-#include <sstream>
-#include <vector>
-#include <set>
-#include <algorithm>
-#include <iterator>
-#include <fstream>
-#include <exception>
+inline bool AddAccount(const Traveller &traveller)
+{
+    return traveller.SaveData();
+}
 
-#include "traveller.h"
-#include "id_map.h"
-#include "user_type.h"
-#include "path.h"
-
-#if defined(_WIN32) || (defined(__CYGWIN__) && !defined(_WIN32)) || defined(__MINGW32__) || defined(__MINGW64__)
-#include <windows.h>
-#endif // _WIN32
-
-extern const std::string name_path;
-extern const int kCityNum;
-
-//欢迎界面
-int Welcome(Traveller &t);
-
-//功能菜单,返回一个操作代码
-int Menu(const IDMap &im, Traveller &traveller);
-
-//预定行程
-std::vector<City_id> Request(const IDMap &im);
-
-// 打印错误信息
-void ErrorMsg(const std::string &err_msg);
-
-// 打印账户列表
-bool PrintNameList();
-
-void Status();
-
-// 根据所提供的traveller添加账号
-inline bool AddAccount(const Traveller &traveller) { return traveller.SaveData(); }
-// 根据用户名添加账号
-bool AddAccount(const std::string &account_name)
+inline bool AddAccount(const std::string &account_name)
 {
     std::ofstream fos(name_path, std::ofstream::app);
     if (fos)
@@ -57,34 +17,6 @@ bool AddAccount(const std::string &account_name)
         return false;
 }
 
-void MapSearch();
-
-// 返回账户名称所在的行数,若账户名称不存在则返回-1
-int AccountCheck(const std::string &id);
-
-// 提供界面供用户选择是否采用该路线
-bool PathConfirm();
-
-// 给出界面让用户选择策略
-Strategy InputStrategy(Time &init_time, Time &limit_time);
-
-// 打印用户的信息
-void PrintTravellerInfo(const CityGraph &graph, const IDMap &id_map, const Time &now, const Traveller &traveller);
-
-// 打印界面友好的路径
-std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, std::ostream &os = std::cout);
-std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path &path, const int index, bool showtotal = false, std::ostream &os = std::cout);
-
-// 改变模拟的速度
-double getSimulateSpeed();
-
-// 提供设置选项菜单
-eSettings SettingsMenu();
-
-// 设置控制台字体大小
-bool SetConsoleFontSize();
-
-// 验证账户名称是否合法
 inline bool IsValidName(const std::string &name_str)
 {
     for (auto i = name_str.begin(); i != name_str.end(); ++i)
@@ -93,7 +25,6 @@ inline bool IsValidName(const std::string &name_str)
     return true;
 }
 
-// 返回给定字符串中第一个数字,如果没有数字,则返回一个不是数字的字符
 char FindFirstDigit(const std::string &op_str)
 {
     for (auto i = op_str.begin(); i != op_str.end(); ++i)
@@ -102,7 +33,6 @@ char FindFirstDigit(const std::string &op_str)
     return 'A';
 }
 
-// 返回给定字符串中第一个字母,如果没有字母,则返回一个不是字母的字符
 char FindFirstAlpha(const std::string &op_str)
 {
     for (auto i = op_str.begin(); i != op_str.end(); ++i)
@@ -111,53 +41,31 @@ char FindFirstAlpha(const std::string &op_str)
     return '0';
 }
 
-// 清除屏幕上的信息
-inline bool ClearScreen()
+inline void ClearScreen()
 {
 #if defined(_WIN32) || (defined(__CYGWIN__) && !defined(_WIN32)) || defined(__MINGW32__) || defined(__MINGW64__)
+    static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    static const HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE); // 获得标准输出流的句柄
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    COORD topLeft = {0, 0};
 
-    CONSOLE_SCREEN_BUFFER_INFO csbiStdOut; // 用于接收标准输出流的缓存的信息
-    COORD topLeft = {0, 0};                // 设置光标最后位于终端的坐标
+    std::cout.flush();
 
-    std::cout.flush(); // 刷新缓冲区,防止数据残留,避免清屏后出现清屏前的信息
-
-    if (!GetConsoleScreenBufferInfo(hStdOut, &csbiStdOut))
+    if (!GetConsoleScreenBufferInfo(hOut, &csbi))
     {
         abort();
     }
-    DWORD length = csbiStdOut.dwSize.X * csbiStdOut.dwSize.Y; // 写入缓冲区的长度,等于标准输出流缓冲区的size大小
+    DWORD length = csbi.dwSize.X * csbi.dwSize.Y;
 
     DWORD written;
 
-    bool bWirteSuccess = FillConsoleOutputCharacter(
-        hStdOut,   // 指定标准输出为要写入的流
-        TEXT(' '), // 用空格覆盖标准输出流控制台的每一个字符
-        length,    // 写入的长度
-        topLeft,   // 从何处开始写入
-        &written   // 写入了多少字符
-    );
+    FillConsoleOutputCharacter(hOut, TEXT(' '), length, topLeft, &written);
 
-    SetConsoleCursorPosition(hStdOut, topLeft); // 设置标准输出流所在控制台的光标位置
-
-    return bWirteSuccess;
-
+    SetConsoleCursorPosition(hOut, topLeft);
 #elif defined(__linux__)
     std::cout << "\x1B[2J\x1B[H";
-    return true;
 #endif
 }
-
-// 输出两个城市的所有路线
-void PrintRoutes(const CityGraph &graph, const IDMap &id_map);
-
-// 获得时间
-Time InputLimitTime();
-Time InputInitTime();
-
-// 判断所给城市是否处于旅行计划中
-bool IsInplan(const std::vector<City_id> &plan, City_id city);
 
 int Welcome(Traveller &traveller)
 {
@@ -280,7 +188,6 @@ int Welcome(Traveller &traveller)
     }
 }
 
-//功能菜单,返回一个操作代码
 int Menu(const IDMap &im, Traveller &traveller)
 {
     std::cout << std::endl;
@@ -344,12 +251,6 @@ int Menu(const IDMap &im, Traveller &traveller)
     std::cin.clear();
 }
 
-//预定行程
-//
-//
-//
-//
-// TODO: 判断输入是否为数字
 std::vector<City_id> Request(const IDMap &im)
 {
     std::vector<City_id> res;
@@ -486,24 +387,11 @@ std::vector<City_id> Request(const IDMap &im)
     return res;
 }
 
-/*inline void Status()
-{
-    //traveller.();//关于traveller的输出
-}*/
-
-// 打印错误信息
-// TODO : 同时输出至日志
 void ErrorMsg(const std::string &err_msg)
 {
     std::cout << err_msg << std::endl;
 }
 
-/*inline void MapSearch()
-{
-    //citygraph.()//关于图的输出
-}*/
-
-// 返回账户名称所在的行数,若账户名称不存在则返回-1
 inline int AccountCheck(const std::string &id)
 {
     std::vector<std::string> namelist; // unused parameter
@@ -524,7 +412,6 @@ inline int AccountCheck(const std::string &id)
     return -1;
 }
 
-// 打印账户列表
 inline bool PrintNameList()
 {
     std::string line_buf;
@@ -539,7 +426,7 @@ inline bool PrintNameList()
         return false;
 }
 
-inline bool PathConfirm()
+bool PathConfirm()
 {
     std::string option_str;
     char option;
@@ -563,7 +450,7 @@ inline bool PathConfirm()
     }
 }
 
-inline Strategy InputStrategy(Time &init_time, Time &limit_time)
+Strategy InputStrategy(Time &init_time, Time &limit_time)
 {
     std::string strategy_str;
     int strategy;
@@ -935,14 +822,13 @@ eSettings SettingsMenu()
 bool SetConsoleFontSize()
 {
 #if defined(_WIN32) || (defined(__CYGWIN__) && !defined(_WIN32)) || defined(__MINGW32__) || defined(__MINGW64__)
-
-    static HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE); // 获取标准输出流的句柄
-    static CONSOLE_FONT_INFOEX cfiStdOut;                    // 记录标准输出所使用的字体的信息
+    static HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    static CONSOLE_FONT_INFOEX cfiStdOut;
     SHORT sNewX, sNewY;
-    cfiStdOut.cbSize = sizeof(CONSOLE_FONT_INFOEX); // 必须设置cbSize为CONSOLE_FONT_SIZE的大小以满足GetCurrentConsoleFontEx()的要求
+    cfiStdOut.cbSize = sizeof(CONSOLE_FONT_INFOEX);
 
-    GetCurrentConsoleFontEx(hStdOut, FALSE, &cfiStdOut);    // 获得标准输出所使用的字体的信息
-    GetConsoleFontSize(hStdOut, cfiStdOut.nFont);           // 获得字体大小
+    GetCurrentConsoleFontEx(hStdOut, FALSE, &cfiStdOut);
+    GetConsoleFontSize(hStdOut, cfiStdOut.nFont);
 
     // std::cout << cfiStdOut.FaceName << " "
     //           << "X: " << cfiStdOut.dwFontSize.X << " Y: " << cfiStdOut.dwFontSize.Y << std::endl;
@@ -962,10 +848,9 @@ bool SetConsoleFontSize()
     // cfiStdOut.dwFontSize.X = sNewX;
     cfiStdOut.dwFontSize.Y = sNewY;
 
-    SetCurrentConsoleFontEx(hStdOut, FALSE, &cfiStdOut);    // 设置字体大小
+    SetCurrentConsoleFontEx(hStdOut, FALSE, &cfiStdOut);
 
 #else
     std::cout << "该设置目前仅支持Windows系统" << std::endl;
 #endif
 }
-#endif //SRC_IO

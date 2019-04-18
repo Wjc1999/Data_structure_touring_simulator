@@ -1,66 +1,19 @@
-#ifndef SRC_CG
-#define SRC_CG
+#include "headers/city_graph.h"
 
-#include <iostream>
-#include <vector>
-#include <fstream>
-#include <string>
-#include <sstream>
-
-#include "user_type.h"
-#include "time_format.h"
-#include "id_map.h"
-
-const int kCityNum = 31;
-static const std::string flightfn = "../data/flight_extract_with_id.txt";
-static const std::string trainfn = "../data/train_extract_with_id.txt";
-static const std::string carfn = "../data/car_extract_with_id.txt";
-
-struct Route
+inline int CityGraph::get_city_num() const
 {
-  Trans_id transport_type;
-  Train_id train_seat_type;
-  Time start_time;
-  Time end_time;
-  int price;
-};
+    return kCityNum;
+}
 
-class CityGraph // 城市图
+inline const Route &CityGraph::GetRoute(City_id former_city, City_id current_city, int k) const
 {
+    return city_[former_city][current_city].at(k);
+}
 
-public:
-  CityGraph(); //构造函数
-  int get_city_num() const { return kCityNum; }
-
-  //打印ijk的存储数据
-  void Show(City_id former_city, City_id current_city, int k) const;
-
-  //获得存储在ijk的Route
-  const Route &GetRoute(City_id former_city, City_id current_city, int k) const { return city_[former_city][current_city].at(k); }
-  
-  //获得city[i][j]的大小
-  int Getsize(City_id i, City_id j) const { return city_[i][j].size(); }
-
-#ifdef TEST_CG
-
-  void print()
-  {
-    for (int i = 0; i < 5; i++)
-      for (int j = 0; j < 5; j++)
-      {
-        if (i != j)
-        {
-          for (int k = 0; k < city_[i][j].size(); k++)
-            Show(i, j, k);
-        }
-      }
-  }
-#endif // TEST_CG
-
-private:
-  bool LoadCityGraph(const std::string &name, int type); // 加载文件
-  std::vector <Route> city_[kCityNum][kCityNum];
-};
+inline int CityGraph::Getsize(City_id i, City_id j) const
+{
+    return city_[i][j].size();
+}
 
 inline CityGraph::CityGraph()
 {
@@ -76,7 +29,7 @@ inline CityGraph::CityGraph()
   }
 }
 
-inline bool CityGraph::LoadCityGraph(const std::string &name, int type)
+bool CityGraph::LoadCityGraph(const std::string &name, int type)
 { //将飞机火车汽车数据加载到程序中
   std::ifstream stream(name);
   if (type != 1)
@@ -142,4 +95,3 @@ inline void CityGraph::Show(City_id former_city, City_id current_city, int k) co
   else
     std::cout << "No data!" << std::endl;
 }
-#endif //SRC_CG
