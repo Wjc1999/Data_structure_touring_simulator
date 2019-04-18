@@ -2,6 +2,7 @@
 #define SRC_TIME_CC
 
 #include <iostream>
+#include <string>
 
 #include "time_format.h"
 

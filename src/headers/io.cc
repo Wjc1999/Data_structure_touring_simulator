@@ -667,13 +667,13 @@ bool SetConsoleFontSize()
 #endif
 }
 
-inline bool IsValidName(const std::string &name_str)
-{
-    for (auto i = name_str.begin(); i != name_str.end(); ++i)
-        if (!std::isalnum(*i))
-            return false;
-    return true;
-}
+// inline bool IsValidName(const std::string &name_str)
+// {
+//     for (auto i = name_str.begin(); i != name_str.end(); ++i)
+//         if (!std::isalnum(*i))
+//             return false;
+//     return true;
+// }
 
 // 返回给定字符串中第一个数字,如果没有数字,则返回一个不是数字的字符
 inline char FindFirstDigit(const std::string &op_str)

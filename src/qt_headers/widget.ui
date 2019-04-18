@@ -14,7 +14,10 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Touring_Simulator</string>
+   <string>Touring Simulator</string>
+  </property>
+  <property name="whatsThis">
+   <string>A Touring Simulation</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="1">
@@ -35,6 +38,9 @@
             <property name="autoFillBackground">
              <bool>false</bool>
             </property>
+            <property name="maxLength">
+             <number>256</number>
+            </property>
            </widget>
           </item>
          </layout>
@@ -44,14 +50,14 @@
         <widget class="QWidget" name="widget_2" native="true">
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="LogInButton">
             <property name="text">
              <string>登陆</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_2">
+           <widget class="QPushButton" name="SignUpButton">
             <property name="text">
              <string>注册</string>
             </property>
@@ -139,7 +145,7 @@
         </spacer>
        </item>
        <item row="1" column="3">
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="welcom_label">
          <property name="text">
           <string>欢迎使用</string>
          </property>
@@ -153,7 +159,7 @@
      <widget class="QWidget" name="MainPage">
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="1">
-        <widget class="QPushButton" name="pushButton_3">
+        <widget class="QPushButton" name="OrderPageButton">
          <property name="text">
           <string>预定行程</string>
          </property>
@@ -173,21 +179,21 @@
         </spacer>
        </item>
        <item row="2" column="1">
-        <widget class="QPushButton" name="pushButton_5">
+        <widget class="QPushButton" name="QueryPathPageButton">
          <property name="text">
           <string>路线查询</string>
          </property>
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QPushButton" name="pushButton_4">
+        <widget class="QPushButton" name="StatePageButton">
          <property name="text">
           <string>状态查询</string>
          </property>
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QPushButton" name="pushButton_6">
+        <widget class="QPushButton" name="SimulationPageButton">
          <property name="text">
           <string>模拟旅行</string>
          </property>
@@ -285,7 +291,7 @@
         </spacer>
        </item>
        <item row="4" column="1">
-        <widget class="QPushButton" name="pushButton_10">
+        <widget class="QPushButton" name="ExitButton">
          <property name="text">
           <string>退出程序</string>
          </property>
@@ -322,7 +328,7 @@
         </spacer>
        </item>
        <item row="1" column="1">
-        <widget class="QPushButton" name="pushButton_7">
+        <widget class="QPushButton" name="StatePageToMenuButton">
          <property name="text">
           <string>返回主菜单</string>
          </property>
@@ -347,7 +353,7 @@
       </layout>
      </widget>
      <widget class="QWidget" name="QueryPage">
-      <widget class="QPushButton" name="pushButton_8">
+      <widget class="QPushButton" name="QueryPageToMenuButton">
        <property name="geometry">
         <rect>
          <x>904</x>
@@ -369,16 +375,16 @@
          <height>31</height>
         </rect>
        </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <layout class="QHBoxLayout" name="horizontalTargetLayout">
         <item>
-         <widget class="QLabel" name="label_3">
+         <widget class="QLabel" name="target_label">
           <property name="text">
            <string>目的地</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBox_2">
+         <widget class="QComboBox" name="target_comboBox">
           <item>
            <property name="text">
             <string>济南</string>
@@ -538,7 +544,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QPushButton" name="pushButton_11">
+      <widget class="QPushButton" name="QueryPathButton">
        <property name="geometry">
         <rect>
          <x>820</x>
@@ -551,7 +557,7 @@
         <string>查询</string>
        </property>
       </widget>
-      <widget class="QTextBrowser" name="textBrowser">
+      <widget class="QTextBrowser" name="PathtextBrowser">
        <property name="geometry">
         <rect>
          <x>40</x>
@@ -561,7 +567,7 @@
         </rect>
        </property>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
          <x>171</x>
@@ -570,16 +576,16 @@
          <height>31</height>
         </rect>
        </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <layout class="QHBoxLayout" name="horizontalOriginLayout">
         <item>
-         <widget class="QLabel" name="label_2">
+         <widget class="QLabel" name="origin_label">
           <property name="text">
            <string>始发地</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBox">
+         <widget class="QComboBox" name="origin_comboBox">
           <item>
            <property name="text">
             <string>济南</string>
@@ -769,7 +775,7 @@
         </spacer>
        </item>
        <item row="1" column="1">
-        <widget class="QPushButton" name="pushButton_9">
+        <widget class="QPushButton" name="OrderPageToMenuButton">
          <property name="text">
           <string>返回主菜单</string>
          </property>
