@@ -22,10 +22,11 @@ CityGraph::CityGraph()
       LoadCityGraph(flightfn, 2) &&
       LoadCityGraph(trainfn, 1) &&
       LoadCityGraph(carfn, 0))
-    std::cout << "数据读取成功！" << std::endl;
+      ;
+    //std::cout << "数据读取成功！" << std::endl;
   else
   {
-    std::cout << "数据读取失败！" << std::endl;
+    //std::cout << "数据读取失败！" << std::endl;
     exit(0);
   }
 }

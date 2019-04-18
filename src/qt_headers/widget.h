@@ -50,6 +50,10 @@ private slots:
 
     void on_pushButton_9_released();
 
+    void on_pushButton_2_released();
+
+    void on_pushButton_11_released();
+
 private:
     Ui::Widget *ui;
 };
