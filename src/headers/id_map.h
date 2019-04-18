@@ -1,12 +1,12 @@
-#ifndef SRC_IDMAP
-#define SRC_IDMAP
+﻿#ifndef SRC_IDMAP_H
+#define SRC_IDMAP_H
 
-// #include <iostream>
 #include <fstream>
 #include <map>
 #include <string>
 
 #include "user_type.h"
+
 /* class IDMap
  * 储存各类序号及其对应的字符串,供输出使用
  */
@@ -42,45 +42,4 @@ private:
       "..//data//transport_type_id.txt"   // trans_id_path_
   };
 };
-
-IDMap::IDMap()
-{
-  std::ifstream in_id_file;
-  decltype(&city_map_) map_table[3] = // 三个map的类型实际上是一样的
-      {
-          &city_map_,
-          &train_map_,
-          &trans_map_
-      };
-  for (int i = 0; i != 3; ++i)
-  {
-    in_id_file.open(paths_[i]);
-    // std::cout << "in_id_file opened " << i << std::endl;
-    if (in_id_file.is_open())
-    {
-      LoadID(in_id_file, *map_table[i]);
-      in_id_file.close();
-    }
-    else
-      in_id_file.clear();
-    // error handler
-  }
-  // std::cout << "Loaded IDs" << std::endl;
-}
-
-bool IDMap::LoadID(std::ifstream &id_file, std::map<int, std::string> &map)
-{
-  int temp_int;
-  std::string temp_string;
-  while (id_file >> temp_int >> temp_string)
-    map[temp_int] = temp_string;
-  return id_file.eof();
-}
-
-inline const std::string &IDMap::GetStr(int id, const std::map<int, std::string> &map) const
-{
-  // TODO: error handling
-  return map.at(id);  // map为const
-}
-
-#endif // SRC_IDMAP
+#endif // SRC_IDMAP_H

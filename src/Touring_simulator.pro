@@ -25,8 +25,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    headers/city_graph.cc \
+    headers/id_map.cc \
+    headers/io.cc \
+    headers/log.cc \
+    headers/path.cc \
+    headers/save_at_exit.cc \
+    headers/simulation.cc \
+    headers/time_format.cc \
+    headers/traveller.cc \
         main.cpp \
-        widget.cpp
+        qt_headers/widget.cpp \
 
 HEADERS += \
     qt_headers/widget.h \

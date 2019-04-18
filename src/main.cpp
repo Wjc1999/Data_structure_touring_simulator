@@ -1,3 +1,6 @@
+﻿#ifndef SRC_MAIN
+#define SRC_MAIN
+
 #include "qt_headers/widget.h"
 #include <QApplication>
 
@@ -9,3 +12,4 @@ int main(int argc, char *argv[])
 
     return a.exec();
 }
+#endif // SRC_MAIN

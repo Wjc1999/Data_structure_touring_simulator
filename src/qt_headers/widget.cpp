@@ -1,3 +1,6 @@
+﻿#ifndef SRC_WIDGET
+#define SRC_WIDGET
+
 #include "widget.h"
 #include <QString>
 #include <QWidget>
@@ -20,5 +23,5 @@ void Widget::on_pushButton_released()
 {
     QString accout_name = ui->lineEdit->text();
     accout_name.toStdString();
-
 }
+#endif // SRC_WIDGET

@@ -1,3 +1,6 @@
+﻿#ifndef WIDGET_H
+#define WIDGET_H
+
 #include "../headers/id_map.h"
 #include "../headers/city_graph.h"
 #include "../headers/io.h"
@@ -8,9 +11,6 @@
 #include "../headers/time_format.h"
 #include "../headers/traveller.h"
 #include "../headers/user_type.h"
-
-#ifndef WIDGET_H
-#define WIDGET_H
 
 #include "ui_widget.h"
 #include <QDebug>

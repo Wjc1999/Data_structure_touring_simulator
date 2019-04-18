@@ -1,50 +1,14 @@
-#ifndef SAVE_AT_EXIT
-#define SAVE_AT_EXIT
+﻿#ifndef SAVE_AT_EXIT_H
+#define SAVE_AT_EXIT_H
 
-#include <cstdlib>
-#include <csignal>
-#include <string>
-#include <iostream>
+class Traveller;
 
-#include "io.h"
-#include "traveller.h"
+void setTravellerPtr(Traveller *traveller);
 
-static Traveller *p_traveller = nullptr;
-static bool saved = false;
+void SaveDataOnExit();
 
-void setTravellerPtr(Traveller *traveller)
-{
-    p_traveller = traveller;
-}
+void SaveDataOnExit(int sig);
 
-void SaveDataOnExit()
-{
-    if (!saved && p_traveller != nullptr /*&& (*p_traveller).get_position() != -2*/)
-    {
-        std::cout << "saving..." << "\t";
-        if ((*p_traveller).SaveData())
-        {
-            saved = true;
-            std::cout << "success." << std::endl;
-        }
-        else
-            std::cout << "failed." << std::endl;
-    }
-}
+void setSignalHandlers();
 
-void SaveDataOnExit(int sig)
-{
-    std::cout << "Receive signal " << sig << std::endl;
-    SaveDataOnExit();
-    std::exit(EXIT_FAILURE);
-}
-
-void setSignalHandlers()
-{
-    std::signal(SIGABRT, SaveDataOnExit);
-    std::signal(SIGINT, SaveDataOnExit);
-    std::signal(SIGTERM, SaveDataOnExit);
-    std::atexit(SaveDataOnExit);
-}
-
-#endif // SAVE_AT_EXIT
+#endif // SAVE_AT_EXIT_H
