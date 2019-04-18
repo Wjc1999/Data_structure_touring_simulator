@@ -1,5 +1,6 @@
 ﻿#ifndef WIDGET_H
 #define WIDGET_H
+#pragma execution_character_set("utf-8")
 
 #include "../headers/id_map.h"
 #include "../headers/city_graph.h"
@@ -36,25 +37,25 @@ public:
     Time init_time_widget;
 
 private slots:
-    void on_pushButton_released();
+    void on_LogInButton_released();
 
-    void on_pushButton_3_released();
+    void on_SignUpButton_released();
 
-    void on_pushButton_4_released();
+    void on_OrderPageButton_released();
 
-    void on_pushButton_5_released();
+    void on_StatePageButton_released();
 
-    void on_pushButton_7_released();
+    void on_QueryPathPageButton_released();
 
-    void on_pushButton_8_released();
+    void on_SimulationPageButton_released();
 
-    void on_pushButton_9_released();
+    void on_StatePageToMenuButton_released();
 
-    void on_pushButton_2_released();
+    void on_OrderPageToMenuButton_released();
 
-    void on_pushButton_11_released();
+    void on_QueryPathButton_released();
 
-private:
+  private:
     Ui::Widget *ui;
 };
 
