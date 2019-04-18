@@ -1,3 +1,4 @@
+#define cpp1
 #include "widget.h"
 #include <QApplication>
 

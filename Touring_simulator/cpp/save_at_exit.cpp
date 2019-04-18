@@ -1,16 +1,6 @@
-#ifndef SAVE_AT_EXIT
-#define SAVE_AT_EXIT
 
-#include <cstdlib>
-#include <csignal>
-#include <string>
-#include <iostream>
+#include "headers/save_at_exit.h"
 
-#include "io.h"
-#include "traveller.h"
-
-static Traveller *p_traveller = nullptr;
-static bool saved = false;
 
 void setTravellerPtr(Traveller *traveller)
 {
@@ -46,5 +36,3 @@ void setSignalHandlers()
     std::signal(SIGTERM, SaveDataOnExit);
     std::atexit(SaveDataOnExit);
 }
-
-#endif // SAVE_AT_EXIT

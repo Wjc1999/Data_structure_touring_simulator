@@ -26,20 +26,29 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        widget.cpp
+        widget.cpp \
+    cpp/city_graph.cpp \
+    cpp/id_map.cpp \
+    cpp/path.cpp \
+    cpp/time_format.cpp \
+    cpp/traveller.cpp \
+    cpp/io.cpp \
+    cpp/log.cpp \
+    cpp/save_at_exit.cpp \
+    cpp/simulation.cpp
 
 HEADERS += \
     widget.h \
-    src/city_graph.h \
-    src/id_map.h \
-    src/io.h \
-    src/log.h \
-    src/path.h \
-    src/save_at_exit.h \
-    src/simulation.h \
-    src/time_format.h \
-    src/traveller.h \
-    src/user_type.h
+    headers/city_graph.h \
+    headers/id_map.h \
+    headers/io.h \
+    headers/log.h \
+    headers/path.h \
+    headers/save_at_exit.h \
+    headers/simulation.h \
+    headers/time_format.h \
+    headers/traveller.h \
+    headers/user_type.h
 
 FORMS += \
         widget.ui

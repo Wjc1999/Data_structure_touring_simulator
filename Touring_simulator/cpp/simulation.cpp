@@ -1,24 +1,7 @@
-#ifndef SRC_SIMULATE
-#define SRC_SIMULATE
 
-#include <ctime>
-#include <cstdlib>
-#include <chrono>
-#include <thread>
-#include <memory>
+#include "headers/simulation.h"
 
-#include "io.h"
-#include "traveller.h"
-#include "city_graph.h"
-#include "user_type.h"
-#include "path.h"
-#include "log.h"
-#include "id_map.h"
 
-static Time current_time;
-static int sleep_millsecs = 500;
-
-// 返回每两次调用间的间隔毫秒数
 std::chrono::duration<double, std::milli> Timer()
 {
     static int count = 0;
@@ -39,7 +22,6 @@ std::chrono::duration<double, std::milli> Timer()
     }
 }
 
-// 接受一个值,根据值的奇偶来返回时间间隔,当count为奇数时返回该次调用与上次count为偶数时调用的时间间隔
 std::chrono::duration<double, std::milli> Timer(int count)
 {
     static std::chrono::time_point<std::chrono::system_clock> start_time;
@@ -70,8 +52,6 @@ void InitializeSimulator(const Time &start_time)
 {
     current_time = start_time;
 }
-
-#if defined(_WIN32) || (defined(__CYGWIN__) && !defined(_WIN32)) || defined(__MINGW32__) || defined(__MINGW64__)
 
 static HANDLE InitOutBuf()
 {
@@ -144,9 +124,7 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
     delete[] data_buffer;
 }
 
-#else
-
-void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id_map)
+/*void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id_map)
 {
 
     int count = 0;
@@ -179,6 +157,4 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
     std::cout << "当前时间 : " << current_time.GetDay() << " 日 " << current_time.GetHour() << "时" << std::endl;
     std::cout << "到达目的地" << std::endl;
     PrintPath(city_graph, id_map, traveller.get_path(), traveller.get_path().GetLen());
-}
-#endif
-#endif // SRC_SIMULATE
+}*/

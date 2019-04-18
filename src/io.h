@@ -427,7 +427,7 @@ std::vector<City_id> Request(const IDMap &im)
             }
         }
     }
-    if(!res.size()){std::cout << "您选择不经过任何城市" << std::endl;}
+    if(res.size() == 1){std::cout << "您选择不经过任何城市" << std::endl;}
     else
     {
         std::cout << "您选择经过的城市是：";
