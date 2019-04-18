@@ -15,17 +15,6 @@
 #include "ui_widget.h"
 #include <QDebug>
 
-#include "headers/city_graph.h"
-#include "headers/id_map.h"
-#include "headers/io.h"
-#include "headers/log.h"
-#include "headers/path.h"
-#include "headers/save_at_exit.h"
-#include "headers/simulation.h"
-#include "headers/time_format.h"
-#include "headers/traveller.h"
-#include "headers/user_type.h"
-
 namespace Ui {
 class Widget;
 }

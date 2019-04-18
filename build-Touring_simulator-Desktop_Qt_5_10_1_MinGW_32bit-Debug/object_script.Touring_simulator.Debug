@@ -1,0 +1,14 @@
+INPUT(
+./debug/city_graph.o
+./debug/id_map.o
+./debug/io.o
+./debug/log.o
+./debug/path.o
+./debug/save_at_exit.o
+./debug/simulation.o
+./debug/time_format.o
+./debug/traveller.o
+./debug/main.o
+./debug/widget.o
+./debug/moc_widget.o
+);
