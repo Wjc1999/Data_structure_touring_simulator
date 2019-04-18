@@ -30,6 +30,7 @@
 *.exe
 *.out
 *.app
+
 test/time_format_test
 .vscode/settings.json
 data/flight_ex.py
@@ -39,7 +40,6 @@ data/time_fix.py
 test/get_path_LM
 test/path_test
 .vscode/launch.json
-
 .vscode/ipch/4c3ca03175e49768/mmap_address.bin
 *.bin
 test/main_test
@@ -53,3 +53,5 @@ test/traveller_test
 test/slp.cc
 test/slp
 src/Touring_simulator.pro.user.c19e98d.4.8-pre1
+build-Touring_simulator-Desktop_Qt_5_12_3_MSVC2017_64bit-Debug/*
+src\Touring_simulator.pro.user

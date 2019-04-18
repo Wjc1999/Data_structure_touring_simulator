@@ -192,7 +192,7 @@ Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> 
             res.Append(path_matrix[order_of_path[i - 1]][order_of_path[i]]);
         res.FixTotalTime(graph, start_time);
 
-        delete isMeet;
+        delete[] isMeet;
         return res;
         // return GetPathLeastMoney(graph, plan);
     }
@@ -215,7 +215,7 @@ Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> 
             std::vector<City_id> temp{0, 1};
             DFSLeastTimeParWarp par_warp = {start_time, 0, isMeet, 0, temp};
             DFSLeastTime(graph, plan, res, temp_path, par_warp);
-            delete isMeet;
+            delete[] isMeet;
         }
         return res;
     }
