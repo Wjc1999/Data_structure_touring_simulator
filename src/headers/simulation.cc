@@ -187,4 +187,5 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
     PrintPath(city_graph, id_map, traveller.get_path(), traveller.get_path().GetLen());
 }
 #endif
+
 #endif // SRC_SIMULATE_CC

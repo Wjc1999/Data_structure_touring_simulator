@@ -6,34 +6,9 @@
 
 #include "time_format.h"
 
-Time Time::time_diff(const Time &t) const
-{
-  int temp_hour = hour_ - t.hour_, temp_day = day_ - t.day_;
-  if (temp_hour < 0)
-  {
-    --temp_day;
-    temp_hour += 24;
-  }
-  Time res(temp_day + 1, temp_hour);
-  return res;
-}
-
 Time &Time::add_time(const Time &t)
 {
   return add_time(t.hour_, t.day_);
-}
-
-Time &Time::add_time(const int hour, const int day /* = 0 */)
-{
-  day_ += day;
-  hour_ += hour;
-  int d = hour_ / 24;
-  if (d)
-  {
-    hour_ -= 24 * d;
-    day_ += d;
-  }
-  return *this;
 }
 
 int Time::hour_diff(const Time &t) const
@@ -63,14 +38,14 @@ std::string RouteShow(const Time &leave, const Time &arrive)
             << arrive.GetHour() << ":00";*/
   if (arrive.GetDay())
   {
-      temp += "+" + std::to_string(arrive.GetDay()) + "\t\t";
-      //std::cout << "+" << arrive.GetDay() << "\t\t";
+    temp += "+" + std::to_string(arrive.GetDay()) + "\t\t";
+    //std::cout << "+" << arrive.GetDay() << "\t\t";
   }
 
   else
   {
-      temp += "\t\t";
-      //std::cout << "\t\t";
+    temp += "\t\t";
+    //std::cout << "\t\t";
   }
   return temp;
 }

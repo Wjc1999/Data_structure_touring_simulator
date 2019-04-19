@@ -23,7 +23,7 @@ public:
   int get_city_num() const { return kCityNum; }
 
   //打印ijk的存储数据
-  void Show(City_id former_city, City_id current_city, int k) const;
+void Show(City_id former_city, City_id current_city, int k) const;
 
   //获得存储在ijk的Route
   const Route &GetRoute(City_id former_city, City_id current_city, int k) const { return city_[former_city][current_city].at(k); }

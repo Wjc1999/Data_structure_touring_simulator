@@ -171,9 +171,7 @@ void Widget::on_QueryPathButton_released()
             end_time_qstr = QString::fromStdString(end_time_str);
 
             price_qstr = QString::fromStdString(std::to_string(r.price));
-            qDebug() << start_city_qstr << " " << target_city_qstr << " " <<
-                        transport_type_qstr << " " << start_time_qstr << " " <<
-                        end_time_qstr << " " << price_qstr << endl;
+            qDebug() << start_city_qstr << " " << target_city_qstr << " " << transport_type_qstr << " " << start_time_qstr << " " << end_time_qstr << " " << price_qstr << endl;
             QTableWidgetItem *id_cell = new QTableWidgetItem(tr(std::to_string(i + 1).c_str()));
             QTableWidgetItem *start_city_cell = new QTableWidgetItem(start_city_qstr);
             QTableWidgetItem *target_city_cell = new QTableWidgetItem(target_city_qstr);
