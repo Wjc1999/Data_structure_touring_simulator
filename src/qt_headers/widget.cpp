@@ -36,6 +36,7 @@ void Widget::on_LogInButton_released() //登陆
     if (account_check != -1)
     {
         traveller_widget.LoadData(account_check, citygraph_widget);
+        traveller_widget.set_id(account_name.toStdString());
         ui->stackedWidget->setCurrentWidget(ui->MainPage);
     }
     else
@@ -43,7 +44,7 @@ void Widget::on_LogInButton_released() //登陆
         QMessageBox::StandardButton sB = QMessageBox::question(this, "", "该账号不存在，是否注册:" + account_name, QMessageBox::Yes | QMessageBox::No);
         if (sB == QMessageBox::Yes)
         {
-            AddAccount(account_name.toStdString()); //?
+            AddAccount(account_name.toStdString());
             traveller_widget.set_id(account_name.toStdString());
             ui->stackedWidget->setCurrentWidget(ui->MainPage);
         }
@@ -85,6 +86,65 @@ void Widget::on_OrderPageButton_released() // 预定行程
 void Widget::on_StatePageButton_released() // 状态查询
 {
     ui->stackedWidget->setCurrentWidget(ui->StatePage);
+    ui->StatetextBrowser->clear();
+    std::string temp;
+    QString qtemp;
+    auto plan = traveller_widget.get_plan();
+    auto path = traveller_widget.get_path();
+    auto position = traveller_widget.get_position();
+    temp = "用户名:" + traveller_widget.get_ID();
+    ui->StatetextBrowser->append(qtemp.fromStdString(temp));
+    if (traveller_widget.get_state() == STAY)
+    {
+        if (position == -2)
+            ui->StatetextBrowser->append("当前无出行计划");
+        else if (position == -1)
+        {
+            ui->StatetextBrowser->append("");
+            temp.clear();
+            temp = "您的始发地是:" + idmap_widget.GetCityStr(plan.front());
+            ui->StatetextBrowser->append(qtemp.fromStdString(temp));
+            //std::cout << "您的始发地是：" << id_map.GetCityStr(plan.front()) << std::endl;
+            temp.clear();
+            temp = "您的目的地是:" + idmap_widget.GetCityStr(plan.back());
+            ui->StatetextBrowser->append(qtemp.fromStdString(temp));
+            //std::cout << "您的目的地是：" << id_map.GetCityStr(plan.back()) << std::endl;
+
+            if (plan.size() > 2)
+            {
+                ui->StatetextBrowser->append("您的途经城市有:");
+                //std::cout << "您的途经城市有：";
+                temp.clear();
+                for (int i = 1; i < plan.size() - 1; i++)
+                {
+                    temp += idmap_widget.GetCityStr(plan.at(i)) + " ";
+                }
+                ui->StatetextBrowser->append(qtemp.fromStdString(temp));
+            }
+            qtemp = "始发地\t\t目的地\t\t方式\t出发时间\t到达时间\t价格\t";
+            ui->StatetextBrowser->append(qtemp);
+            std::string comp("三个字");
+            std::string wrap[] = {"\t\t", "\t"};
+            for(int path_node = 0; path_node < path.GetLen(); path_node++)
+            {
+                temp.clear();
+                int i = path.GetNode(path_node).former_city;
+                int j = path.GetNode(path_node).current_city;
+                int k = path.GetNode(path_node).kth_way;
+                Route route = citygraph_widget.GetRoute(i, j, k);
+                auto former_city_str = idmap_widget.GetCityStr(i);
+                auto current_city_str = idmap_widget.GetCityStr(j);
+                temp += former_city_str + wrap[former_city_str.size() > comp.size()];
+                temp += current_city_str + wrap[current_city_str.size() > comp.size()];
+                temp += idmap_widget.GetTransStr(route.transport_type) + "\t";
+                temp += RouteShow(route.start_time, route.end_time);
+                temp += std::to_string(route.price) + "\t";
+                ui->StatetextBrowser->append(qtemp.fromStdString(temp));
+            }
+
+            //PrintPath(graph, id_map, path);
+        }
+    }
 }
 
 void Widget::on_QueryPathPageButton_released() // 路线查询
@@ -168,3 +228,8 @@ void Widget::on_QueryPathButton_released()
 }
 
 #endif // SRC_WIDGET
+
+void Widget::on_QueryPageToMenuButton_released()
+{
+    ui->stackedWidget->setCurrentWidget(ui->MainPage);
+}

@@ -55,7 +55,9 @@ private slots:
 
     void on_QueryPathButton_released();
 
-  private:
+    void on_QueryPageToMenuButton_released();
+
+private:
     Ui::Widget *ui;
 };
 

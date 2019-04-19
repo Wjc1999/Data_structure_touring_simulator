@@ -301,450 +301,391 @@
      </widget>
      <widget class="QWidget" name="StatePage">
       <layout class="QGridLayout" name="gridLayout_5">
-       <item row="0" column="1">
-        <spacer name="verticalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="1" column="0">
-        <spacer name="horizontalSpacer_13">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>880</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="1" column="1">
+       <item row="2" column="1">
         <widget class="QPushButton" name="StatePageToMenuButton">
          <property name="text">
           <string>返回主菜单</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="2">
-        <spacer name="horizontalSpacer_15">
+       <item row="2" column="0">
+        <spacer name="horizontalSpacer_13">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
-         </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>13</width>
+           <width>40</width>
            <height>20</height>
           </size>
          </property>
         </spacer>
        </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QTextBrowser" name="StatetextBrowser"/>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="QueryPage">
-      <widget class="QPushButton" name="QueryPageToMenuButton">
-       <property name="geometry">
-        <rect>
-         <x>904</x>
-         <y>598</y>
-         <width>93</width>
-         <height>28</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>返回主菜单</string>
-       </property>
-      </widget>
-      <widget class="QWidget" name="layoutWidget">
-       <property name="geometry">
-        <rect>
-         <x>550</x>
-         <y>10</y>
-         <width>181</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalTargetLayout">
-        <item>
-         <widget class="QLabel" name="target_label">
-          <property name="text">
-           <string>目的地</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="target_comboBox">
-          <item>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="0" column="1">
+        <layout class="QHBoxLayout" name="horizontalTargetLayout">
+         <item>
+          <widget class="QLabel" name="target_label">
            <property name="text">
-            <string>济南</string>
+            <string>目的地</string>
            </property>
-          </item>
-          <item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="target_comboBox">
+           <item>
+            <property name="text">
+             <string>济南</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>石家庄</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>长春</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>哈尔滨</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>沈阳</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>呼和浩特</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>乌鲁木齐</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>兰州</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>银川</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>太原</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>西安</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>郑州</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>合肥</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>南京</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>杭州</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>福州</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>广州</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>南昌</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>海口</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>南宁</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>贵阳</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>长沙</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>武汉</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>成都</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>昆明</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>西宁</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>天津</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>上海</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>重庆</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>北京</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>拉萨</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="0" column="0">
+        <layout class="QHBoxLayout" name="horizontalOriginLayout">
+         <item>
+          <widget class="QLabel" name="origin_label">
            <property name="text">
-            <string>石家庄</string>
+            <string>始发地</string>
            </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>长春</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>哈尔滨</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>沈阳</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>呼和浩特</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>乌鲁木齐</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>兰州</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>银川</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>太原</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>西安</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>郑州</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>合肥</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>南京</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>杭州</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>福州</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>广州</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>南昌</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>海口</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>南宁</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>贵阳</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>长沙</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>武汉</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>成都</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>昆明</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>西宁</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>天津</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>上海</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>重庆</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>北京</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>拉萨</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QPushButton" name="QueryPathButton">
-       <property name="geometry">
-        <rect>
-         <x>820</x>
-         <y>10</y>
-         <width>93</width>
-         <height>28</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>查询</string>
-       </property>
-      </widget>
-      <widget class="QTextBrowser" name="PathtextBrowser">
-       <property name="geometry">
-        <rect>
-         <x>40</x>
-         <y>70</y>
-         <width>871</width>
-         <height>511</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QWidget" name="layoutWidget">
-       <property name="geometry">
-        <rect>
-         <x>171</x>
-         <y>11</y>
-         <width>181</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalOriginLayout">
-        <item>
-         <widget class="QLabel" name="origin_label">
-          <property name="text">
-           <string>始发地</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="origin_comboBox">
-          <item>
-           <property name="text">
-            <string>济南</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>石家庄</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>长春</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>哈尔滨</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>沈阳</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>呼和浩特</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>乌鲁木齐</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>兰州</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>银川</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>太原</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>西安</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>郑州</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>合肥</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>南京</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>杭州</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>福州</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>广州</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>南昌</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>海口</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>南宁</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>贵阳</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>长沙</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>武汉</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>成都</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>昆明</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>西宁</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>天津</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>上海</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>重庆</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>北京</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>拉萨</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-       </layout>
-      </widget>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="origin_comboBox">
+           <item>
+            <property name="text">
+             <string>济南</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>石家庄</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>长春</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>哈尔滨</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>沈阳</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>呼和浩特</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>乌鲁木齐</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>兰州</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>银川</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>太原</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>西安</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>郑州</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>合肥</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>南京</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>杭州</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>福州</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>广州</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>南昌</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>海口</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>南宁</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>贵阳</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>长沙</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>武汉</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>成都</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>昆明</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>西宁</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>天津</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>上海</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>重庆</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>北京</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>拉萨</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="0" column="2">
+        <widget class="QPushButton" name="QueryPathButton">
+         <property name="text">
+          <string>查询</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="3">
+        <widget class="QTextBrowser" name="PathtextBrowser"/>
+       </item>
+       <item row="2" column="2">
+        <widget class="QPushButton" name="QueryPageToMenuButton">
+         <property name="text">
+          <string>返回主菜单</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="OrderPage">
       <layout class="QGridLayout" name="gridLayout_6">
