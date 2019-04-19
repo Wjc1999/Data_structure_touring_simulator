@@ -56,3 +56,5 @@ test/x64
 test/CMakeCache.txt
 test/cmake builds
 *.diagsession
+data/namelist.txt
+data/traveller_data.txt
