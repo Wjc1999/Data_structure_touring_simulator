@@ -55,3 +55,4 @@ test/Touring_Simulaor.dir
 test/x64
 test/CMakeCache.txt
 test/cmake builds
+*.diagsession
