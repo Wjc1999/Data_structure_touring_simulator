@@ -2,6 +2,7 @@
 #define SRC_PATH_H
 
 #include <deque>
+#include <algorithm>
 
 #include "user_type.h"
 #include "time_format.h"

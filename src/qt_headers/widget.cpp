@@ -108,35 +108,35 @@ void Widget::on_StatePageButton_released() // 状态查询
     auto path = traveller_widget.get_path();
     auto position = traveller_widget.get_position();
     temp = "用户名:" + traveller_widget.get_ID();
-    ui->StatetextBrowser->append(qtemp.fromStdString(temp));
+    ui->StatetextBrowser->append(tr(temp.c_str()));
     if (traveller_widget.get_state() == STAY)
     {
         if (position == -2)
-            ui->StatetextBrowser->append("当前无出行计划");
+            ui->StatetextBrowser->append(tr("当前无出行计划"));
         else if (position == -1)
         {
             ui->StatetextBrowser->append("");
             temp.clear();
             temp = "您的始发地是:" + idmap_widget.GetCityStr(plan.front());
-            ui->StatetextBrowser->append(qtemp.fromStdString(temp));
+            ui->StatetextBrowser->append(tr(temp.c_str()));
             //std::cout << "您的始发地是：" << id_map.GetCityStr(plan.front()) << std::endl;
             temp.clear();
             temp = "您的目的地是:" + idmap_widget.GetCityStr(plan.back());
-            ui->StatetextBrowser->append(qtemp.fromStdString(temp));
+            ui->StatetextBrowser->append(tr(temp.c_str()));
             //std::cout << "您的目的地是：" << id_map.GetCityStr(plan.back()) << std::endl;
 
             if (plan.size() > 2)
             {
-                ui->StatetextBrowser->append("您的途经城市有:");
+                ui->StatetextBrowser->append(tr("您的途经城市有:"));
                 //std::cout << "您的途经城市有：";
                 temp.clear();
                 for (int i = 1; i < plan.size() - 1; i++)
                 {
                     temp += idmap_widget.GetCityStr(plan.at(i)) + " ";
                 }
-                ui->StatetextBrowser->append(qtemp.fromStdString(temp));
+                ui->StatetextBrowser->append(tr(temp.c_str()));
             }
-            qtemp = "始发地\t\t目的地\t\t方式\t出发时间\t到达时间\t价格\t";
+            qtemp = tr("始发地\t\t目的地\t\t方式\t出发时间\t到达时间\t价格\t");
             ui->StatetextBrowser->append(qtemp);
             std::string comp("三个字");
             std::string wrap[] = {"\t\t", "\t"};
@@ -154,8 +154,12 @@ void Widget::on_StatePageButton_released() // 状态查询
                 temp += idmap_widget.GetTransStr(route.transport_type) + "\t";
                 temp += RouteShow(route.start_time, route.end_time);
                 temp += std::to_string(route.price) + "\t";
-                ui->StatetextBrowser->append(qtemp.fromStdString(temp));
+                ui->StatetextBrowser->append(tr(temp.c_str()));
             }
+            temp = "总价格花费:" + std::to_string(path.GetTotalPrice());
+            ui->StatetextBrowser->append(tr(temp.c_str()));
+            temp = "总时间花费:" + std::to_string(path.GetTotalTime().GetLength());
+            ui->StatetextBrowser->append(tr(temp.c_str()));
 
             //PrintPath(graph, id_map, path);
         }
@@ -251,9 +255,7 @@ void Widget::on_QueryPathButton_released()
     }
 }
 
+
 #endif // SRC_WIDGET
 
-void Widget::on_QueryPageToMenuButton_released()
-{
-    ui->stackedWidget->setCurrentWidget(ui->MainPage);
-}
+
