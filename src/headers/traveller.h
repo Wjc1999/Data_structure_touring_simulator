@@ -112,4 +112,25 @@ private:
   void DFSLTM(const CityGraph &graph, const std::vector<City_id> &plan, Path &path, Path temp, int layer, int &least_money, const int limit);
 };
 
+inline bool Traveller::set_strategy(int strategy)
+{
+    switch (strategy)
+    {
+    case 0:
+        strategy_ = LEAST_MONEY;
+        break;
+    case 1:
+        strategy_ = LEAST_TIME;
+        break;
+    case 2:
+        strategy_ = LIMIT_TIME;
+        break;
+    default:
+        return false;
+    }
+    return true;
+}
+
+
+
 #endif // SRC_TRAVELLER_H

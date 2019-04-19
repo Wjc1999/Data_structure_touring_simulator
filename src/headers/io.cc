@@ -219,7 +219,7 @@ std::vector<City_id> Request(const IDMap &im)
     std::vector<City_id> res;
     std::string id;
     City_id temp_id;
-    
+
     std::cout << "当前支持的城市有：" << std::endl;
     for (int i = 0; i < im.GetCityMapSize(); i++)
     {
@@ -303,7 +303,10 @@ std::vector<City_id> Request(const IDMap &im)
             }
         }
     }
-    if(res.size() == 1){std::cout << "您选择不经过任何城市" << std::endl;}
+    if (res.size() == 1)
+    {
+        std::cout << "您选择不经过任何城市" << std::endl;
+    }
     else
     {
         std::cout << "您选择经过的城市是：";
@@ -350,15 +353,8 @@ std::vector<City_id> Request(const IDMap &im)
     return res;
 }
 
-// 打印错误信息
-// TODO : 同时输出至日志
-void ErrorMsg(const std::string &err_msg)
-{
-    std::cout << err_msg << std::endl;
-}
-
 // 打印账户列表
-inline bool PrintNameList()
+bool PrintNameList()
 {
     std::string line_buf;
     std::ifstream fis(name_path);
@@ -372,13 +368,14 @@ inline bool PrintNameList()
         return false;
 }
 
-inline bool AddAccount(const Traveller &traveller)
-{ 
+// 根据所提供的traveller添加账号
+bool AddAccount(const Traveller &traveller)
+{
     return traveller.SaveData();
 }
 
 // 根据用户名添加账号
-inline bool AddAccount(const std::string &account_name)
+bool AddAccount(const std::string &account_name)
 {
     std::ofstream fos(name_path, std::ofstream::app);
     if (fos)
@@ -390,28 +387,7 @@ inline bool AddAccount(const std::string &account_name)
         return false;
 }
 
-// 返回账户名称所在的行数,若账户名称不存在则返回-1
-inline int AccountCheck(const std::string &id)
-{
-    std::vector<std::string> namelist; // unused parameter
-    std::ifstream in_stream(name_path);
-    if (in_stream.is_open())
-    {
-        int cnt = 0;
-        std::string temp;
-        while (getline(in_stream, temp))
-        {
-            if (temp == id)
-            {
-                return cnt;
-            }
-            cnt++;
-        }
-    }
-    return -1;
-}
-
-inline bool PathConfirm()
+bool PathConfirm()
 {
     std::string option_str;
     char option;
@@ -435,7 +411,7 @@ inline bool PathConfirm()
     }
 }
 
-inline Strategy InputStrategy(Time &init_time, Time &limit_time)
+Strategy InputStrategy(Time &init_time, Time &limit_time)
 {
     std::string strategy_str;
     int strategy;
@@ -468,6 +444,27 @@ inline Strategy InputStrategy(Time &init_time, Time &limit_time)
             break;
         }
     }
+}
+
+// 返回账户名称所在的行数,若账户名称不存在则返回-1
+int AccountCheck(const std::string &id)
+{
+    std::vector<std::string> namelist; // unused parameter
+    std::ifstream in_stream(name_path);
+    if (in_stream.is_open())
+    {
+        int cnt = 0;
+        std::string temp;
+        while (getline(in_stream, temp))
+        {
+            if (temp == id)
+            {
+                return cnt;
+            }
+            cnt++;
+        }
+    }
+    return -1;
 }
 
 void PrintTravellerInfo(const CityGraph &graph, const IDMap &id_map, const Time &now, const Traveller &traveller)
@@ -675,25 +672,7 @@ bool SetConsoleFontSize()
 //     return true;
 // }
 
-// 返回给定字符串中第一个数字,如果没有数字,则返回一个不是数字的字符
-inline char FindFirstDigit(const std::string &op_str)
-{
-    for (auto i = op_str.begin(); i != op_str.end(); ++i)
-        if (std::isdigit(*i))
-            return *i;
-    return 'A';
-}
-
-// 返回给定字符串中第一个字母,如果没有字母,则返回一个不是字母的字符
-inline char FindFirstAlpha(const std::string &op_str)
-{
-    for (auto i = op_str.begin(); i != op_str.end(); ++i)
-        if (std::isalpha(*i))
-            return *i;
-    return '0';
-}
-
-inline void ClearScreen()
+void ClearScreen()
 {
 #if defined(_WIN32) || (defined(__CYGWIN__) && !defined(_WIN32)) || defined(__MINGW32__) || defined(__MINGW64__)
     static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -887,11 +866,6 @@ Time InputInitTime()
         }
     }
     return Time(1, hour);
-}
-
-inline bool IsInplan(const std::vector<City_id> &plan, City_id city)
-{
-    return std::find(plan.begin(), plan.end(), city) != plan.end();
 }
 
 #endif // SRC_IO_CC

@@ -27,13 +27,24 @@ public:
   Path &Append(const Path &path);
   void Remove(const CityGraph &graph);
   // 固定路径的出发与结束点
-  void Fix();
+  void Fix()
+  {
+    if (len_)
+    {
+      start_city_ = cities_[0].former_city;
+      end_city_ = cities_[cities_.size() - 1].current_city;
+    }
+  }
 
   // 根据路径设置总时间
   void FixTotalTime(const CityGraph &graph, const Time &start_time = Time());
 
   //将cities向量反转
-  void Reverse();
+  void Reverse()
+  {
+    reverse(cities_.begin(), cities_.end());
+    Fix();
+  }
 
   //打印这条路径
   void Show() const;
@@ -63,7 +74,7 @@ public:
 #endif
 
 private:
-  std::deque <PathNode> cities_; //储存节点
+  std::deque<PathNode> cities_; //储存节点
   int start_city_ = 0;          //记录出发城市
   int end_city_ = 0;            //记录到达城市
   int len_ = 0;                 //路径长度

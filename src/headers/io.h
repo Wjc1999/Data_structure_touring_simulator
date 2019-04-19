@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <fstream>
 
 #include "user_type.h"
 
@@ -23,7 +24,10 @@ int Menu(const IDMap &im, Traveller &traveller);
 std::vector<City_id> Request(const IDMap &im);
 
 // 打印错误信息
-void ErrorMsg(const std::string &err_msg);
+inline void ErrorMsg(const std::string &err_msg)
+{
+        std::cout << err_msg << std::endl;
+}
 
 // 打印账户列表
 bool PrintNameList();
@@ -62,18 +66,30 @@ bool SetConsoleFontSize();
 inline bool IsValidName(const std::string &name_str)
 {
         for (auto i = name_str.begin(); i != name_str.end(); ++i)
-            if (!std::isalnum(*i))
-                return false;
+                if (!std::isalnum(*i))
+                        return false;
         return true;
 }
 
 // 返回给定字符串中第一个数字,如果没有数字,则返回一个不是数字的字符
-char FindFirstDigit(const std::string &op_str);
+inline char FindFirstDigit(const std::string &op_str)
+{
+        for (auto i = op_str.begin(); i != op_str.end(); ++i)
+                if (std::isdigit(*i))
+                        return *i;
+        return 'A';
+}
 
 // 返回给定字符串中第一个字母,如果没有字母,则返回一个不是字母的字符
-char FindFirstAlpha(const std::string &op_str);
+inline char FindFirstAlpha(const std::string &op_str)
+{
+        for (auto i = op_str.begin(); i != op_str.end(); ++i)
+                if (std::isalpha(*i))
+                        return *i;
+        return '0';
+}
 
-inline void ClearScreen();
+void ClearScreen();
 
 // 输出两个城市的所有路线
 void PrintRoutes(const CityGraph &graph, const IDMap &id_map);
@@ -83,5 +99,9 @@ Time InputLimitTime();
 Time InputInitTime();
 
 // 判断所给城市是否处于旅行计划中
-bool IsInplan(const std::vector<City_id> &plan, City_id city);
+inline bool IsInplan(const std::vector<City_id> &plan, City_id city)
+{
+        return std::find(plan.begin(), plan.end(), city) != plan.end();
+}
+
 #endif //SRC_IO_H

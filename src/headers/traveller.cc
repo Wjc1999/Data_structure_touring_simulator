@@ -703,26 +703,7 @@ void Traveller::InitState(const CityGraph &graph)
     }
 }
 
-inline bool Traveller::set_strategy(int strategy)
-{
-    switch (strategy)
-    {
-    case 0:
-        strategy_ = LEAST_MONEY;
-        break;
-    case 1:
-        strategy_ = LEAST_TIME;
-        break;
-    case 2:
-        strategy_ = LIMIT_TIME;
-        break;
-    default:
-        return false;
-    }
-    return true;
-}
-
-inline void Traveller::PrintPlan() const
+void Traveller::PrintPlan() const
 {
     std::for_each(travelling_plan_.begin(), travelling_plan_.end(), [](City_id city) { std::cout << city << " "; });
     std::cout << std::endl;

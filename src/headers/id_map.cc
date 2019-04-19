@@ -33,6 +33,7 @@ IDMap::IDMap()
   // std::cout << "Loaded IDs" << std::endl;
 }
 
+//从给定的文件中加载ID
 bool IDMap::LoadID(std::ifstream &id_file, std::map<int, std::string> &map)
 {
   int temp_int;
@@ -41,11 +42,4 @@ bool IDMap::LoadID(std::ifstream &id_file, std::map<int, std::string> &map)
     map[temp_int] = temp_string;
   return id_file.eof();
 }
-
-const std::string &IDMap::GetStr(int id, const std::map<int, std::string> &map) const
-{
-  // TODO: error handling
-  return map.at(id);  // map为const
-}
-
 #endif // SRC_IDMAP_CC

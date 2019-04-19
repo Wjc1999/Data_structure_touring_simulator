@@ -16,7 +16,8 @@
 #include "ui_widget.h"
 #include <QDebug>
 
-namespace Ui {
+namespace Ui
+{
 class Widget;
 }
 
@@ -24,19 +25,19 @@ class Widget : public QWidget
 {
     Q_OBJECT
 
-public:
+  public:
     explicit Widget(QWidget *parent = nullptr);
     ~Widget();
     Traveller traveller_widget;
     CityGraph citygraph_widget;
     IDMap idmap_widget;
     Path path_widget;
-    std::vector <City_id> plan_widget;
+    std::vector<City_id> plan_widget;
     Strategy strategy_widget;
     Time limit_time_widget;
     Time init_time_widget;
 
-private slots:
+  private slots:
     void on_LogInButton_released();
 
     void on_SignUpButton_released();
@@ -54,6 +55,8 @@ private slots:
     void on_OrderPageToMenuButton_released();
 
     void on_QueryPathButton_released();
+
+    void on_QueryPageToMenuButton_released();
 
   private:
     Ui::Widget *ui;

@@ -34,7 +34,7 @@ private:
   std::map<Train_id, Train_str> train_map_;
   std::map<Trans_id, Trans_str> trans_map_;
   bool LoadID(std::ifstream &id_file, std::map<int, std::string> &map); //从给定的文件中加载ID
-  const std::string &GetStr(int id, const std::map<int, std::string> &map) const;
+  const std::string &GetStr(int id, const std::map<int, std::string> &map) const { return map.at(id);};
   const std::string paths_[3] = {
       // 文件路径
       "..//data//city_id.txt",            // city_id_path
