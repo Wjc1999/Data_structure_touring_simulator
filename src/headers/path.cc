@@ -106,21 +106,6 @@ void Path::FixTotalTime(const CityGraph &graph, const Time &start_time)
   }
 }
 
-inline void Path::Reverse()
-{
-  reverse(cities_.begin(), cities_.end());
-  Fix();
-}
-
-inline void Path::Fix()
-{
-  if (len_)
-  {
-    start_city_ = cities_[0].former_city;
-    end_city_ = cities_[cities_.size() - 1].current_city;
-  }
-}
-
 void Path::Show() const
 {
   for (auto path_node : cities_)
@@ -131,7 +116,7 @@ void Path::Show() const
 
 #ifdef TEST_PATH
 
-  inline bool Path::ValidatePath() const // 验证path是否合法
+  bool Path::ValidatePath() const // 验证path是否合法
   {
     assert(cities_.size() == len_ && len_ > 0);
     City_id temp = cities_.at(0).current_city;

@@ -12,16 +12,16 @@
 #include "time_format.h"
 #include "id_map.h"
 
-static const std::string flightfn = "../data/flight_extract_with_id.txt";
-static const std::string trainfn = "../data/train_extract_with_id.txt";
-static const std::string carfn = "../data/car_extract_with_id.txt";
+static const std::string flight_file_path = "../data/flight_extract_with_id.txt";
+static const std::string train_file_path = "../data/train_extract_with_id.txt";
+static const std::string car_file_path = "../data/car_extract_with_id.txt";
 
 CityGraph::CityGraph()
 {
   if (
-      LoadCityGraph(flightfn, 2) &&
-      LoadCityGraph(trainfn, 1) &&
-      LoadCityGraph(carfn, 0))
+      LoadCityGraph(flight_file_path, 2) &&
+      LoadCityGraph(train_file_path, 1) &&
+      LoadCityGraph(car_file_path, 0))
       ;
     //std::cout << "数据读取成功！" << std::endl;
   else
@@ -31,7 +31,7 @@ CityGraph::CityGraph()
   }
 }
 
-inline bool CityGraph::LoadCityGraph(const std::string &name, int type)
+bool CityGraph::LoadCityGraph(const std::string &name, int type)
 { //将飞机火车汽车数据加载到程序中
   std::ifstream stream(name);
   if (type != 1)
@@ -83,7 +83,7 @@ inline bool CityGraph::LoadCityGraph(const std::string &name, int type)
   }
 }
 
-inline void CityGraph::Show(City_id former_city, City_id current_city, int k) const
+void CityGraph::Show(City_id former_city, City_id current_city, int k) const
 {
   if (former_city != current_city)
   {

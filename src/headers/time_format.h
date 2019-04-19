@@ -52,4 +52,29 @@ private:
 
 std::string RouteShow(const Time &leave, const Time &arrive);
 
+inline Time &Time::add_time(const int hour, const int day /* = 0 */)
+{
+  day_ += day;
+  hour_ += hour;
+  int d = hour_ / 24;
+  if (d)
+  {
+    hour_ -= 24 * d;
+    day_ += d;
+  }
+  return *this;
+}
+
+inline Time Time::time_diff(const Time &t) const
+{
+  int temp_hour = hour_ - t.hour_, temp_day = day_ - t.day_;
+  if (temp_hour < 0)
+  {
+    --temp_day;
+    temp_hour += 24;
+  }
+  Time res(temp_day + 1, temp_hour);
+  return res;
+}
+
 #endif // SRC_TIME_H
