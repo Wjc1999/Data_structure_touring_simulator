@@ -11,6 +11,7 @@
 #include <QTableWidget>
 #include <QStringList>
 #include <QTableWidgetItem>
+#include <QPixmap>
 
 #include "time_table_widget_item.h"
 
@@ -98,6 +99,8 @@ void Widget::on_SignUpButton_released() //注册
 void Widget::on_OrderPageButton_released() // 预定行程
 {
     ui->stackedWidget->setCurrentWidget(ui->OrderPage);
+    //ui->MapLabel->setPixmap(QPixmap("D:\app\Github\Data_structure_touring_simulator\src\material\map.png"));
+    //ui->MapLabel->setScaledContents(true);
 }
 
 void Widget::on_StatePageButton_released() // 状态查询
