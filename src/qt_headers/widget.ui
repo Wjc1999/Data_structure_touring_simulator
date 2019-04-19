@@ -41,6 +41,9 @@
             <property name="maxLength">
              <number>256</number>
             </property>
+            <property name="clearButtonEnabled">
+             <bool>false</bool>
+            </property>
            </widget>
           </item>
          </layout>

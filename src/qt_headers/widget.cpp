@@ -33,12 +33,12 @@ void Widget::on_LogInButton_released() //登陆
 
     if (!account_name.size())
     {
-        QMessageBox::warning(this, "Warning!", "输入为空", QMessageBox::Ok);
+        QMessageBox::warning(this, tr("Warning!"), tr("输入为空"), QMessageBox::Ok);
         return;
     }
     else if (!IsValidName(account_name.toStdString()))
     {
-        QMessageBox::warning(this, "Warning!", "非法的用户名,请重新输入", QMessageBox::Ok);
+        QMessageBox::warning(this, tr("Warning!"), tr("非法的用户名,请重新输入"), QMessageBox::Ok);
         return;
     }
 
@@ -51,7 +51,7 @@ void Widget::on_LogInButton_released() //登陆
     }
     else
     {
-        QMessageBox::StandardButton sB = QMessageBox::question(this, "", "该账号不存在，是否注册:" + account_name, QMessageBox::Yes | QMessageBox::No);
+        QMessageBox::StandardButton sB = QMessageBox::question(this, "", tr("该账号不存在，是否注册:") + account_name, QMessageBox::Yes | QMessageBox::No);
 
         if (sB == QMessageBox::Yes)
         {
@@ -171,7 +171,9 @@ void Widget::on_QueryPathButton_released()
             end_time_qstr = QString::fromStdString(end_time_str);
 
             price_qstr = QString::fromStdString(std::to_string(r.price));
-            qDebug() << start_city_qstr << " " << target_city_qstr << " " << transport_type_qstr << " " << start_time_qstr << " " << end_time_qstr << " " << price_qstr << endl;
+
+            // qDebug() << start_city_qstr << " " << target_city_qstr << " " << transport_type_qstr << " " << start_time_qstr << " " << end_time_qstr << " " << price_qstr << endl;
+
             QTableWidgetItem *id_cell = new QTableWidgetItem(tr(std::to_string(i + 1).c_str()));
             QTableWidgetItem *start_city_cell = new QTableWidgetItem(start_city_qstr);
             QTableWidgetItem *target_city_cell = new QTableWidgetItem(target_city_qstr);

@@ -2,6 +2,7 @@
 #define SRC_PATH_H
 
 #include <deque>
+#include <algorithm>
 
 #include "user_type.h"
 #include "time_format.h"
@@ -42,7 +43,7 @@ public:
   //将cities向量反转
   void Reverse()
   {
-    reverse(cities_.begin(), cities_.end());
+    std::reverse(cities_.begin(), cities_.end());
     Fix();
   }
 
