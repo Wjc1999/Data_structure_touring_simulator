@@ -12,6 +12,8 @@
 #include <QStringList>
 #include <QTableWidgetItem>
 
+#include "time_table_widget_item.h"
+
 Widget::Widget(QWidget *parent) : QWidget(parent),
                                   ui(new Ui::Widget)
 {
@@ -197,6 +199,7 @@ void Widget::on_QueryPathButton_released()
     City_id start_city = ui->origin_comboBox->currentIndex();
     City_id target_city = ui->target_comboBox->currentIndex();
     ui->Path_tableWidget->clearContents();
+    ui->Path_tableWidget->setSortingEnabled(false);
 
     if (start_city == target_city)
     {
@@ -238,12 +241,14 @@ void Widget::on_QueryPathButton_released()
 
             // qDebug() << start_city_qstr << " " << target_city_qstr << " " << transport_type_qstr << " " << start_time_qstr << " " << end_time_qstr << " " << price_qstr << endl;
 
-            QTableWidgetItem *id_cell = new QTableWidgetItem(tr(std::to_string(i + 1).c_str()));
+            QTableWidgetItem *id_cell = new QTableWidgetItem;
+            id_cell->setData(Qt::DisplayRole, i + 1);
+
             QTableWidgetItem *start_city_cell = new QTableWidgetItem(start_city_qstr);
             QTableWidgetItem *target_city_cell = new QTableWidgetItem(target_city_qstr);
             QTableWidgetItem *transport_type_cell = new QTableWidgetItem(transport_type_qstr);
-            QTableWidgetItem *start_time_cell = new QTableWidgetItem(start_time_qstr);
-            QTableWidgetItem *end_time_cell = new QTableWidgetItem(end_time_qstr);
+            QTableWidgetItem *start_time_cell = new TimeTableWidgetItem(start_time_qstr);
+            QTableWidgetItem *end_time_cell = new TimeTableWidgetItem(end_time_qstr);
             QTableWidgetItem *price_cell = new QTableWidgetItem(price_qstr);
 
             path_table->setItem(i, 0, id_cell);
@@ -255,6 +260,7 @@ void Widget::on_QueryPathButton_released()
             path_table->setItem(i, 6, price_cell);
         }
     }
+    ui->Path_tableWidget->setSortingEnabled(true);
 }
 
 
