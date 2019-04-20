@@ -5,7 +5,7 @@
 
 MyLabel::MyLabel(QWidget *parent) : QLabel(parent)
 {
-
+    this->setScaledContents(true);
 }
 
 void MyLabel::mousePressEvent(QMouseEvent *ev)
