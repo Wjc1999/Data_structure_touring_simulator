@@ -2,17 +2,18 @@
 #define TEST_MAIN
 
 #include <iostream>
+#include <thread>
 
-#include "../src/io.h"
-#include "../src/id_map.h"
-#include "../src/city_graph.h"
-#include "../src/traveller.h"
-#include "../src/time_format.h"
-#include "../src/log.h"
-#include "../src/path.h"
-#include "../src/simulation.h"
-#include "../src/save_at_exit.h"
-
+#include "../src/headers/user_type.h"
+#include "../src/headers/io.h"
+#include "../src/headers/id_map.h"
+#include "../src/headers/city_graph.h"
+#include "../src/headers/traveller.h"
+#include "../src/headers/time_format.h"
+#include "../src/headers/log.h"
+#include "../src/headers/path.h"
+#include "../src/headers/simulation.h"
+#include "../src/headers/save_at_exit.h"
 
 int main()
 {

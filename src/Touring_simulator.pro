@@ -40,6 +40,7 @@ SOURCES += \
     qt_headers/mylabel.cpp
 
 HEADERS += \
+    qt_headers/time_table_widget_item.h \
     qt_headers/widget.h \
     headers/city_graph.h \
     headers/id_map.h \

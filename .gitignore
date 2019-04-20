@@ -33,6 +33,11 @@
 
 *.py
 *.autosave
+*.vcxproj
+*.filters
+*.user
+*.cmake
+*.sln
 
 .vscode
 build-Touring_simulator-Desktop_Qt_5_12_3_MSVC2017_64bit-Debug
@@ -42,3 +47,14 @@ src/Touring_simulator.pro.user
 test/main_test
 test/traveller_load_test
 test/traveller_save_test
+test/.vs
+test/CMakeFiles
+test/Debug
+test/Release
+test/Touring_Simulaor.dir
+test/x64
+test/CMakeCache.txt
+test/cmake builds
+*.diagsession
+data/namelist.txt
+data/traveller_data.txt

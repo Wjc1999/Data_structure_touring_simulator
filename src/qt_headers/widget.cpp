@@ -1,6 +1,8 @@
 ﻿#ifndef SRC_WIDGET
 #define SRC_WIDGET
+
 #pragma execution_character_set("utf-8")
+
 #include <string>
 #include <sstream>
 
@@ -12,6 +14,9 @@
 #include <QStringList>
 #include <QTableWidgetItem>
 #include <QPixmap>
+#include <QTextCodec>
+
+#include "time_table_widget_item.h"
 
 Widget::Widget(QWidget *parent) : QWidget(parent),
                                   ui(new Ui::Widget)
@@ -52,7 +57,7 @@ void Widget::on_LogInButton_released() //登陆
     }
     else
     {
-        QMessageBox::StandardButton sB = QMessageBox::question(this, "", "该账号不存在，是否注册:" + account_name, QMessageBox::Yes | QMessageBox::No);
+        QMessageBox::StandardButton sB = QMessageBox::question(this, "", QString("该账号不存在，是否注册:") + account_name, QMessageBox::Yes | QMessageBox::No);
 
         if (sB == QMessageBox::Yes)
         {
@@ -69,12 +74,12 @@ void Widget::on_SignUpButton_released() //注册
 
     if (!account_name.size())
     {
-        QMessageBox::warning(this, tr("Warning!"), tr("输入为空"), QMessageBox::Ok);
+        QMessageBox::warning(this, "Warning!", "输入为空", QMessageBox::Ok);
         return;
     }
     else if (!IsValidName(account_name.toStdString()))
     {
-        QMessageBox::warning(this, tr("Warning!"), "非法的用户名,请重新输入", QMessageBox::Ok);
+        QMessageBox::warning(this, "Warning!", "非法的用户名,请重新输入", QMessageBox::Ok);
         return;
     }
 
@@ -82,7 +87,7 @@ void Widget::on_SignUpButton_released() //注册
 
     if (account_check != -1)
     {
-        QMessageBox::warning(this, tr("Warning!"), tr("该账号已被注册，请重新输入"), QMessageBox::Ok);
+        QMessageBox::warning(this, "Warning!", "该账号已被注册，请重新输入", QMessageBox::Ok);
         return;
     }
     else
@@ -95,9 +100,10 @@ void Widget::on_SignUpButton_released() //注册
 
 void Widget::on_OrderPageButton_released() // 预定行程
 {
+    ui->MapLabel->setOriginPixmap();
     ui->stackedWidget->setCurrentWidget(ui->OrderPage);
-    //ui->MapLabel->setPixmap(QPixmap("D:\app\Github\Data_structure_touring_simulator\src\material\map.png"));
-    //ui->MapLabel->setScaledContents(true);
+    // ui->MapLabel->setPixmap(QPixmap("D:\app\Github\Data_structure_touring_simulator\src\material\map.png"));
+    // ui->MapLabel->setScaledContents(true);
 }
 
 void Widget::on_StatePageButton_released() // 状态查询
@@ -138,7 +144,7 @@ void Widget::on_StatePageButton_released() // 状态查询
                 }
                 ui->StatetextBrowser->append(tr(temp.c_str()));
             }
-            qtemp = tr("始发地\t\t目的地\t\t方式\t出发时间\t到达时间\t价格\t");
+            qtemp = "始发地\t\t目的地\t\t方式\t出发时间\t到达时间\t价格\t";
             ui->StatetextBrowser->append(qtemp);
             std::string comp("三个字");
             std::string wrap[] = {"\t\t", "\t"};
@@ -199,17 +205,18 @@ void Widget::on_QueryPathButton_released()
     City_id start_city = ui->origin_comboBox->currentIndex();
     City_id target_city = ui->target_comboBox->currentIndex();
     ui->Path_tableWidget->clearContents();
+    ui->Path_tableWidget->setSortingEnabled(false);
 
     if (start_city == target_city)
     {
-        QMessageBox::warning(this, tr("Warning!"), tr("始发地不能与目的地一样"), QMessageBox::Ok);
+        QMessageBox::warning(this, "Warning!", "始发地不能与目的地一样", QMessageBox::Ok);
         return;
     }
 
     int size = citygraph_widget.Getsize(start_city, target_city);
     if (!size)
     {
-        QMessageBox::warning(this, tr("Warning!"), tr("两城市间无路线"), QMessageBox::Ok);
+        QMessageBox::warning(this, "Warning!", "两城市间无路线", QMessageBox::Ok);
     }
     else
     {
@@ -237,13 +244,17 @@ void Widget::on_QueryPathButton_released()
             end_time_qstr = QString::fromStdString(end_time_str);
 
             price_qstr = QString::fromStdString(std::to_string(r.price));
-            qDebug() << start_city_qstr << " " << target_city_qstr << " " << transport_type_qstr << " " << start_time_qstr << " " << end_time_qstr << " " << price_qstr << endl;
-            QTableWidgetItem *id_cell = new QTableWidgetItem(tr(std::to_string(i + 1).c_str()));
+
+            // qDebug() << start_city_qstr << " " << target_city_qstr << " " << transport_type_qstr << " " << start_time_qstr << " " << end_time_qstr << " " << price_qstr << endl;
+
+            QTableWidgetItem *id_cell = new QTableWidgetItem;
+            id_cell->setData(Qt::DisplayRole, i + 1);
+
             QTableWidgetItem *start_city_cell = new QTableWidgetItem(start_city_qstr);
             QTableWidgetItem *target_city_cell = new QTableWidgetItem(target_city_qstr);
             QTableWidgetItem *transport_type_cell = new QTableWidgetItem(transport_type_qstr);
-            QTableWidgetItem *start_time_cell = new QTableWidgetItem(start_time_qstr);
-            QTableWidgetItem *end_time_cell = new QTableWidgetItem(end_time_qstr);
+            QTableWidgetItem *start_time_cell = new TimeTableWidgetItem(start_time_qstr);
+            QTableWidgetItem *end_time_cell = new TimeTableWidgetItem(end_time_qstr);
             QTableWidgetItem *price_cell = new QTableWidgetItem(price_qstr);
 
             path_table->setItem(i, 0, id_cell);
@@ -255,6 +266,7 @@ void Widget::on_QueryPathButton_released()
             path_table->setItem(i, 6, price_cell);
         }
     }
+    ui->Path_tableWidget->setSortingEnabled(true);
 }
 
 

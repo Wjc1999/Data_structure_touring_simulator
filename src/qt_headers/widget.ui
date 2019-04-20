@@ -41,6 +41,9 @@
             <property name="maxLength">
              <number>256</number>
             </property>
+            <property name="clearButtonEnabled">
+             <bool>false</bool>
+            </property>
            </widget>
           </item>
          </layout>
@@ -765,13 +768,19 @@
       </layout>
      </widget>
      <widget class="QWidget" name="OrderPage">
-      <layout class="QGridLayout" name="gridLayout">
+      <layout class="QGridLayout" name="gridLayout" columnstretch="7,1">
        <item row="0" column="0" rowspan="2">
         <widget class="MyLabel" name="MapLabel">
-         <property name="maximumSize">
+         <property name="minimumSize">
           <size>
            <width>900</width>
            <height>650</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>2999</width>
+           <height>2999</height>
           </size>
          </property>
          <property name="autoFillBackground">
@@ -839,8 +848,8 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>502</x>
-     <y>544</y>
+     <x>93</x>
+     <y>33</y>
     </hint>
     <hint type="destinationlabel">
      <x>620</x>
