@@ -109,69 +109,59 @@ void Widget::on_OrderPageButton_released() // 预定行程
 void Widget::on_StatePageButton_released() // 状态查询
 {
     ui->stackedWidget->setCurrentWidget(ui->StatePage);
-    ui->StatetextBrowser->clear();
-    std::string temp;
-    QString qtemp;
+    ui->stateTableWidget->clearContents();
+    ui->stateTableWidget->setSortingEnabled(false);
+
+    const QString empty_plan_qstr("无");
+    std::string temp_str;
     auto plan = traveller_widget.get_plan();
     auto path = traveller_widget.get_path();
     auto position = traveller_widget.get_position();
-    temp = "用户名:" + traveller_widget.get_ID();
-    ui->StatetextBrowser->append(tr(temp.c_str()));
-    if (traveller_widget.get_state() == STAY)
+
+    ui->state_user_name_content->setText(QString::fromStdString(traveller_widget.get_ID()));
+    if (position == -2)
     {
-        if (position == -2)
-            ui->StatetextBrowser->append(tr("当前无出行计划"));
-        else if (position == -1)
-        {
-            ui->StatetextBrowser->append("");
-            temp.clear();
-            temp = "您的始发地是:" + idmap_widget.GetCityStr(plan.front());
-            ui->StatetextBrowser->append(tr(temp.c_str()));
-            //std::cout << "您的始发地是：" << id_map.GetCityStr(plan.front()) << std::endl;
-            temp.clear();
-            temp = "您的目的地是:" + idmap_widget.GetCityStr(plan.back());
-            ui->StatetextBrowser->append(tr(temp.c_str()));
-            //std::cout << "您的目的地是：" << id_map.GetCityStr(plan.back()) << std::endl;
-
-            if (plan.size() > 2)
-            {
-                ui->StatetextBrowser->append(tr("您的途经城市有:"));
-                //std::cout << "您的途经城市有：";
-                temp.clear();
-                for (int i = 1; i < plan.size() - 1; i++)
-                {
-                    temp += idmap_widget.GetCityStr(plan.at(i)) + " ";
-                }
-                ui->StatetextBrowser->append(tr(temp.c_str()));
-            }
-            qtemp = "始发地\t\t目的地\t\t方式\t出发时间\t到达时间\t价格\t";
-            ui->StatetextBrowser->append(qtemp);
-            std::string comp("三个字");
-            std::string wrap[] = {"\t\t", "\t"};
-            for(int path_node = 0; path_node < path.GetLen(); path_node++)
-            {
-                temp.clear();
-                int i = path.GetNode(path_node).former_city;
-                int j = path.GetNode(path_node).current_city;
-                int k = path.GetNode(path_node).kth_way;
-                Route route = citygraph_widget.GetRoute(i, j, k);
-                auto former_city_str = idmap_widget.GetCityStr(i);
-                auto current_city_str = idmap_widget.GetCityStr(j);
-                temp += former_city_str + wrap[former_city_str.size() > comp.size()];
-                temp += current_city_str + wrap[current_city_str.size() > comp.size()];
-                temp += idmap_widget.GetTransStr(route.transport_type) + "\t";
-                temp += RouteShow(route.start_time, route.end_time);
-                temp += std::to_string(route.price) + "\t";
-                ui->StatetextBrowser->append(tr(temp.c_str()));
-            }
-            temp = "总价格花费:" + std::to_string(path.GetTotalPrice());
-            ui->StatetextBrowser->append(tr(temp.c_str()));
-            temp = "总时间花费:" + std::to_string(path.GetTotalTime().GetLength());
-            ui->StatetextBrowser->append(tr(temp.c_str()));
-
-            //PrintPath(graph, id_map, path);
-        }
+        ui->state_start_city_content->setText(empty_plan_qstr);
+        ui->state_target_city_content->setText(empty_plan_qstr);
+        ui->state_pass_content->setText(empty_plan_qstr);
+        ui->state_time_content->setText(empty_plan_qstr);
+        ui->state_price_content->setText(empty_plan_qstr);
+        return;
     }
+    else if (position == -1)
+    {
+        ui->state_start_city_content->setText(QString::fromStdString(idmap_widget.GetCityStr(plan.front())));
+        ui->state_target_city_content->setText(QString::fromStdString(idmap_widget.GetCityStr(plan.back())));
+
+        if (plan.size() > 2)
+        {
+            temp_str.clear();
+            for (int i = 1; i < plan.size() - 1; i++)
+            {
+                temp_str += idmap_widget.GetCityStr(plan.at(i)) + " ";
+            }
+            ui->state_pass_content->setText(QString::fromStdString(temp_str));
+        }
+        else
+        {
+            ui->state_pass_content->setText(empty_plan_qstr);
+        }
+        ui->state_time_content->setNum(path.GetTotalTime().GetLength());
+        ui->state_price_content->setNum(path.GetTotalPrice());
+    }
+    else
+    {
+
+    }
+
+    ui->stateTableWidget->setRowCount(path.GetLen());
+    for (int i = 0; i < path.GetLen(); i++)
+    {
+        auto &node = path.GetNode(i);
+        UpdateTable(ui->stateTableWidget, i, node.former_city, node.current_city, node.kth_way);
+    }
+
+    ui->stateTableWidget->setSortingEnabled(true);
 }
 
 void Widget::on_QueryPathPageButton_released() // 路线查询
@@ -200,6 +190,48 @@ void Widget::on_QueryPageToMenuButton_released() // 从查询路线页面返回�
     ui->stackedWidget->setCurrentWidget(ui->MainPage);
 }
 
+void Widget::UpdateTable(QTableWidget *table, int row, City_id start_city, City_id target_city, int k)
+{
+    QString start_city_qstr, target_city_qstr, transport_type_qstr, start_time_qstr, end_time_qstr, price_qstr;
+    std::string start_time_str, end_time_str;
+    std::stringstream ss;
+
+    start_city_qstr = QString::fromStdString(idmap_widget.GetCityStr(start_city));
+    target_city_qstr = QString::fromStdString(idmap_widget.GetCityStr(target_city));
+
+    Route r = citygraph_widget.GetRoute(start_city, target_city, k);
+
+    transport_type_qstr = QString::fromStdString(idmap_widget.GetTransStr(r.transport_type));
+
+    ss.str(RouteShow(r.start_time, r.end_time));
+    ss.clear();
+    ss >> start_time_str >> end_time_str;
+    start_time_qstr = QString::fromStdString(start_time_str);
+    end_time_qstr = QString::fromStdString(end_time_str);
+
+    price_qstr = QString::fromStdString(std::to_string(r.price));
+
+    // qDebug() << start_city_qstr << " " << target_city_qstr << " " << transport_type_qstr << " " << start_time_qstr << " " << end_time_qstr << " " << price_qstr << endl;
+
+    QTableWidgetItem *id_cell = new QTableWidgetItem;
+    id_cell->setData(Qt::DisplayRole, row + 1);
+
+    QTableWidgetItem *start_city_cell = new QTableWidgetItem(start_city_qstr),
+                     *target_city_cell = new QTableWidgetItem(target_city_qstr),
+                     *transport_type_cell = new QTableWidgetItem(transport_type_qstr),
+                     *start_time_cell = new TimeTableWidgetItem(start_time_qstr),
+                     *end_time_cell = new TimeTableWidgetItem(end_time_qstr),
+                     *price_cell = new QTableWidgetItem(price_qstr);
+
+    table->setItem(row, 0, id_cell);
+    table->setItem(row, 1, start_city_cell);
+    table->setItem(row, 2, target_city_cell);
+    table->setItem(row, 3, transport_type_cell);
+    table->setItem(row, 4, start_time_cell);
+    table->setItem(row, 5, end_time_cell);
+    table->setItem(row, 6, price_cell);
+}
+
 void Widget::on_QueryPathButton_released()
 {
     City_id start_city = ui->origin_comboBox->currentIndex();
@@ -220,56 +252,16 @@ void Widget::on_QueryPathButton_released()
     }
     else
     {
-        auto &path_table = ui->Path_tableWidget;
+        auto path_table = ui->Path_tableWidget;
         path_table->setRowCount(size);
-
-        QString start_city_qstr, target_city_qstr, transport_type_qstr, start_time_qstr, end_time_qstr, price_qstr;
-        std::string start_time_str, end_time_str;
-        std::stringstream ss;
-
-        start_city_qstr = QString::fromStdString(idmap_widget.GetCityStr(start_city));
-        target_city_qstr = QString::fromStdString(idmap_widget.GetCityStr(target_city));
 
         std::string temp;
         for (int i = 0; i < size; i++)
         {
-            Route r = citygraph_widget.GetRoute(start_city, target_city, i);
-
-            transport_type_qstr = QString::fromStdString(idmap_widget.GetTransStr(r.transport_type));
-
-            ss.str(RouteShow(r.start_time, r.end_time));
-            ss.clear();
-            ss >> start_time_str >> end_time_str;
-            start_time_qstr = QString::fromStdString(start_time_str);
-            end_time_qstr = QString::fromStdString(end_time_str);
-
-            price_qstr = QString::fromStdString(std::to_string(r.price));
-
-            // qDebug() << start_city_qstr << " " << target_city_qstr << " " << transport_type_qstr << " " << start_time_qstr << " " << end_time_qstr << " " << price_qstr << endl;
-
-            QTableWidgetItem *id_cell = new QTableWidgetItem;
-            id_cell->setData(Qt::DisplayRole, i + 1);
-
-            QTableWidgetItem *start_city_cell = new QTableWidgetItem(start_city_qstr);
-            QTableWidgetItem *target_city_cell = new QTableWidgetItem(target_city_qstr);
-            QTableWidgetItem *transport_type_cell = new QTableWidgetItem(transport_type_qstr);
-            QTableWidgetItem *start_time_cell = new TimeTableWidgetItem(start_time_qstr);
-            QTableWidgetItem *end_time_cell = new TimeTableWidgetItem(end_time_qstr);
-            QTableWidgetItem *price_cell = new QTableWidgetItem(price_qstr);
-
-            path_table->setItem(i, 0, id_cell);
-            path_table->setItem(i, 1, start_city_cell);
-            path_table->setItem(i, 2, target_city_cell);
-            path_table->setItem(i, 3, transport_type_cell);
-            path_table->setItem(i, 4, start_time_cell);
-            path_table->setItem(i, 5, end_time_cell);
-            path_table->setItem(i, 6, price_cell);
+            UpdateTable(path_table, i, start_city, target_city, i);
         }
     }
     ui->Path_tableWidget->setSortingEnabled(true);
 }
 
-
 #endif // SRC_WIDGET
-
-

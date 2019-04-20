@@ -60,6 +60,7 @@ class Widget : public QWidget
 
   private:
     Ui::Widget *ui;
+    void UpdateTable(QTableWidget *table, int row, City_id start_city, City_id target_city, int k);
 };
 
 #endif // WIDGET_H
