@@ -7,7 +7,7 @@ class MyLabel : public QLabel
 {
     Q_OBJECT
 public:
-    explicit MyLabel(QWidget *parent = nullptr);
+    explicit MyLabel(QWidget *parent = 0);
 protected:
     void mousePressEvent(QMouseEvent *ev);
 signals:
