@@ -23,6 +23,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+INCLUDEPATH += ../src/qt_headers
 
 SOURCES += \
     headers/city_graph.cc \
@@ -34,8 +35,9 @@ SOURCES += \
     headers/simulation.cc \
     headers/time_format.cc \
     headers/traveller.cc \
-        main.cpp \
-        qt_headers/widget.cpp \
+    main.cpp \
+    qt_headers/widget.cpp \
+    qt_headers/mylabel.cpp
 
 HEADERS += \
     qt_headers/time_table_widget_item.h \
@@ -49,10 +51,11 @@ HEADERS += \
     headers/simulation.h \
     headers/time_format.h \
     headers/traveller.h \
-    headers/user_type.h
+    headers/user_type.h \
+    qt_headers/mylabel.h
 
 FORMS += \
-        qt_headers/widget.ui
+    qt_headers/widget.ui
 
 DISTFILES += \
     ../data/car_extract_with_id.txt \
@@ -61,3 +64,6 @@ DISTFILES += \
     ../data/train_extract_with_id.txt \
     ../data/train_seat_type_id.txt \
     ../data/transport_type_id.txt
+
+RESOURCES += \
+    material/material.qrc

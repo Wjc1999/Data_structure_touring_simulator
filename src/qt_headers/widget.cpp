@@ -21,7 +21,6 @@ Widget::Widget(QWidget *parent) : QWidget(parent),
     ui->setupUi(this);
 
     ui->Path_tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
     ui->stackedWidget->setCurrentWidget(ui->LoginPage);
 }
 
