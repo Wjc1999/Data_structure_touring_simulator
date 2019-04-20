@@ -100,7 +100,7 @@ void Widget::on_SignUpButton_released() //注册
 
 void Widget::on_OrderPageButton_released() // 预定行程
 {
-    ui->MapLabel->InitPixmap();
+    ui->MapLabel->setOriginPixmap();
     ui->stackedWidget->setCurrentWidget(ui->OrderPage);
     // ui->MapLabel->setPixmap(QPixmap("D:\app\Github\Data_structure_touring_simulator\src\material\map.png"));
     // ui->MapLabel->setScaledContents(true);
