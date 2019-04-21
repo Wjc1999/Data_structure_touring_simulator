@@ -126,9 +126,10 @@ void Widget::on_StatePageButton_released() // 状态查询
         ui->state_pass_content->setText(empty_plan_qstr);
         ui->state_time_content->setText(empty_plan_qstr);
         ui->state_price_content->setText(empty_plan_qstr);
+        ui->state_position_content->setText(empty_plan_qstr);
         return;
     }
-    else if (position == -1)
+    else
     {
         ui->state_start_city_content->setText(QString::fromStdString(idmap_widget.GetCityStr(plan.front())));
         ui->state_target_city_content->setText(QString::fromStdString(idmap_widget.GetCityStr(plan.back())));
@@ -148,10 +149,15 @@ void Widget::on_StatePageButton_released() // 状态查询
         }
         ui->state_time_content->setNum(path.GetTotalTime().GetLength());
         ui->state_price_content->setNum(path.GetTotalPrice());
-    }
-    else
-    {
 
+        if (position == -1)
+        {
+            ui->state_position_content->setText(empty_plan_qstr);
+        }
+        else
+        {
+            ui->state_position_content->setText(QString::fromStdString(idmap_widget.GetCityStr(path.GetNode(position).former_city)));
+        }
     }
 
     ui->stateTableWidget->setRowCount(path.GetLen());
@@ -237,6 +243,7 @@ void Widget::on_QueryPathButton_released()
     City_id start_city = ui->origin_comboBox->currentIndex();
     City_id target_city = ui->target_comboBox->currentIndex();
     ui->Path_tableWidget->clearContents();
+    ui->Path_tableWidget->setRowCount(0);
     ui->Path_tableWidget->setSortingEnabled(false);
 
     if (start_city == target_city)

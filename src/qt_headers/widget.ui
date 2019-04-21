@@ -304,78 +304,6 @@
      </widget>
      <widget class="QWidget" name="StatePage">
       <layout class="QGridLayout" name="gridLayout_5">
-       <item row="0" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,10">
-         <item>
-          <widget class="QLabel" name="state_user_name_label">
-           <property name="text">
-            <string>用户名</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="state_user_name_content">
-           <property name="text">
-            <string>TextLabel</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="1" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,10">
-         <item>
-          <widget class="QLabel" name="state_start_city_label">
-           <property name="text">
-            <string>始发地:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="state_start_city_content">
-           <property name="text">
-            <string>TextLabel</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="2" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,10">
-         <item>
-          <widget class="QLabel" name="state_target_city_label">
-           <property name="text">
-            <string>目的地:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="state_target_city_content">
-           <property name="text">
-            <string>TextLabel</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="3" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,10">
-         <item>
-          <widget class="QLabel" name="state_pass_label">
-           <property name="text">
-            <string>途径城市:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="state_pass_content">
-           <property name="text">
-            <string>TextLabel</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
        <item row="4" column="0">
         <widget class="QTableWidget" name="stateTableWidget">
          <property name="sortingEnabled">
@@ -421,6 +349,42 @@
          </column>
         </widget>
        </item>
+       <item row="3" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,10">
+         <item>
+          <widget class="QLabel" name="state_pass_label">
+           <property name="text">
+            <string>途径城市:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="state_pass_content">
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,10">
+         <item>
+          <widget class="QLabel" name="state_start_city_label">
+           <property name="text">
+            <string>始发地:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="state_start_city_content">
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
        <item row="5" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="1,10">
          <item>
@@ -460,7 +424,57 @@
          </item>
         </layout>
        </item>
-       <item row="6" column="1">
+       <item row="0" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,10">
+         <item>
+          <widget class="QLabel" name="state_user_name_label">
+           <property name="text">
+            <string>用户名</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="state_user_name_content">
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="2" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,10,1,10">
+         <item>
+          <widget class="QLabel" name="state_target_city_label">
+           <property name="text">
+            <string>目的地:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="state_target_city_content">
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="state_position_label">
+           <property name="text">
+            <string>当前城市:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="state_position_content">
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="6" column="2">
         <widget class="QPushButton" name="StatePageToMenuButton">
          <property name="minimumSize">
           <size>
@@ -496,7 +510,7 @@
         <number>0</number>
        </property>
        <property name="spacing">
-        <number>0</number>
+        <number>5</number>
        </property>
        <item row="0" column="0">
         <layout class="QVBoxLayout" name="verticalLayout" stretch="1,10">
@@ -912,6 +926,18 @@
        </item>
        <item row="1" column="1">
         <widget class="QPushButton" name="QueryPageToMenuButton">
+         <property name="minimumSize">
+          <size>
+           <width>75</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>75</width>
+           <height>23</height>
+          </size>
+         </property>
          <property name="text">
           <string>返回主菜单</string>
          </property>
