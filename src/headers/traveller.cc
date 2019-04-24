@@ -11,6 +11,8 @@
 #include <sstream>
 #include <memory>
 #include <initializer_list>
+#include <queue>
+#include <utility>
 
 #include "traveller.h"
 #include "user_type.h"
@@ -235,8 +237,10 @@ Path Traveller::GetPathLeastMoney(const CityGraph &graph, const std::vector<City
     City_id destination; // 终点
     City_id origin;      // 起点
     Path path;
-    std::vector<int> find_min_cost;
-    // std::cout << plan[0] << plan[1] << std::endl;
+    std::priority_queue<std::pair<int /*k*/, int /*price*/>> find_min_cost;
+    std::pair<int, int> temp_pair;
+    auto empty_pq(find_min_cost);
+
     for (int cnt = plan.size() - 1; cnt > 0; cnt--)
     {
         destination = plan[cnt];
@@ -250,15 +254,18 @@ Path Traveller::GetPathLeastMoney(const CityGraph &graph, const std::vector<City
             if (j == origin)
                 continue;
             for (int k = 0; k < graph.Getsize(origin, j); k++) // 将所有从origin到j的价格push到find_min_cost中
-                find_min_cost.push_back(graph.GetRoute(origin, j, k).price);
+            {
+                temp_pair.first = k, temp_pair.second = graph.GetRoute(origin, j, k).price;
+                find_min_cost.push(temp_pair);
+            }
 
             if (!find_min_cost.empty()) // 如果可以从origin到j
             {
-                std::vector<int>::iterator min = min_element(find_min_cost.begin(), find_min_cost.end());
-                cost[j] = *min;
+                auto &min = find_min_cost.top();
+                cost[j] = min.second;
                 preway[j][0] = origin;
-                preway[j][1] = distance(find_min_cost.begin(), min);
-                find_min_cost.clear();
+                preway[j][1] = min.first;
+                find_min_cost = empty_pq;
             }
             else // 不可达
             {
@@ -296,18 +303,21 @@ Path Traveller::GetPathLeastMoney(const CityGraph &graph, const std::vector<City
                 if (is_count[j])
                     continue;
                 for (int k = 0; k < graph.Getsize(city_temp, j); k++)
-                    find_min_cost.push_back(graph.GetRoute(city_temp, j, k).price);
+                {
+                    temp_pair.first = k, temp_pair.second = graph.GetRoute(city_temp, j, k).price;
+                    find_min_cost.push(std::make_pair(k, graph.GetRoute(city_temp, j, k).price));
+                }
                 if (!find_min_cost.empty())
                 {
-                    std::vector<int>::iterator min = min_element(find_min_cost.begin(), find_min_cost.end());
-                    int newcost = *min + cost[city_temp];
+                    auto &min = find_min_cost.top();
+                    int newcost = min.second + cost[city_temp];
                     if (newcost < cost[j])
                     {
                         cost[j] = newcost;
                         preway[j][0] = city_temp;
-                        preway[j][1] = distance(find_min_cost.begin(), min);
+                        preway[j][1] = min.first;
                     }
-                    find_min_cost.clear();
+                    find_min_cost = empty_pq;
                 }
             }
         }

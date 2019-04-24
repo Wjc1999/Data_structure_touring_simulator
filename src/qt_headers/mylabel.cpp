@@ -1,15 +1,37 @@
+#ifndef SRC_MYLABEL
+#define SRC_WYLABEL
+
 #include "mylabel.h"
 #include <QMouseEvent>
 #include <QDebug>
 #include <QPixmap>
 #include <QString>
 #include <cmath>
+#include <QResizeEvent>
 
 #define r_city 7  //半径
 
 MyLabel::MyLabel(QWidget *parent) : QLabel(parent)
 {
-    //this->setScaledContents(true);
+    
+}
+
+MyLabel::MyLabel(QWidget *parent) : QLabel(parent)
+{
+    this->setScaledContents(true);
+    //this->setScaledContents(false);
+    //this->setSizePolicy( QSizePolicy::Ignored, QSizePolicy::Ignored );
+}
+
+void MyLabel::setOriginPixmap()
+{
+    if (!hasOriginPixmap())
+        origin_pixmap = *pixmap();
+}
+
+bool MyLabel::hasOriginPixmap()
+{
+    return !origin_pixmap.isNull();
 }
 
 void MyLabel::mousePressEvent(QMouseEvent *ev)
@@ -260,4 +282,19 @@ bool MyLabel::in_city_range(int i)
 {
     //qDebug() << sqrt(pow(mouse_x - city_pos[i][0], 2) + pow(mouse_y - city_pos[i][1], 2));
     return sqrt(pow(mouse_x - city_pos[i][0], 2) + pow(mouse_y - city_pos[i][1], 2)) < r_city;
+    int x = ev->x();
+    int y = ev->y();
+    qDebug() << this->size() << endl
+             << this->origin_pixmap.size() << endl;
+
+    // qDebug() << x << y;
 }
+
+void MyLabel::resizeEvent(QResizeEvent *ev)
+{
+    this->setPixmap(origin_pixmap.scaled(ev->size().width(),
+                                         ev->size().height(),
+                                         Qt::KeepAspectRatio,
+                                         Qt::FastTransformation));
+}
+#endif // SRC_MYLABEL

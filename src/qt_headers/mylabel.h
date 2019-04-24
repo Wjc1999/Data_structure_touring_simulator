@@ -6,6 +6,7 @@
 #include <QAction>
 #include <QLabel>
 #include <../headers/id_map.h>
+#include <QResizeEvent>
 
 class MyLabel : public QLabel
 {
@@ -13,8 +14,11 @@ class MyLabel : public QLabel
 public:
     explicit MyLabel(QWidget *parent = 0);
     void initializMyLabel(IDMap *a);
+    void setOriginPixmap();
+    bool hasOriginPixmap();
 protected:
     void mousePressEvent(QMouseEvent *ev);
+    void resizeEvent(QResizeEvent *ev);
 signals:
 
 public slots:
@@ -39,6 +43,8 @@ private:
     void initialize_citymap_pos();
     bool in_city_range(int i);
     int judge_mouse_pos();
+
+    QPixmap origin_pixmap;
 };
 
 #endif // MYLABEL_H
