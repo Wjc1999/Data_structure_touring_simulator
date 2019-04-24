@@ -20,6 +20,8 @@ Widget::Widget(QWidget *parent) : QWidget(parent),
 
     ui->Path_tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->stackedWidget->setCurrentWidget(ui->LoginPage);
+    ui->MapLabel->initializMyLabel(&idmap_widget);
+
 }
 
 Widget::~Widget()
@@ -29,6 +31,10 @@ Widget::~Widget()
 
 void Widget::on_LogInButton_released() //登陆
 {
+    //？？？这里打不出城市名?
+    //QString temp;
+    //temp.fromStdString(idmap_widget.GetCityStr(0));
+    //qDebug() << temp;
     QString account_name = ui->lineEdit->text();
 
     if (!account_name.size())
