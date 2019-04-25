@@ -36,21 +36,24 @@ private:
     int mouse_x_;
     int mouse_y_;
 
+    void MoveWhenResize(QLabel *target, const QRect &origin_rect);
     QMenu *rightbutton_menu;
 
     QLabel *mark_origin;
+    QRect rect_mark_origin;
     int where_mark_origin;
 
-    QRect rect_mark_origin;
-
     QLabel *mark_destination;
+    QRect  rect_mark_destination;
     int where_mark_destination;
 
     QLabel *mark_transfer[31];
+    QRect rect_mark_transfer[31];
     bool has_mark_transfer[31];
 
     int current_set_city;
     std::deque <int> transfer_city;
+
 
     std::pair<int, int> city_pos_[31];      //在图片大小为900x650情况下
 
