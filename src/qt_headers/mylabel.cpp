@@ -41,7 +41,6 @@ void MyLabel::mousePressEvent(QMouseEvent *ev)
         QString temp;
         int i = judge_mouse_pos();
         qDebug() << i << idmap << endl;
-        //这里打不出对应城市名？
         if(i!=-1)
             temp = QString::fromStdString(idmap->GetCityStr(i));
         qDebug() << temp;
@@ -117,7 +116,10 @@ void MyLabel::origin_action_triggered()
 
 void MyLabel::destination_action_triggered()
 {
-
+    mark_destination->move(mouse_x_ - 33, mouse_y_ - 55);
+    rect_mark_destination = mark_destination->geometry();
+    rect_mark_destination.moveTo(rect_mark_destination.x() + 33, rect_mark_destination.y() + 55);
+    mark_destination->show();
 }
 
 void MyLabel::transfer_action_triggered()
@@ -340,7 +342,6 @@ bool MyLabel::in_city_range(int i)
     city_x *= w_ratio;
     city_y *= h_ratio;
 
-
     return std::pow(x - city_x, 2.0) + std::pow(y - city_y, 2.0) <= r * r;
     // int x = ev->x();
     // int y = ev->y();
@@ -350,23 +351,29 @@ bool MyLabel::in_city_range(int i)
     // qDebug() << x << y;
 }
 
+void MyLabel::MoveWhenResize(QLabel *target, const QRect &origin_rect)
+{
+    QRect temp_rect = target->geometry();
+    temp_rect.moveTo(temp_rect.x() + 33, temp_rect.y() + 55);
+
+    double x_ratio = static_cast<double>(origin_rect.x()) / static_cast<double>(origin_qsize_.width());
+    double y_ratio = static_cast<double>(origin_rect.y()) / static_cast<double>(origin_qsize_.height());
+
+    temp_rect.moveTo(current_qsize_.width() * x_ratio, current_qsize_.height() * y_ratio);
+    temp_rect.moveTo(temp_rect.x() - 33, temp_rect.y() - 55);
+
+    target->setGeometry(temp_rect);
+}
+
 void MyLabel::resizeEvent(QResizeEvent *ev)
 {
     current_qsize_ = ev->size();
     qDebug() << current_qsize_ << endl;
     qDebug() << mark_origin->geometry() << endl;
-    QRect temp_rect = mark_origin->geometry();
 
-    temp_rect.moveTo(temp_rect.x() + 33, temp_rect.y() + 55);
+    MoveWhenResize(mark_origin, rect_mark_origin);
+    MoveWhenResize(mark_destination, rect_mark_destination);
 
-    double x_ratio = static_cast<double>(rect_mark_origin.x()) / static_cast<double>(origin_qsize_.width());
-    double y_ratio = static_cast<double>(rect_mark_origin.y()) / static_cast<double>(origin_qsize_.height());
-
-    temp_rect.moveTo(current_qsize_.width() * x_ratio, current_qsize_.height() * y_ratio);
-
-    temp_rect.moveTo(temp_rect.x() - 33, temp_rect.y() - 55);
-
-    mark_origin->setGeometry(temp_rect);
     this->setPixmap(origin_pixmap.scaled(ev->size().width(),
                                          ev->size().height(),
                                          Qt::KeepAspectRatio,
