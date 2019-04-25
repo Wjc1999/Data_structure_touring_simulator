@@ -145,10 +145,12 @@ std::vector <int> MyLabel::getplan()
 {
     std::vector <int> temp;
     temp.push_back(where_mark_origin);
-    while(!transfer_city.empty())
+    for (const auto &i : transfer_city)
+    // while(!transfer_city.empty())
     {
-        temp.push_back(transfer_city.front());
-        transfer_city.pop_front();
+        temp.push_back(i);
+        // temp.push_back(transfer_city.front());
+        // transfer_city.pop_front();
     }
     temp.push_back(where_mark_destination);
     return temp;
