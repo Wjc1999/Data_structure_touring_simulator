@@ -5,8 +5,11 @@
 #include <QMenu>
 #include <QAction>
 #include <QLabel>
-#include <../headers/id_map.h>
 #include <QResizeEvent>
+
+#include <../headers/id_map.h>
+#include <deque>
+#include <vector>
 
 class MyLabel : public QLabel
 {
@@ -14,6 +17,7 @@ class MyLabel : public QLabel
 public:
     explicit MyLabel(QWidget *parent = 0);
     void initializMyLabel(IDMap *a);
+    std::vector <int> getplan();
     void setOriginPixmap();
     bool hasOriginPixmap();
 protected:
@@ -31,8 +35,14 @@ private:
 
     QMenu *rightbutton_menu;
     QLabel *mark_origin;
+    int where_mark_origin;
     QLabel *mark_destination;
+    int where_mark_destination;
     QLabel *mark_transfer[31];
+    bool has_mark_transfer[31];
+
+    int current_set_city;
+    std::deque <int> transfer_city;
 
     int city_pos[31][2];      //在图片大小为900x650情况下
     int col_map[7];

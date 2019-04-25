@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QPixmap>
 #include <QString>
+#include <QMessageBox>
 #include <cmath>
 #include <QResizeEvent>
 
@@ -13,14 +14,9 @@
 
 MyLabel::MyLabel(QWidget *parent) : QLabel(parent)
 {
-    
-}
-
-MyLabel::MyLabel(QWidget *parent) : QLabel(parent)
-{
-    this->setScaledContents(true);
-    //this->setScaledContents(false);
-    //this->setSizePolicy( QSizePolicy::Ignored, QSizePolicy::Ignored );
+    //this->setScaledContents(true);
+    this->setScaledContents(false);
+    this->setSizePolicy( QSizePolicy::Ignored, QSizePolicy::Ignored );
 }
 
 void MyLabel::setOriginPixmap()
@@ -59,6 +55,19 @@ void MyLabel::mousePressEvent(QMouseEvent *ev)
         //qDebug() << temp;
         rightbutton_menu->popup(ev->globalPos());
     }
+
+    //int x = ev->x();
+    //int y = ev->y();
+    //qDebug() << this->size() << endl
+    //         << this->origin_pixmap.size() << endl;
+
+    //qDebug() << x << y;
+}
+
+std::vector <int> MyLabel::getplan()
+{
+    std::vector <int> temp;
+
 }
 
 void MyLabel::initializMyLabel(IDMap *a)
@@ -87,12 +96,14 @@ void MyLabel::initializMyLabel(IDMap *a)
     mark_origin->setScaledContents(true);
     mark_origin->resize(66,66);
     mark_origin->hide();
+    where_mark_origin = -1;
 
     mark_destination = new QLabel(this);
     mark_destination->setPixmap(QPixmap(":/image/2.png"));
     mark_destination->setScaledContents(true);
     mark_destination->resize(66,66);
     mark_destination->hide();
+    where_mark_origin = -1;
 
 
     for(int i=0;i<31;i++)
@@ -102,6 +113,7 @@ void MyLabel::initializMyLabel(IDMap *a)
         mark_transfer[i]->setScaledContents(true);
         mark_transfer[i]->resize(66,66);
         mark_transfer[i]->hide();
+        has_mark_transfer[i] = false;
     }
 
     initialize_citymap_pos();
@@ -115,7 +127,8 @@ MyLabel::origin_action_triggered()
 
 MyLabel::destination_action_triggered()
 {
-
+    mark_origin->move(mouse_x - 33, mouse_y - 63);
+    mark_origin->show();
 }
 
 MyLabel::transfer_action_triggered()
@@ -282,16 +295,12 @@ bool MyLabel::in_city_range(int i)
 {
     //qDebug() << sqrt(pow(mouse_x - city_pos[i][0], 2) + pow(mouse_y - city_pos[i][1], 2));
     return sqrt(pow(mouse_x - city_pos[i][0], 2) + pow(mouse_y - city_pos[i][1], 2)) < r_city;
-    int x = ev->x();
-    int y = ev->y();
-    qDebug() << this->size() << endl
-             << this->origin_pixmap.size() << endl;
 
-    // qDebug() << x << y;
 }
 
 void MyLabel::resizeEvent(QResizeEvent *ev)
 {
+
     this->setPixmap(origin_pixmap.scaled(ev->size().width(),
                                          ev->size().height(),
                                          Qt::KeepAspectRatio,
