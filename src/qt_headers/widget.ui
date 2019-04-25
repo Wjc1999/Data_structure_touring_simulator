@@ -963,8 +963,8 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>2999</width>
-           <height>2999</height>
+           <width>1920</width>
+           <height>1080</height>
           </size>
          </property>
          <property name="autoFillBackground">
