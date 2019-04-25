@@ -15,6 +15,7 @@
 #include <QTableWidgetItem>
 #include <QPixmap>
 #include <QTextCodec>
+#include <QComboBox>
 
 #include "time_table_widget_item.h"
 
@@ -25,7 +26,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent),
 
     ui->Path_tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->stackedWidget->setCurrentWidget(ui->LoginPage);
-    qDebug() << &idmap_widget << endl;
+    //qDebug() << &idmap_widget << endl;
     ui->MapLabel->initializMyLabel(&idmap_widget);
 
 }
@@ -37,9 +38,8 @@ Widget::~Widget()
 
 void Widget::on_LogInButton_released() //登陆
 {
-    //？？？这里打不出城市名?
     //QString temp;
-    //temp.fromStdString(idmap_widget.GetCityStr(0));
+    //temp.fromStdString(idmap_widget.GetCityStr(13));
     //qDebug() << temp;
     QString account_name = ui->lineEdit->text();
 
@@ -109,8 +109,13 @@ void Widget::on_OrderPageButton_released() // 预定行程
 {
     ui->MapLabel->setOriginPixmap();
     ui->stackedWidget->setCurrentWidget(ui->OrderPage);
-    // ui->MapLabel->setPixmap(QPixmap("D:\app\Github\Data_structure_touring_simulator\src\material\map.png"));
-    // ui->MapLabel->setScaledContents(true);
+    ui->limit_time_widget->hide();
+}
+
+void Widget::on_strategy_comboBox_currentIndexChanged(int index)
+{
+    if(index == 2)ui->limit_time_widget->show();
+    else ui->limit_time_widget->hide();
 }
 
 void Widget::on_StatePageButton_released() // 状态查询
@@ -277,5 +282,37 @@ void Widget::on_QueryPathButton_released()
     }
     ui->Path_tableWidget->setSortingEnabled(true);
 }
+
+void Widget::on_OrderPathButton_released()
+{
+    if(!ui->MapLabel->has_origin())
+    {
+        QMessageBox::warning(this, "Warning!", "未设置始发地", QMessageBox::Ok);
+    }
+    else if(!ui->MapLabel->has_destination())
+    {
+        QMessageBox::warning(this, "Warning!", "未设置目的地", QMessageBox::Ok);
+    }
+    else
+    {
+        Strategy s = static_cast<Strategy>(ui->strategy_comboBox->currentIndex());
+        Time init_time(1,ui->init_time_comboBox->currentIndex());
+        if(s == 2)
+        {
+            Time limit_time(ui->limit_day_spinbox->value(), ui->limit_hour_comboBox->currentIndex());
+            traveller_widget.set_plan(ui->MapLabel->getplan());
+            Path p = traveller_widget.SchedulePath(citygraph_widget, s, init_time, limit_time);
+            traveller_widget.set_path(p);
+        }
+        else
+        {
+            traveller_widget.set_plan(ui->MapLabel->getplan());
+            Path p = traveller_widget.SchedulePath(citygraph_widget, s, init_time);
+            traveller_widget.set_path(p);
+        }
+        QMessageBox::information(this, "Success!", "已预定行程" ,QMessageBox::Ok);
+    }
+}
+
 
 #endif // SRC_WIDGET

@@ -8,8 +8,10 @@
 #include <QDebug>
 #include <QPixmap>
 #include <QString>
+#include <QMessageBox>
 #include <cmath>
 #include <QResizeEvent>
+#include <deque>
 
 static const double r_city = 7;  //半径
 
@@ -33,30 +35,121 @@ bool MyLabel::hasOriginPixmap()
 
 void MyLabel::mousePressEvent(QMouseEvent *ev)
 {
-    qDebug() << ev->x() << ev->y();
+    //qDebug() << ev->x() << ev->y();
     if(ev->button() == Qt::LeftButton)
     {
         mouse_x_ = ev->x();
         mouse_y_ = ev->y();
-        QString temp;
         int i = judge_mouse_pos();
-        qDebug() << i << idmap << endl;
-        if(i!=-1)
-            temp = QString::fromStdString(idmap->GetCityStr(i));
-        qDebug() << temp;
+        if(i!=-1 && has_mark_transfer[i])
+        {
+            has_mark_transfer[i] = false;
+            mark_transfer[i]->hide();
+            delete_transfer_city(i);
+        }
+
     }
     else if(ev->button() == Qt::RightButton)
     {
         mouse_x_ = ev->x();
         mouse_y_ = ev->y();
-        QString temp;
+        //QString temp;
         int i = judge_mouse_pos();
-        qDebug() << i;
-        if(i!=-1)
-            temp = QString::fromStdString(idmap->GetCityStr(i));
-        qDebug() << temp;
-        rightbutton_menu->popup(ev->globalPos());
+        //qDebug() << i;
+        //if(i!=-1)
+            //temp = QString::fromStdString(idmap->GetCityStr(i));
+        //qDebug() << temp;
+        if(i!=-1 && where_mark_destination!=i && where_mark_origin!=i && !has_mark_transfer[i])
+        {
+            current_set_city = i;
+            rightbutton_menu->popup(ev->globalPos());
+        }
+
     }
+}
+
+void MyLabel::origin_action_triggered()
+{
+    double x = mouse_x_, y = mouse_y_;
+    double city_x = city_pos_[current_set_city].first, city_y = city_pos_[current_set_city].second;
+    double w_ratio = static_cast<double>(current_qsize_.width())/static_cast<double>(origin_qsize_.width());
+    double h_ratio = static_cast<double>(current_qsize_.height())/static_cast<double>(origin_qsize_.height());
+    city_x *= w_ratio;
+    city_y *= h_ratio;
+
+    mark_origin->move(city_x - 33, city_y - 55);
+    //rect_mark_origin = mark_origin->geometry();
+    //rect_mark_origin.moveTo(rect_mark_origin.x() + 33, rect_mark_origin.y() + 55);
+    mark_origin->show();
+
+    where_mark_origin = current_set_city;
+}
+
+void MyLabel::destination_action_triggered()
+{
+    double x = mouse_x_, y = mouse_y_;
+    double city_x = city_pos_[current_set_city].first, city_y = city_pos_[current_set_city].second;
+    double w_ratio = static_cast<double>(current_qsize_.width())/static_cast<double>(origin_qsize_.width());
+    double h_ratio = static_cast<double>(current_qsize_.height())/static_cast<double>(origin_qsize_.height());
+    city_x *= w_ratio;
+    city_y *= h_ratio;
+
+    mark_destination->move(city_x - 33, city_y - 55);
+    //todo
+    mark_destination->show();
+
+    where_mark_destination = current_set_city;
+}
+
+void MyLabel::transfer_action_triggered()
+{
+    double x = mouse_x_, y = mouse_y_;
+    double city_x = city_pos_[current_set_city].first, city_y = city_pos_[current_set_city].second;
+    double w_ratio = static_cast<double>(current_qsize_.width())/static_cast<double>(origin_qsize_.width());
+    double h_ratio = static_cast<double>(current_qsize_.height())/static_cast<double>(origin_qsize_.height());
+    city_x *= w_ratio;
+    city_y *= h_ratio;
+
+    mark_transfer[current_set_city]->move(city_x - 33, city_y - 55);
+    //todo
+    mark_transfer[current_set_city]->show();
+
+    transfer_city.push_back(current_set_city);
+    has_mark_transfer[current_set_city] = true;
+
+    for(auto city : transfer_city)
+    {
+        qDebug() << city;
+    }
+}
+
+void MyLabel::delete_transfer_city(int i)
+{
+    for(auto iter = transfer_city.begin();iter != transfer_city.end();iter++)
+    {
+        if(i == *iter)
+        {
+            transfer_city.erase(iter);
+            for(auto city : transfer_city)
+            {
+                qDebug() << city;
+            }
+            return;
+        }
+    }
+}
+
+std::vector <int> MyLabel::getplan()
+{
+    std::vector <int> temp;
+    temp.push_back(where_mark_origin);
+    while(!transfer_city.empty())
+    {
+        temp.push_back(transfer_city.front());
+        transfer_city.pop_front();
+    }
+    temp.push_back(where_mark_destination);
+    return temp;
 }
 
 void MyLabel::initializMyLabel(IDMap *a)
@@ -82,49 +175,31 @@ void MyLabel::initializMyLabel(IDMap *a)
     connect(add_transfer, SIGNAL(triggered()), this, SLOT(transfer_action_triggered()));
 
     mark_origin = new QLabel(this);
-    mark_origin->setPixmap(QPixmap(":/image/1.png"));
+    mark_origin->setPixmap(QPixmap(":/image/6.png"));
     mark_origin->setScaledContents(true);
     mark_origin->resize(66,66);
     mark_origin->hide();
+    where_mark_origin = -1;
 
     mark_destination = new QLabel(this);
     mark_destination->setPixmap(QPixmap(":/image/2.png"));
     mark_destination->setScaledContents(true);
     mark_destination->resize(66,66);
     mark_destination->hide();
+    where_mark_destination = -1;
 
 
     for(int i=0;i<31;i++)
     {
         mark_transfer[i] = new QLabel(this);
-        mark_transfer[i]->setPixmap(QPixmap(":/image/3.png"));
+        mark_transfer[i]->setPixmap(QPixmap(":/image/4.png"));
         mark_transfer[i]->setScaledContents(true);
         mark_transfer[i]->resize(66,66);
         mark_transfer[i]->hide();
+        has_mark_transfer[i] = false;
     }
 
     initialize_citymap_pos();
-}
-
-void MyLabel::origin_action_triggered()
-{
-    mark_origin->move(mouse_x_ - 33, mouse_y_ - 55);
-    rect_mark_origin = mark_origin->geometry();
-    rect_mark_origin.moveTo(rect_mark_origin.x() + 33, rect_mark_origin.y() + 55);
-    mark_origin->show();
-}
-
-void MyLabel::destination_action_triggered()
-{
-    mark_destination->move(mouse_x_ - 33, mouse_y_ - 55);
-    rect_mark_destination = mark_destination->geometry();
-    rect_mark_destination.moveTo(rect_mark_destination.x() + 33, rect_mark_destination.y() + 55);
-    mark_destination->show();
-}
-
-void MyLabel::transfer_action_triggered()
-{
-
 }
 
 void MyLabel::UpdateColAndRowMap()
@@ -348,7 +423,6 @@ bool MyLabel::in_city_range(int i)
     //  qDebug() << this->size() << endl
     //           << this->origin_pixmap.size() << endl;
 
-    // qDebug() << x << y;
 }
 
 void MyLabel::MoveWhenResize(QLabel *target, const QRect &origin_rect)

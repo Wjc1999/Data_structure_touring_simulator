@@ -58,7 +58,11 @@ class Widget : public QWidget
 
     void on_QueryPageToMenuButton_released();
 
-  private:
+    void on_strategy_comboBox_currentIndexChanged(int index);
+
+    void on_OrderPathButton_released();
+
+private:
     Ui::Widget *ui;
     void UpdateTable(QTableWidget *table, int row, City_id start_city, City_id target_city, int k);
 };
