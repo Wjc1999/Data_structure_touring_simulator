@@ -1,4 +1,4 @@
-#ifndef MY_TABLE_WIDGET_ITEM_H
+﻿#ifndef MY_TABLE_WIDGET_ITEM_H
 #define MY_TABLE_WIDGET_ITEM_H
 
 #include <QTableWidgetItem>
