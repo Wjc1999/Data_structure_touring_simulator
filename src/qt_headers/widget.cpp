@@ -109,12 +109,14 @@ void Widget::on_OrderPageButton_released() // 预定行程
 {
     ui->MapLabel->setOriginPixmap();
     ui->stackedWidget->setCurrentWidget(ui->OrderPage);
-    ui->limit_time_widget->hide();
+    if(ui->strategy_comboBox->currentIndex() != 2)
+        ui->limit_time_widget->hide();
 }
 
 void Widget::on_strategy_comboBox_currentIndexChanged(int index)
 {
-    if(index == 2)ui->limit_time_widget->show();
+    if(index == 2)
+        ui->limit_time_widget->show();
     else ui->limit_time_widget->hide();
 }
 
