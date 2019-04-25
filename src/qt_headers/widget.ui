@@ -949,10 +949,16 @@
       <layout class="QGridLayout" name="gridLayout" columnstretch="7,1">
        <item row="0" column="0" rowspan="2">
         <widget class="MyLabel" name="MapLabel">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="minimumSize">
           <size>
-           <width>1</width>
-           <height>1</height>
+           <width>900</width>
+           <height>650</height>
           </size>
          </property>
          <property name="maximumSize">

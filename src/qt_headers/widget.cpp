@@ -25,6 +25,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent),
 
     ui->Path_tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->stackedWidget->setCurrentWidget(ui->LoginPage);
+    qDebug() << &idmap_widget << endl;
     ui->MapLabel->initializMyLabel(&idmap_widget);
 
 }

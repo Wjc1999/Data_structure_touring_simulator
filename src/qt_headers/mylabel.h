@@ -1,4 +1,4 @@
-#ifndef MYLABEL_H
+﻿#ifndef MYLABEL_H
 #define MYLABEL_H
 
 #include <QLabel>
@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <../headers/id_map.h>
 #include <QResizeEvent>
+#include <utility>
 
 class MyLabel : public QLabel
 {
@@ -22,21 +23,27 @@ protected:
 signals:
 
 public slots:
-    origin_action_triggered();
-    destination_action_triggered();
-    transfer_action_triggered();
+    void origin_action_triggered();
+    void destination_action_triggered();
+    void transfer_action_triggered();
 private:
-    int mouse_x;
-    int mouse_y;
+    int mouse_x_;
+    int mouse_y_;
 
     QMenu *rightbutton_menu;
     QLabel *mark_origin;
+    QRect rect_mark_origin;
     QLabel *mark_destination;
     QLabel *mark_transfer[31];
 
-    int city_pos[31][2];      //在图片大小为900x650情况下
-    int col_map[7];
-    int row_map[5];
+    std::pair<int, int> city_pos_[31];      //在图片大小为900x650情况下
+    double origin_col_map_[7];
+    double col_map_[7];
+    double origin_row_map_[5];
+    double row_map_[5];
+    void UpdateColAndRowMap();
+    QSize origin_qsize_;
+    QSize current_qsize_;
 
     IDMap *idmap;
 
