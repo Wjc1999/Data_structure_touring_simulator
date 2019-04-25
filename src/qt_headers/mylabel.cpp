@@ -78,8 +78,8 @@ void MyLabel::origin_action_triggered()
     city_y *= h_ratio;
 
     mark_origin->move(city_x - 33, city_y - 55);
-    //rect_mark_origin = mark_origin->geometry();
-    //rect_mark_origin.moveTo(rect_mark_origin.x() + 33, rect_mark_origin.y() + 55);
+    rect_mark_origin = mark_origin->geometry();
+    rect_mark_origin.moveTo(rect_mark_origin.x() + 33, rect_mark_origin.y() + 55);
     mark_origin->show();
 
     where_mark_origin = current_set_city;
@@ -95,7 +95,8 @@ void MyLabel::destination_action_triggered()
     city_y *= h_ratio;
 
     mark_destination->move(city_x - 33, city_y - 55);
-    //todo
+    rect_mark_destination = mark_destination->geometry();
+    rect_mark_destination.moveTo(rect_mark_destination.x() + 33, rect_mark_destination.y() + 55);
     mark_destination->show();
 
     where_mark_destination = current_set_city;
@@ -111,7 +112,8 @@ void MyLabel::transfer_action_triggered()
     city_y *= h_ratio;
 
     mark_transfer[current_set_city]->move(city_x - 33, city_y - 55);
-    //todo
+    rect_mark_transfer[current_set_city] = mark_transfer[current_set_city]->geometry();
+    rect_mark_transfer[current_set_city].moveTo(rect_mark_transfer[current_set_city].x() + 33, rect_mark_transfer[current_set_city].y() + 55);
     mark_transfer[current_set_city]->show();
 
     transfer_city.push_back(current_set_city);
@@ -447,6 +449,12 @@ void MyLabel::resizeEvent(QResizeEvent *ev)
 
     MoveWhenResize(mark_origin, rect_mark_origin);
     MoveWhenResize(mark_destination, rect_mark_destination);
+
+    for (int i = 0; i < 31; i++)
+    {
+        if (has_mark_transfer[i])
+            MoveWhenResize(mark_transfer[i], rect_mark_transfer[i]);
+    }
 
     this->setPixmap(origin_pixmap.scaled(ev->size().width(),
                                          ev->size().height(),

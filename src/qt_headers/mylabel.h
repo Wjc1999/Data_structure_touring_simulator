@@ -40,15 +40,15 @@ private:
     QMenu *rightbutton_menu;
 
     QLabel *mark_origin;
-    int where_mark_origin;
-
     QRect rect_mark_origin;
+    int where_mark_origin;
 
     QLabel *mark_destination;
     QRect  rect_mark_destination;
     int where_mark_destination;
 
     QLabel *mark_transfer[31];
+    QRect rect_mark_transfer[31];
     bool has_mark_transfer[31];
 
     int current_set_city;
