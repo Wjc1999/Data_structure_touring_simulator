@@ -11,6 +11,7 @@
 #include "user_type.h"
 #include "time_format.h"
 #include "id_map.h"
+#include "log.h"
 
 static const std::string flight_file_path = "../data/flight_extract_with_id.txt";
 static const std::string train_file_path = "../data/train_extract_with_id.txt";
@@ -22,17 +23,16 @@ CityGraph::CityGraph()
       LoadCityGraph(flight_file_path, 2) &&
       LoadCityGraph(train_file_path, 1) &&
       LoadCityGraph(car_file_path, 0))
-      ;
-    //std::cout << "数据读取成功！" << std::endl;
+    Log::LogWrite("车次数据加载成功");
   else
   {
-    //std::cout << "数据读取失败！" << std::endl;
-    exit(0);
+    Log::LogWrite("车次数据读取失败");
   }
 }
 
 bool CityGraph::LoadCityGraph(const std::string &name, int type)
 { //将飞机火车汽车数据加载到程序中
+  Log::LogWrite(std::string("加载 ") + name + " 中");
   std::ifstream stream(name);
   if (type != 1)
   { //飞机汽车的数据

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1117</width>
-    <height>694</height>
+    <width>1097</width>
+    <height>686</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -155,23 +155,6 @@
          <property name="alignment">
           <set>Qt::AlignCenter</set>
          </property>
-        </widget>
-       </item>
-       <item row="1" column="4">
-        <widget class="QScrollArea" name="scrollArea">
-         <property name="widgetResizable">
-          <bool>true</bool>
-         </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>354</width>
-            <height>80</height>
-           </rect>
-          </property>
-         </widget>
         </widget>
        </item>
       </layout>
@@ -513,7 +496,7 @@
       </layout>
      </widget>
      <widget class="QWidget" name="QueryPage">
-      <layout class="QGridLayout" name="gridLayout_4">
+      <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,0">
        <property name="leftMargin">
         <number>0</number>
        </property>

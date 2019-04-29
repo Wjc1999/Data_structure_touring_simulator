@@ -12,6 +12,13 @@
 
 #include "log.h"
 
+static bool InitLog();
+static std::string GetCurrentTimestamp();
+static std::string GetCurrentTime();
+
+static bool is_inited = false;
+static std::ofstream log_stream; // 供写入的日志文件流
+static std::string log_path;
 static const std::string log_doc("../data/"); // log文件的文件目录
 static const std::string log_ext(".log");
 
@@ -25,28 +32,7 @@ static std::string RemoveAllPunct(const std::string &time_str)
   return res;
 }
 
-Log::Log()
-{
-  log_path_ = log_doc + GetCurrentTimestamp() + log_ext;
-  log_stream_.open(log_path_);
-  if (!log_stream_)
-    throw "日志文件创建失败";
-}
-
-inline bool Log::WriteLog(const std::string &log_str)
-{
-  if (log_stream_)
-  {
-    log_stream_ << GetCurrentTime() << "  " << log_str << std::endl;
-    return true;
-  }
-  else
-  {
-    return false;
-  }
-}
-
-std::string Log::GetCurrentTimestamp() const
+std::string GetCurrentTimestamp()
 {
   auto current_time = std::chrono::system_clock::to_time_t(
       std::chrono::system_clock::now());
@@ -66,7 +52,7 @@ std::string Log::GetCurrentTimestamp() const
   return res;
 }
 
-std::string Log::GetCurrentTime() const
+std::string GetCurrentTime()
 {
   auto current_time = std::chrono::system_clock::to_time_t(
       std::chrono::system_clock::now());
@@ -83,4 +69,43 @@ std::string Log::GetCurrentTime() const
 
   return time_str;
 }
+
+
+bool InitLog()
+{
+  log_path = log_doc + GetCurrentTimestamp() + log_ext;
+  log_stream.open(log_path);
+  return log_stream.is_open();
+}
+
+bool Log::LogWrite(const std::string &log_str)
+{
+  if (!is_inited)
+  {
+    bool is_init_success = InitLog();
+	if (is_init_success)
+		is_inited = true;
+  }
+  if (log_stream)
+  {
+    log_stream << GetCurrentTime() << "  " << log_str << std::endl;
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+};
+
+const std::string &Log::get_log_path()
+{
+  return log_path;
+}
+
+bool Log::CloseLog()
+{
+  log_stream.close();
+  return !log_stream.is_open();
+}
+
 #endif // SRC_LOG_CC

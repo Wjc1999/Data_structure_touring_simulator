@@ -7,6 +7,7 @@
 
 #include "id_map.h"
 #include "user_type.h"
+#include "log.h"
 
 IDMap::IDMap()
 {
@@ -15,20 +16,23 @@ IDMap::IDMap()
       {
           &city_map_,
           &train_map_,
-          &trans_map_
-      };
+          &trans_map_};
   for (int i = 0; i != 3; ++i)
   {
     in_id_file.open(paths_[i]);
     // std::cout << "in_id_file opened " << i << std::endl;
     if (in_id_file.is_open())
     {
+      Log::LogWrite(std::string("加载 ") + paths_[i] + " 中");
       LoadID(in_id_file, *map_table[i]);
       in_id_file.close();
     }
     else
+    {
+      Log::LogWrite(paths_[i] + " 加载失败");
       in_id_file.clear();
-    // error handler
+      // error handler
+    }
   }
   // std::cout << "Loaded IDs" << std::endl;
 }
