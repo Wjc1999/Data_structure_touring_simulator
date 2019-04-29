@@ -34,6 +34,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent),
 Widget::~Widget()
 {
     delete ui;
+    traveller_widget.SaveData();
 }
 
 void Widget::on_LogInButton_released() //登陆

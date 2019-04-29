@@ -20,6 +20,7 @@
 //#include "io.h"
 #include "time_format.h"
 #include "city_graph.h"
+#include "log.h"
 
 #ifdef TEST_GET_PATH
 extern int call_counter_time;
@@ -123,6 +124,7 @@ void Traveller::DFSLeastTime(const CityGraph &graph, const std::vector<City_id> 
 
 Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time start_time, Time limit)
 {
+    Log::LogWrite("安排路线中");
     init_time_ = start_time;
     strategy_ = s;
     travelling_plan_ = plan;
@@ -226,6 +228,7 @@ Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> 
         Path a = GetPathLTM(graph, plan, start_time, limit);
         if (a.GetLen() == 0)
         {
+            Log::LogWrite("没有符合要求的路线");
             std::cout << "未找到符合要求路线" << std::endl;
         }
         return a;
