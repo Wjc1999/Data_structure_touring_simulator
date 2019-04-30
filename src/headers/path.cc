@@ -1,6 +1,8 @@
 ﻿#ifndef SRC_PATH_CC
 #define SRC_PATH_CC
 
+#pragma execution_character_set("utf-8")
+
 #include <cassert>
 
 #include <iostream>

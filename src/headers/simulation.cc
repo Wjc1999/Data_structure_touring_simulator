@@ -1,6 +1,8 @@
 ﻿#ifndef SRC_SIMULATE_CC
 #define SRC_SIMULATE_CC
 
+#pragma execution_character_set("utf-8")
+
 #include <ctime>
 #include <cstdlib>
 #include <chrono>

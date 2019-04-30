@@ -1,6 +1,8 @@
 ﻿#ifndef SAVE_AT_EXIT_CC
 #define SAVE_AT_EXIT_CC
 
+#pragma execution_character_set("utf-8")
+
 #include <cstdlib>
 #include <csignal>
 #include <string>

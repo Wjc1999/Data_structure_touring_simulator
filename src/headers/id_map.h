@@ -1,6 +1,8 @@
 ﻿#ifndef SRC_IDMAP_H
 #define SRC_IDMAP_H
 
+#pragma execution_character_set("utf-8")
+
 #include <fstream>
 #include <map>
 #include <string>

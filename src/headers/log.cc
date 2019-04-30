@@ -1,6 +1,8 @@
 ﻿#ifndef SRC_LOG_CC
 #define SRC_LOG_CC
 
+#pragma execution_character_set("utf-8")
+
 #include <string>
 #include <sstream>
 #include <fstream>

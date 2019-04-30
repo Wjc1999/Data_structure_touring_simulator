@@ -1,6 +1,8 @@
 ﻿#ifndef SRC_CG_H
 #define SRC_CG_H
 
+#pragma execution_character_set("utf-8")
+
 #include <vector>
 
 #include "time_format.h"
