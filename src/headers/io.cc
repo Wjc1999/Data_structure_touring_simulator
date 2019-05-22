@@ -20,6 +20,7 @@
 #include "user_type.h"
 #include "path.h"
 #include "time_format.h"
+#include "log.h"
 
 extern const std::string name_path;
 extern const int kCityNum;
@@ -77,7 +78,10 @@ int Welcome(Traveller &traveller)
                     std::cin.clear();
                 }
             }
-            AddAccount(accout_name);
+            if (AddAccount(accout_name))
+                Log::LogWrite(std::string("注册账号") + accout_name);
+            else
+                Log::LogWrite(std::string("注册账号") + accout_name + "失败");
             traveller.set_id(accout_name);
             std::cout << "您已注册账号：" << accout_name << std::endl;
             return -1;
@@ -136,10 +140,12 @@ int Welcome(Traveller &traveller)
                     }
                 }
             }
+            Log::LogWrite(std::string("登陆账号") + accout_name);
             return AccountCheck(accout_name);
         }
         else if (option == 'q' || option == 'Q')
         {
+            Log::LogWrite("程序退出");
             exit(0);
         }
         else
@@ -175,34 +181,40 @@ int Menu(const IDMap &im, Traveller &traveller)
 
         if (operate_code == SCHEDULE)
         {
+            Log::LogWrite("用户选择预定行程");
             ClearScreen();
             std::cout << "-------------------------------------------------" << std::endl;
             return operate_code;
         }
         else if (operate_code == INQUIRE_STATE)
         {
+            Log::LogWrite("用户选择查询状态");
             ClearScreen();
             std::cout << "-------------------------------------------------" << std::endl;
             return operate_code;
         }
         else if (operate_code == INQUIRE_PATH)
         {
+            Log::LogWrite("用户选择查询路径");
             ClearScreen();
             std::cout << "-------------------------------------------------" << std::endl;
             return operate_code;
         }
         else if (operate_code == SIMULATE)
         {
+            Log::LogWrite("用户选择模拟旅行");
             ClearScreen();
             return operate_code;
         }
         else if (operate_code == SETTINGS)
         {
+            Log::LogWrite("用户选择设置");
             ClearScreen();
             return operate_code;
         }
         else if (operate_code == EXIT)
         {
+            Log::LogWrite("程序退出");
             return operate_code;
         }
         else
@@ -262,6 +274,7 @@ std::vector<City_id> Request(const IDMap &im)
         }
     }
 
+    Log::LogWrite(std::string("起始城市:") + im.GetCityStr(temp_id));
     std::cout << "请输入您希望经过的城市(以q结束)：";
     while (1)
     {
@@ -305,11 +318,16 @@ std::vector<City_id> Request(const IDMap &im)
     }
     if (res.size() == 1)
     {
+        Log::LogWrite("不经过任何城市");
         std::cout << "您选择不经过任何城市" << std::endl;
     }
     else
     {
         std::cout << "您选择经过的城市是：";
+        std::string pass;
+        for (auto i = ++res.begin(); i != res.end(); ++i)
+            pass += im.GetCityStr(*i) + " ";
+        Log::LogWrite(std::string("经过以下城市:") + pass);
         std::for_each(++res.begin(), res.end(), [&](City_id city_id) { std::cout << im.GetCityStr(city_id) << " "; });
         std::cout << std::endl;
     }
@@ -350,6 +368,7 @@ std::vector<City_id> Request(const IDMap &im)
             }
         }
     }
+    Log::LogWrite(std::string("目的城市:") + im.GetCityStr(temp_id));
     return res;
 }
 
@@ -371,7 +390,17 @@ bool PrintNameList()
 // 根据所提供的traveller添加账号
 bool AddAccount(const Traveller &traveller)
 {
-    return traveller.SaveData();
+    bool add_success = traveller.SaveData();
+    if (add_success)
+    {
+        Log::LogWrite("添加账号成功");
+    }
+    else
+    {
+        Log::LogWrite("添加账号失败");
+    }
+    
+    return add_success;
 }
 
 // 根据用户名添加账号
@@ -380,11 +409,15 @@ bool AddAccount(const std::string &account_name)
     std::ofstream fos(name_path, std::ofstream::app);
     if (fos)
     {
+        Log::LogWrite("添加账号成功");
         fos << account_name << std::endl;
         return true;
     }
     else
+    {
+        Log::LogWrite("添加账号失败, 文件未打开");
         return false;
+    }
 }
 
 bool PathConfirm()
@@ -400,9 +433,15 @@ bool PathConfirm()
             continue;
         option = FindFirstAlpha(option_str);
         if (option == 'Y' || option == 'y')
+        {
+            Log::LogWrite("确认选择该路线");
             return true;
+        }
         else if (option == 'N' || option == 'n')
+        {
+            Log::LogWrite("不选择该路线");
             return false;
+        }
         else
         {
             ErrorMsg("无效的输入，请重新输入");
@@ -431,13 +470,16 @@ Strategy InputStrategy(Time &init_time, Time &limit_time)
         {
         case 0:
             init_time = InputInitTime();
+            Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.GetHour()) + " 旅行策略: 最少价格");
             return LEAST_MONEY;
         case 1:
             init_time = InputInitTime();
+            Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.GetHour()) + " 旅行策略: 最少时间");
             return LEAST_TIME;
         case 2:
             init_time = InputInitTime();
             limit_time = InputLimitTime();
+            Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.GetHour()) + "限定时间: " + std::to_string(init_time.GetLength()) + "小时 " + " 旅行策略: 限定时间内最小价格");
             return LIMIT_TIME;
         default:
             ErrorMsg("无效的输入，请重新输入");
@@ -571,7 +613,7 @@ double getSimulateSpeed()
 {
     std::cout << "请输入两次模拟的间隔时间(在0.5秒和10秒之间)：";
     std::string line;
-    double sleep_ms;
+    double sleep_sec;
     std::exception excpt;
 
     while (1)
@@ -584,8 +626,8 @@ double getSimulateSpeed()
                 continue;
             else
             {
-                sleep_ms = std::stod(line);
-                if (sleep_ms < 0.5 || sleep_ms > 10)
+                sleep_sec = std::stod(line);
+                if (sleep_sec < 0.5 || sleep_sec > 10)
                     throw excpt;
                 break;
             }
@@ -595,7 +637,8 @@ double getSimulateSpeed()
             std::cout << "输入有误，请重新输入" << std::endl;
         }
     }
-    return 1000 * sleep_ms;
+    Log::LogWrite(std::string("设置模拟时间间隔为: ") + std::to_string(sleep_sec) + "秒" );
+    return 1000 * sleep_sec;
 }
 
 eSettings SettingsMenu()
@@ -616,9 +659,15 @@ eSettings SettingsMenu()
         option = FindFirstDigit(line);
 
         if (option == '1')
+        {
+            Log::LogWrite("设置模拟速度");
             return SIMULATION_SPEED;
+        }
         else if (option == '2')
+        {
+            Log::LogWrite("设置字体大小");
             return CONSOLE_FONT_SIZE;
+        }
         else
         {
             std::cout << "无效的输入，请重新输入" << std::endl;
@@ -655,10 +704,15 @@ bool SetConsoleFontSize()
     // cfiStdOut.dwFontSize.X = sNewX;
     cfiStdOut.dwFontSize.Y = sNewY;
 
-    SetCurrentConsoleFontEx(hStdOut, FALSE, &cfiStdOut);
+    BOOL bSetFontSizeSuccess = SetCurrentConsoleFontEx(hStdOut, FALSE, &cfiStdOut);
+    if (bSetFontSizeSuccess)
+        Log::LogWrite(std::string("设置字体大小成功, 字体大小为: ") + std::to_string(sNewY));
+    else
+        Log::LogWrite("字体大小设置失败");
     return true;
 
 #else
+    Log::LogWrite("字体大小设置失败, 非Windows系统");
     std::cout << "该设置目前仅支持Windows系统" << std::endl;
     return false;
 #endif
@@ -750,6 +804,7 @@ void PrintRoutes(const CityGraph &graph, const IDMap &id_map)
             }
         }
     }
+    Log::LogWrite(std::string("获取从 ") + id_map.GetCityStr(start_city) + " 到 " + id_map.GetCityStr(target_city) + " 的路线");
     int size = graph.Getsize(start_city, target_city);
     if (!size)
     {

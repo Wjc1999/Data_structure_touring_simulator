@@ -89,6 +89,7 @@ int main()
             break;
         }
     }
+    Log::CloseLog();
     return 0;
 }
 /*

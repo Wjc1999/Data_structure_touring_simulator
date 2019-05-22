@@ -5,6 +5,7 @@
 
 #include "time_format.h"
 #include "user_type.h"
+
 const int kCityNum = 31;
 
 struct Route
@@ -23,11 +24,11 @@ public:
   int get_city_num() const { return kCityNum; }
 
   //打印ijk的存储数据
-void Show(City_id former_city, City_id current_city, int k) const;
+  void Show(City_id former_city, City_id current_city, int k) const;
 
   //获得存储在ijk的Route
   const Route &GetRoute(City_id former_city, City_id current_city, int k) const { return city_[former_city][current_city].at(k); }
-  
+
   //获得city[i][j]的大小
   int Getsize(City_id i, City_id j) const { return city_[i][j].size(); }
 
@@ -49,7 +50,7 @@ void Show(City_id former_city, City_id current_city, int k) const;
 
 private:
   bool LoadCityGraph(const std::string &name, int type); // 加载文件
-  std::vector <Route> city_[kCityNum][kCityNum];
+  std::vector<Route> city_[kCityNum][kCityNum];
 };
 
 #endif //SRC_CG_H

@@ -9,6 +9,7 @@
 #include "save_at_exit.h"
 #include "io.h"
 #include "traveller.h"
+#include "log.h"
 
 static Traveller *p_traveller = nullptr;
 static bool saved = false;
@@ -26,15 +27,20 @@ void SaveDataOnExit()
         if ((*p_traveller).SaveData())
         {
             saved = true;
+            Log::LogWrite("数据保存成功");
             std::cout << "success." << std::endl;
         }
         else
+        {
+            Log::LogWrite("数据保存失败或数据已保存");
             std::cout << "failed." << std::endl;
+        }
     }
 }
 
 void SaveDataOnExit(int sig)
 {
+    Log::LogWrite(std::string("收到信号: ") + std::to_string(sig));
     std::cout << "Receive signal " << sig << std::endl;
     SaveDataOnExit();
     std::exit(EXIT_FAILURE);
@@ -42,6 +48,7 @@ void SaveDataOnExit(int sig)
 
 void setSignalHandlers()
 {
+    Log::LogWrite("绑定信号处理函数");
     std::signal(SIGABRT, SaveDataOnExit);
     std::signal(SIGINT, SaveDataOnExit);
     std::signal(SIGTERM, SaveDataOnExit);

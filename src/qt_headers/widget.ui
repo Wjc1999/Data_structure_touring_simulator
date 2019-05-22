@@ -508,7 +508,22 @@
       </layout>
      </widget>
      <widget class="QWidget" name="QueryPage">
-      <layout class="QGridLayout" name="gridLayout_4">
+      <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,0">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
+        <number>5</number>
+       </property>
        <item row="0" column="0">
         <layout class="QVBoxLayout" name="verticalLayout" stretch="1,10">
          <property name="spacing">

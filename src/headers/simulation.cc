@@ -95,6 +95,7 @@ static HANDLE InitOutBuf()
 
 void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id_map)
 {
+    Log::LogWrite("模拟开始");
     static bool out_buf_inited = false;
     static HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
     static HANDLE hOutBuf;
@@ -148,13 +149,14 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
 
     SetConsoleActiveScreenBuffer(hStdOut);
     delete[] data_buffer;
+    Log::LogWrite("模拟结束");
 }
 
 #else
 
 void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id_map)
 {
-
+    Log::LogWrite("模拟开始");
     int count = 0;
 
     while (traveller.get_position() != -1)
@@ -185,6 +187,7 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
     std::cout << "当前时间 : " << current_time.GetDay() << " 日 " << current_time.GetHour() << "时" << std::endl;
     std::cout << "到达目的地" << std::endl;
     PrintPath(city_graph, id_map, traveller.get_path(), traveller.get_path().GetLen());
+    Log::LogWrite("模拟结束");
 }
 #endif
 
