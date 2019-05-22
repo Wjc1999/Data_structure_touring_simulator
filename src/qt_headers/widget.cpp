@@ -28,7 +28,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent),
     ui->stackedWidget->setCurrentWidget(ui->LoginPage);
     //qDebug() << &idmap_widget << endl;
     ui->MapLabel->initializMyLabel(&idmap_widget);
-
+    simulator.initialize(ui->ClockSimulate, ui->MapSimulate);
 }
 
 Widget::~Widget()
@@ -191,9 +191,10 @@ void Widget::on_QueryPathPageButton_released() // 路线查询
     ui->Path_tableWidget->setRowCount(0);
 }
 
-void Widget::on_SimulationPageButton_released() //开始模拟
+void Widget::on_SimulationPageButton_released() // 开始模拟
 {
-    ui->stackedWidget->setCurrentWidget(ui->MainPage);
+    ui->stackedWidget->setCurrentWidget(ui->SimulatePage);
+    simulator.start();
 }
 
 void Widget::on_StatePageToMenuButton_released() // 从状态页面回到主菜单
@@ -210,6 +211,12 @@ void Widget::on_QueryPageToMenuButton_released() // 从查询路线页面返回�
 {
     ui->stackedWidget->setCurrentWidget(ui->MainPage);
 }
+
+void Widget::on_SimuToMenuButton_released()// 从模拟返回到主菜单
+{
+    ui->stackedWidget->setCurrentWidget(ui->MainPage);
+}
+
 
 void Widget::UpdateTable(QTableWidget *table, int row, City_id start_city, City_id target_city, int k)
 {
@@ -305,12 +312,22 @@ void Widget::on_OrderPathButton_released()
             Time limit_time(ui->limit_day_spinbox->value(), ui->limit_hour_comboBox->currentIndex());
             traveller_widget.set_plan(ui->MapLabel->getplan());
             Path p = traveller_widget.SchedulePath(citygraph_widget, s, init_time, limit_time);
+            if(!p.GetLen())
+            {
+                QMessageBox::warning(this, "Warning!", "未找到符合要求路径", QMessageBox::Ok);
+                return;
+            }
             traveller_widget.set_path(p);
         }
         else
         {
             traveller_widget.set_plan(ui->MapLabel->getplan());
             Path p = traveller_widget.SchedulePath(citygraph_widget, s, init_time);
+            if(!p.GetLen())
+            {
+                QMessageBox::warning(this, "Warning!", "未找到符合要求路径", QMessageBox::Ok);
+                return;
+            }
             traveller_widget.set_path(p);
         }
         QMessageBox::information(this, "Success!", "已预定行程" ,QMessageBox::Ok);
@@ -319,3 +336,4 @@ void Widget::on_OrderPathButton_released()
 
 
 #endif // SRC_WIDGET
+

@@ -7,5 +7,8 @@
         <file>4.png</file>
         <file>5.png</file>
         <file>6.png</file>
+        <file>train.png</file>
+        <file>car.png</file>
+        <file>plane.png</file>
     </qresource>
 </RCC>

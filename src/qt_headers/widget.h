@@ -12,6 +12,7 @@
 #include "../headers/time_format.h"
 #include "../headers/traveller.h"
 #include "../headers/user_type.h"
+#include "simulator.h"
 
 #include "ui_widget.h"
 #include <QDebug>
@@ -62,9 +63,12 @@ class Widget : public QWidget
 
     void on_OrderPathButton_released();
 
+    void on_SimuToMenuButton_released();
+
 private:
     Ui::Widget *ui;
     void UpdateTable(QTableWidget *table, int row, City_id start_city, City_id target_city, int k);
+    Simulator simulator;
 };
 
 #endif // WIDGET_H
