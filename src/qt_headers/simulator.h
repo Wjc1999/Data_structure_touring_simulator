@@ -1,11 +1,12 @@
 #ifndef SIMULATOR_H
 #define SIMULATOR_H
 
-#include <myclock.h>
 #include <mymap.h>
 #include <QTime>
 #include <QTimer>
 #include <QObject>
+#include <QLCDNumber>
+#include <QMessageBox>
 
 class Simulator : public QObject
 {
@@ -13,13 +14,21 @@ class Simulator : public QObject
 
 public:
     explicit Simulator(QObject *parent = nullptr);
-    void initialize(MyClock* clock, MyMap* map);
+    void initialize(QLCDNumber* lcd1, QLCDNumber* lcd2, MyMap* map);
     void start();
+    void stop();
+    void continuing();
+    void reset();
 
 private:
-    MyClock* clock_;
+    QLCDNumber* day_LCD_;
+    QLCDNumber* hour_LCD_;
     MyMap* map_;
-    QTimer timer;
+    QTimer timer_;
+    bool is_start_ = false;
+    int display_day_;
+    int display_hour_;
+    int display_interval_ = 100;
 
 public slots:
     void onTimerOut();

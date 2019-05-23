@@ -28,7 +28,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent),
     ui->stackedWidget->setCurrentWidget(ui->LoginPage);
     //qDebug() << &idmap_widget << endl;
     ui->MapLabel->initializMyLabel(&idmap_widget);
-    simulator.initialize(ui->ClockSimulate, ui->MapSimulate);
+    ui->MapSimulate->initialize(&citygraph_widget, &traveller_widget);
 }
 
 Widget::~Widget()
@@ -194,8 +194,13 @@ void Widget::on_QueryPathPageButton_released() // 路线查询
 
 void Widget::on_SimulationPageButton_released() // 开始模拟
 {
+    if(traveller_widget.get_position()==-2)
+    {
+        QMessageBox::warning(this, "Warning!", "请先预定路程", QMessageBox::Ok);
+        return;
+    }
+    simulator.initialize(ui->dayLCDdiaplay, ui->hourLCDdisplay, ui->MapSimulate);
     ui->stackedWidget->setCurrentWidget(ui->SimulatePage);
-    simulator.start();
 }
 
 void Widget::on_StatePageToMenuButton_released() // 从状态页面回到主菜单
@@ -216,6 +221,7 @@ void Widget::on_QueryPageToMenuButton_released() // 从查询路线页面返回�
 void Widget::on_SimuToMenuButton_released()// 从模拟返回到主菜单
 {
     ui->stackedWidget->setCurrentWidget(ui->MainPage);
+    simulator.stop();
 }
 
 
@@ -335,6 +341,25 @@ void Widget::on_OrderPathButton_released()
     }
 }
 
+void Widget::on_StartButton_released()
+{
+    simulator.start();
+}
 
+void Widget::on_StopButton_released()
+{
+    simulator.stop();
+}
+
+void Widget::on_ContinueButton_released()
+{
+    simulator.continuing();
+}
+
+void Widget::on_ResetButton_released()
+{
+     simulator.reset();
+}
 #endif // SRC_WIDGET
+
 

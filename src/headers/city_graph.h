@@ -10,27 +10,28 @@ const int kCityNum = 31;
 
 struct Route
 {
-  Trans_id transport_type;
-  Train_id train_seat_type;
-  Time start_time;
-  Time end_time;
-  int price;
+    Trans_id transport_type;
+    Train_id train_seat_type;
+    Time start_time;
+    Time end_time;
+    int price;
 };
 
 class CityGraph // 城市图
 {
 public:
-  CityGraph(); //构造函数
-  int get_city_num() const { return kCityNum; }
+    //构造函数
+    CityGraph();
+    int get_city_num() const { return kCityNum; }
 
-  //打印ijk的存储数据
-  void Show(City_id former_city, City_id current_city, int k) const;
+    //打印ijk的存储数据
+    void Show(City_id former_city, City_id current_city, int k) const;
 
-  //获得存储在ijk的Route
-  const Route &GetRoute(City_id former_city, City_id current_city, int k) const { return city_[former_city][current_city].at(k); }
+    //获得存储在ijk的Route
+    const Route &GetRoute(City_id former_city, City_id current_city, int k) const { return city_[former_city][current_city].at(k); }
 
-  //获得city[i][j]的大小
-  int Getsize(City_id i, City_id j) const { return city_[i][j].size(); }
+    //获得city[i][j]的大小
+    int Getsize(City_id i, City_id j) const { return city_[i][j].size(); }
 
 #ifdef TEST_CG
 
@@ -49,8 +50,8 @@ public:
 #endif // TEST_CG
 
 private:
-  bool LoadCityGraph(const std::string &name, int type); // 加载文件
-  std::vector<Route> city_[kCityNum][kCityNum];
+    bool LoadCityGraph(const std::string &name, int type); // 加载文件
+    std::vector<Route> city_[kCityNum][kCityNum];
 };
 
 #endif //SRC_CG_H

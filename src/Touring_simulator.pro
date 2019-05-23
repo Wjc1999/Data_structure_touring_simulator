@@ -38,7 +38,6 @@ SOURCES += \
     main.cpp \
     qt_headers/widget.cpp \
     qt_headers/mylabel.cpp \
-    qt_headers/myclock.cpp \
     qt_headers/mymap.cpp \
     qt_headers/simulator.cpp
 
@@ -57,7 +56,6 @@ HEADERS += \
     headers/user_type.h \
     qt_headers/mylabel.h \
     qt_headers/simulator.h \
-    qt_headers/myclock.h \
     qt_headers/mymap.h
 
 FORMS += \

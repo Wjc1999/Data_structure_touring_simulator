@@ -5,29 +5,41 @@ MyMap::MyMap(QWidget *parent) : QLabel(parent)
 
 }
 
-void MyMap::initialize(Traveller *t)
+void MyMap::initialize(CityGraph *cg, Traveller *t)
 {
-    traveller = t;
+    traveller_ = t;
+    citygraph_ = cg;
+    //traveller_path_ = traveller_->get_path();
     initialize_citymap_pos();
 
-    plane = new QLabel(this);
-    car = new QLabel(this);
-    train = new QLabel(this);
+    plane_image_ = new QLabel(this);
+    car_image_ = new QLabel(this);
+    train_image_ = new QLabel(this);
 
-    plane->setPixmap(QPixmap(":/image/plane.png"));
-    plane->setScaledContents(true);
-    plane->resize(66,66);
-    plane->hide();
+    plane_image_->setPixmap(QPixmap(":/image/plane.png"));
+    plane_image_->setScaledContents(true);
+    plane_image_->resize(66,66);
+    plane_image_->hide();
 
-    car->setPixmap(QPixmap(":/image/car.png"));
-    car->setScaledContents(true);
-    car->resize(66,66);
-    car->hide();
+    car_image_->setPixmap(QPixmap(":/image/car.png"));
+    car_image_->setScaledContents(true);
+    car_image_->resize(66,66);
+    car_image_->hide();
 
-    train->setPixmap(QPixmap(":/image/train.png"));
-    train->setScaledContents(true);
-    train->resize(66,66);
-    train->hide();
+    train_image_->setPixmap(QPixmap(":/image/train.png"));
+    train_image_->setScaledContents(true);
+    train_image_->resize(66,66);
+    train_image_->hide();
+}
+
+void MyMap::reset()
+{
+    traveller_->InitState(*citygraph_);
+}
+
+void MyMap::update()
+{
+    traveller_->UpdateState(citygraph_, Time());
 }
 
 void MyMap::initialize_citymap_pos()
