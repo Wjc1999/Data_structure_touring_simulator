@@ -39,7 +39,7 @@ void MyMap::reset()
 
 void MyMap::update()
 {
-    traveller_->UpdateState(citygraph_, Time());
+    //traveller_->UpdateState(citygraph_, new Time());
 }
 
 void MyMap::initialize_citymap_pos()

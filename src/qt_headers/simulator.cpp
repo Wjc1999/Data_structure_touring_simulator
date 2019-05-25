@@ -16,7 +16,7 @@ void Simulator::initialize(QLCDNumber* lcd1, QLCDNumber* lcd2, MyMap* map)
     timer_.setInterval(display_interval_);
     connect(&timer_, SIGNAL(timeout()), this, SLOT(onTimerOut()));
 
-    display_day_ = map->traveller_->get_init_time().GetDay();
+    display_day_ = map->traveller_->get_init_time().GetDay()+1;
     display_hour_ = map->traveller_->get_init_time().GetHour();
     day_LCD_->display(display_day_);
     hour_LCD_->display(display_hour_);
@@ -53,8 +53,8 @@ void Simulator::continuing()
 void Simulator::reset()
 {
     timer_.stop();
-    display_day_ = map->traveller_->get_init_time().GetDay();
-    display_hour_ = map->traveller_->get_init_time().GetHour();
+    display_day_ = map_->traveller_->get_init_time().GetDay();
+    display_hour_ = map_->traveller_->get_init_time().GetHour();
     day_LCD_->display(display_day_);
     hour_LCD_->display(display_hour_);
     is_start_ = false;
