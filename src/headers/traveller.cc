@@ -724,4 +724,23 @@ void Traveller::PrintPlan() const
     std::cout << std::endl;
 }
 
+inline bool Traveller::set_strategy(int strategy)
+{
+    switch (strategy)
+    {
+    case 0:
+        strategy_ = LEAST_MONEY;
+        break;
+    case 1:
+        strategy_ = LEAST_TIME;
+        break;
+    case 2:
+        strategy_ = LIMIT_TIME;
+        break;
+    default:
+        return false;
+    }
+    return true;
+}
+
 #endif // SRC_TRAVELLER_CC

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1097</width>
-    <height>686</height>
+    <width>1138</width>
+    <height>694</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
   <property name="whatsThis">
    <string>A Touring Simulation</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
-   <item>
+  <layout class="QGridLayout" name="gridLayout_5">
+   <item row="0" column="0">
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="autoFillBackground">
       <bool>false</bool>
@@ -303,7 +303,93 @@
       </layout>
      </widget>
      <widget class="QWidget" name="StatePage">
-      <layout class="QGridLayout" name="gridLayout_5">
+      <layout class="QGridLayout" name="gridLayout_8">
+       <item row="0" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,10">
+         <item>
+          <widget class="QLabel" name="state_user_name_label">
+           <property name="text">
+            <string>用户名</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="state_user_name_content">
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,10">
+         <item>
+          <widget class="QLabel" name="state_start_city_label">
+           <property name="text">
+            <string>始发地:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="state_start_city_content">
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="2" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,10,1,10">
+         <item>
+          <widget class="QLabel" name="state_target_city_label">
+           <property name="text">
+            <string>目的地:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="state_target_city_content">
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="state_position_label">
+           <property name="text">
+            <string>当前城市:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="state_position_content">
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="3" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,10">
+         <item>
+          <widget class="QLabel" name="state_pass_label">
+           <property name="text">
+            <string>途径城市:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="state_pass_content">
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
        <item row="4" column="0">
         <widget class="QTableWidget" name="stateTableWidget">
          <property name="sortingEnabled">
@@ -349,42 +435,6 @@
          </column>
         </widget>
        </item>
-       <item row="3" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,10">
-         <item>
-          <widget class="QLabel" name="state_pass_label">
-           <property name="text">
-            <string>途径城市:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="state_pass_content">
-           <property name="text">
-            <string>TextLabel</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="1" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,10">
-         <item>
-          <widget class="QLabel" name="state_start_city_label">
-           <property name="text">
-            <string>始发地:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="state_start_city_content">
-           <property name="text">
-            <string>TextLabel</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
        <item row="5" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="1,10">
          <item>
@@ -424,94 +474,41 @@
          </item>
         </layout>
        </item>
-       <item row="0" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,10">
-         <item>
-          <widget class="QLabel" name="state_user_name_label">
-           <property name="text">
-            <string>用户名</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="state_user_name_content">
-           <property name="text">
-            <string>TextLabel</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="2" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,10,1,10">
-         <item>
-          <widget class="QLabel" name="state_target_city_label">
-           <property name="text">
-            <string>目的地:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="state_target_city_content">
-           <property name="text">
-            <string>TextLabel</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="state_position_label">
-           <property name="text">
-            <string>当前城市:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="state_position_content">
-           <property name="text">
-            <string>TextLabel</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="6" column="2">
+       <item row="6" column="1">
         <widget class="QPushButton" name="StatePageToMenuButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="minimumSize">
           <size>
-           <width>75</width>
-           <height>23</height>
+           <width>100</width>
+           <height>25</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>75</width>
-           <height>23</height>
+           <width>100</width>
+           <height>25</height>
           </size>
          </property>
          <property name="text">
           <string>返回主菜单</string>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="QueryPage">
-      <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,0">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <property name="spacing">
-        <number>5</number>
-       </property>
+      <layout class="QGridLayout" name="gridLayout_4">
        <item row="0" column="0">
         <layout class="QVBoxLayout" name="verticalLayout" stretch="1,10">
          <property name="spacing">
@@ -926,16 +923,22 @@
        </item>
        <item row="1" column="1">
         <widget class="QPushButton" name="QueryPageToMenuButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="minimumSize">
           <size>
-           <width>75</width>
-           <height>23</height>
+           <width>100</width>
+           <height>25</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>75</width>
-           <height>23</height>
+           <width>100</width>
+           <height>25</height>
           </size>
          </property>
          <property name="text">
@@ -1362,6 +1365,199 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="SimulatePage">
+      <widget class="MyMap" name="MapSimulate">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>900</width>
+         <height>654</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>900</width>
+         <height>650</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>1920</width>
+         <height>1080</height>
+        </size>
+       </property>
+       <property name="autoFillBackground">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::AutoText</enum>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="../material/material.qrc">:/image/map.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="ResetButton">
+       <property name="geometry">
+        <rect>
+         <x>960</x>
+         <y>240</y>
+         <width>93</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>重置</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="StopButton">
+       <property name="geometry">
+        <rect>
+         <x>960</x>
+         <y>290</y>
+         <width>93</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>暂停</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="ContinueButton">
+       <property name="geometry">
+        <rect>
+         <x>960</x>
+         <y>340</y>
+         <width>93</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>继续</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="SimuToMenuButton">
+       <property name="geometry">
+        <rect>
+         <x>960</x>
+         <y>610</y>
+         <width>93</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>返回主菜单</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="StartButton">
+       <property name="geometry">
+        <rect>
+         <x>960</x>
+         <y>390</y>
+         <width>93</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>开始</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="LCD_widget" native="true">
+       <property name="geometry">
+        <rect>
+         <x>920</x>
+         <y>20</y>
+         <width>191</width>
+         <height>161</height>
+        </rect>
+       </property>
+       <widget class="QLCDNumber" name="dayLCDdiaplay">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>30</y>
+          <width>111</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="digitCount">
+         <number>5</number>
+        </property>
+        <property name="mode">
+         <enum>QLCDNumber::Dec</enum>
+        </property>
+        <property name="segmentStyle">
+         <enum>QLCDNumber::Flat</enum>
+        </property>
+       </widget>
+       <widget class="QLCDNumber" name="hourLCDdisplay">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>100</y>
+          <width>111</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="digitCount">
+         <number>5</number>
+        </property>
+        <property name="mode">
+         <enum>QLCDNumber::Dec</enum>
+        </property>
+        <property name="segmentStyle">
+         <enum>QLCDNumber::Flat</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="day_lcd_label">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>40</y>
+          <width>72</width>
+          <height>15</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>天</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QLabel" name="hour_lcd_label">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>110</y>
+          <width>72</width>
+          <height>15</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>小时</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </widget>
+     </widget>
     </widget>
    </item>
   </layout>
@@ -1372,6 +1568,11 @@
    <class>MyLabel</class>
    <extends>QLabel</extends>
    <header location="global">mylabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MyMap</class>
+   <extends>QLabel</extends>
+   <header location="global">mymap.h</header>
   </customwidget>
  </customwidgets>
  <resources>

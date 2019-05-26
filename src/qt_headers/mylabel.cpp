@@ -13,7 +13,7 @@
 #include <QResizeEvent>
 #include <deque>
 
-static const double r_city = 7;  //半径
+static const double r_city = 10;  //半径
 
 MyLabel::MyLabel(QWidget *parent) : QLabel(parent)
 {
@@ -38,8 +38,10 @@ void MyLabel::mousePressEvent(QMouseEvent *ev)
     //qDebug() << ev->x() << ev->y();
     if(ev->button() == Qt::LeftButton)
     {
+        //qDebug() << mark_origin->height() << mark_origin->width();
+        //qDebug() << ev->x() << ev->y();
         mouse_x_ = ev->x();
-        mouse_y_ = ev->y();
+        mouse_y_ = ev->y() + mark_origin->height()/4;
         int i = judge_mouse_pos();
         if(i!=-1 && has_mark_transfer[i])
         {
@@ -119,10 +121,10 @@ void MyLabel::transfer_action_triggered()
     transfer_city.push_back(current_set_city);
     has_mark_transfer[current_set_city] = true;
 
-    for(auto city : transfer_city)
+    /*for(auto city : transfer_city)
     {
         qDebug() << city;
-    }
+    }*/
 }
 
 void MyLabel::delete_transfer_city(int i)
@@ -132,10 +134,10 @@ void MyLabel::delete_transfer_city(int i)
         if(i == *iter)
         {
             transfer_city.erase(iter);
-            for(auto city : transfer_city)
+            /*for(auto city : transfer_city)
             {
                 qDebug() << city;
-            }
+            }*/
             return;
         }
     }

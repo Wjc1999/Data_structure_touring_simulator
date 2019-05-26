@@ -29,7 +29,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent),
     ui->stackedWidget->setCurrentWidget(ui->LoginPage);
     //qDebug() << &idmap_widget << endl;
     ui->MapLabel->initializMyLabel(&idmap_widget);
-
+    ui->MapSimulate->initialize(&citygraph_widget, &traveller_widget);
 }
 
 Widget::~Widget()
@@ -205,10 +205,17 @@ void Widget::on_QueryPathPageButton_released() // 路线查询
     ui->Path_tableWidget->setRowCount(0);
 }
 
-void Widget::on_SimulationPageButton_released() //开始模拟
+void Widget::on_SimulationPageButton_released() // 开始模拟
 {
+    
+    if(traveller_widget.get_position()==-2)
+    {
+        QMessageBox::warning(this, "Warning!", "请先预定路程", QMessageBox::Ok);
+        return;
+    }
     Log::LogWrite("用户选择模拟旅行");
-    ui->stackedWidget->setCurrentWidget(ui->MainPage);
+    simulator.initialize(ui->dayLCDdiaplay, ui->hourLCDdisplay, ui->MapSimulate);
+    ui->stackedWidget->setCurrentWidget(ui->SimulatePage);
 }
 
 void Widget::on_StatePageToMenuButton_released() // 从状态页面回到主菜单
@@ -228,6 +235,13 @@ void Widget::on_QueryPageToMenuButton_released() // 从查询路线页面返回�
     Log::LogWrite("从查询路线页面返回到主菜单");
     ui->stackedWidget->setCurrentWidget(ui->MainPage);
 }
+
+void Widget::on_SimuToMenuButton_released()// 从模拟返回到主菜单
+{
+    ui->stackedWidget->setCurrentWidget(ui->MainPage);
+    simulator.stop();
+}
+
 
 void Widget::UpdateTable(QTableWidget *table, int row, City_id start_city, City_id target_city, int k)
 {
@@ -343,6 +357,11 @@ void Widget::on_OrderPathButton_released()
             Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.GetHour()) + "限定时间: " + std::to_string(init_time.GetLength()) + "小时 " + " 旅行策略: 限定时间内最小价格");
 
             Path p = traveller_widget.SchedulePath(citygraph_widget, s, init_time, limit_time);
+            if(!p.GetLen())
+            {
+                QMessageBox::warning(this, "Warning!", "未找到符合要求路径", QMessageBox::Ok);
+                return;
+            }
             traveller_widget.set_path(p);
         }
         else
@@ -353,6 +372,11 @@ void Widget::on_OrderPathButton_released()
                 Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.GetHour()) + " 旅行策略: 最少价格");
 
             Path p = traveller_widget.SchedulePath(citygraph_widget, s, init_time);
+            if(!p.GetLen())
+            {
+                QMessageBox::warning(this, "Warning!", "未找到符合要求路径", QMessageBox::Ok);
+                return;
+            }
             traveller_widget.set_path(p);
         }
         QMessageBox::information(this, "Success!", "已预定行程" ,QMessageBox::Ok);
@@ -360,5 +384,25 @@ void Widget::on_OrderPathButton_released()
     }
 }
 
+void Widget::on_StartButton_released()
+{
+    simulator.start();
+}
 
+void Widget::on_StopButton_released()
+{
+    simulator.stop();
+}
+
+void Widget::on_ContinueButton_released()
+{
+    simulator.continuing();
+}
+
+void Widget::on_ResetButton_released()
+{
+     simulator.reset();
+}
 #endif // SRC_WIDGET
+
+
