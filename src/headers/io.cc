@@ -401,7 +401,7 @@ bool AddAccount(const Traveller &traveller)
     {
         Log::LogWrite("添加账号失败");
     }
-    
+
     return add_success;
 }
 
@@ -639,7 +639,7 @@ double getSimulateSpeed()
             std::cout << "输入有误，请重新输入" << std::endl;
         }
     }
-    Log::LogWrite(std::string("设置模拟时间间隔为: ") + std::to_string(sleep_sec) + "秒" );
+    Log::LogWrite(std::string("设置模拟时间间隔为: ") + std::to_string(sleep_sec) + "秒");
     return 1000 * sleep_sec;
 }
 

@@ -28,7 +28,10 @@ public:
 
 #define TEST_IDMAP
 #ifdef TEST_IDMAP
-    std::map<int, std::string>::size_type GetCityMapSize()  const { return city_map_.size();  }
+    std::map<int, std::string>::size_type GetCityMapSize() const
+    {
+        return city_map_.size();
+    }
     std::map<int, std::string>::size_type GetTrainMapSize() const { return train_map_.size(); }
     std::map<int, std::string>::size_type GetTransMapSize() const { return trans_map_.size(); }
 #endif // TEST_IDMAP
@@ -38,12 +41,12 @@ private:
     std::map<Train_id, Train_str> train_map_;
     std::map<Trans_id, Trans_str> trans_map_;
     bool LoadID(std::ifstream &id_file, std::map<int, std::string> &map); //从给定的文件中加载ID
-    const std::string &GetStr(int id, const std::map<int, std::string> &map) const { return map.at(id);}
+    const std::string &GetStr(int id, const std::map<int, std::string> &map) const { return map.at(id); }
     const std::string paths_[3] = {
-      // 文件路径
-      "..//data//city_id.txt",            // city_id_path
-      "..//data//train_seat_type_id.txt", // train_seat_type_path
-      "..//data//transport_type_id.txt"   // trans_id_path_
+        // 文件路径
+        "..//data//city_id.txt",            // city_id_path
+        "..//data//train_seat_type_id.txt", // train_seat_type_path
+        "..//data//transport_type_id.txt"   // trans_id_path_
     };
 };
 #endif // SRC_IDMAP_H

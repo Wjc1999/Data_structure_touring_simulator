@@ -25,7 +25,8 @@ void SaveDataOnExit()
 {
     if (!saved && p_traveller != nullptr /*&& (*p_traveller).get_position() != -2*/)
     {
-        std::cout << "saving..." << "\t";
+        std::cout << "saving..."
+                  << "\t";
         if ((*p_traveller).SaveData())
         {
             saved = true;

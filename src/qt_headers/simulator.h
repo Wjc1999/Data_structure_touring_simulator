@@ -14,16 +14,16 @@ class Simulator : public QObject
 
 public:
     explicit Simulator(QObject *parent = nullptr);
-    void initialize(QLCDNumber* lcd1, QLCDNumber* lcd2, MyMap* map);
+    void initialize(QLCDNumber *lcd1, QLCDNumber *lcd2, MyMap *map);
     void start();
     void stop();
     void continuing();
     void reset();
 
 private:
-    QLCDNumber* day_LCD_;
-    QLCDNumber* hour_LCD_;
-    MyMap* map_;
+    QLCDNumber *day_LCD_;
+    QLCDNumber *hour_LCD_;
+    MyMap *map_;
     QTimer timer_;
     bool is_start_ = false;
     int display_day_;

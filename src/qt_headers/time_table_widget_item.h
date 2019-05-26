@@ -10,11 +10,11 @@ class TimeTableWidgetItem : public QTableWidgetItem
 {
 public:
     TimeTableWidgetItem(const QString txt = QString("0"))
-        :QTableWidgetItem(txt)
+        : QTableWidgetItem(txt)
     {
     }
 
-    bool operator< ( const QTableWidgetItem & other ) const
+    bool operator<(const QTableWidgetItem &other) const
     {
         QString a_str = text();
         QString b_str = other.text();
