@@ -8,7 +8,7 @@ void MyMap::initialize(CityGraph *cg, Traveller *t)
 {
     traveller_ = t;
     citygraph_ = cg;
-    //traveller_path_ = traveller_->get_path();
+    // traveller_path_ = traveller_->get_path();
     initialize_citymap_pos();
 
     plane_image_ = new QLabel(this);

@@ -52,7 +52,7 @@ void Simulator::continuing()
 void Simulator::reset()
 {
     timer_.stop();
-    display_day_ = map_->traveller_->get_init_time().GetDay();
+    display_day_ = map_->traveller_->get_init_time().GetDay() + 1;
     display_hour_ = map_->traveller_->get_init_time().GetHour();
     day_LCD_->display(display_day_);
     hour_LCD_->display(display_hour_);

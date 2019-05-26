@@ -481,6 +481,7 @@ void MyLabel::resizeEvent(QResizeEvent *ev)
     MoveWhenResize(mark_origin, rect_mark_origin);
     MoveWhenResize(mark_destination, rect_mark_destination);
 
+
     for (int i = 0; i < 31; i++)
     {
         if (has_mark_transfer[i])
