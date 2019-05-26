@@ -458,10 +458,23 @@ bool MyLabel::in_city_range(int i)
     //           << this->origin_pixmap.size() << endl;
 }
 
-void MyLabel::MoveWhenResize(QLabel *target, const QSize &before_size, const QSize &after_size)
+void MyLabel::MoveWhenResize(int type, int index, QLabel *target, const QSize &before_size, const QSize &after_size)
 {
-    static double diff_sum_x = 0.0;
-    static double diff_sum_y = 0.0;
+    struct Point
+    {
+        double x;
+        double y;
+    };
+
+    static Point s_diff{}, e_diff{}, t_diff[31]{};
+    Point *temp;
+
+    if (type == 0) // start
+        temp = &s_diff;
+    else if (type == 1) // end
+        temp = &e_diff;
+    else // transfer
+        temp = &t_diff[index];
 
     QRectF icon_rect = target->geometry();
     icon_rect.moveTo(icon_rect.x() + 33, icon_rect.y() + 55);
@@ -469,57 +482,43 @@ void MyLabel::MoveWhenResize(QLabel *target, const QSize &before_size, const QSi
     double x_ratio = static_cast<double>(icon_rect.x()) / static_cast<double>(before_size.width());
     double y_ratio = static_cast<double>(icon_rect.y()) / static_cast<double>(before_size.height());
 
-    double after_x = (after_size.width() * x_ratio);
+    double after_x = (after_size.width() * x_ratio); // 消除浮点转化为整数时的累积误差(尚有偏差)
     double after_y = (after_size.height() * y_ratio);
     int diff_x = after_x;
     int diff_y = after_y;
 
-    diff_sum_x += after_x - diff_x;
-    diff_sum_y += after_y - diff_y;
+    temp->x += after_x - diff_x;
+    temp->y += after_y - diff_y;
 
-    int adjust_x = static_cast<int>(diff_sum_x);
-    int adjust_y = static_cast<int>(diff_sum_y);
+    int adjust_x = static_cast<int>(temp->x);
+    int adjust_y = static_cast<int>(temp->y);
 
     if (adjust_x)
-    {
-        diff_sum_x -= adjust_x;
-    }
+        temp->x -= adjust_x;
 
     if (adjust_y)
-    {
-        diff_sum_y -= adjust_y;
-    }
+        temp->y -= adjust_y;
 
+    // qDebug() << temp->x << " " << temp->y  << endl;
     icon_rect.moveTo((after_size.width() * x_ratio) + adjust_x, (after_size.height() * y_ratio) + adjust_y);
     icon_rect.moveTo(icon_rect.x() - 33, icon_rect.y() - 55);
 
-    target->setGeometry(icon_rect.x(),icon_rect.y(),icon_rect.width(), icon_rect.height());
-    // QRect temp_rect = target->geometry();
-    // temp_rect.moveTo(temp_rect.x() + 33, temp_rect.y() + 55);
-    //
-    // double x_ratio = static_cast<double>(origin_rect.x()) / static_cast<double>(origin_qsize_.width());
-    // double y_ratio = static_cast<double>(origin_rect.y()) / static_cast<double>(origin_qsize_.height());
-    //
-    // temp_rect.moveTo(current_qsize_.width() * x_ratio, current_qsize_.height() * y_ratio);
-    // temp_rect.moveTo(temp_rect.x() - 33, temp_rect.y() - 55);
-    //
-    // target->setGeometry(temp_rect);
+    target->setGeometry(icon_rect.x(), icon_rect.y(), icon_rect.width(), icon_rect.height());
 }
 
 void MyLabel::resizeEvent(QResizeEvent *ev)
 {
     current_qsize_ = ev->size();
-    qDebug() << current_qsize_ << endl;
-    qDebug() << mark_origin->geometry() << endl;
+    // qDebug() << current_qsize_ << endl;
+    // qDebug() << mark_origin->geometry() << endl;
 
-    MoveWhenResize(mark_origin, ev->oldSize(), ev->size());
-    MoveWhenResize(mark_destination, ev->oldSize(), ev->size());
-
+    MoveWhenResize(0, 0, mark_origin, ev->oldSize(), ev->size());
+    MoveWhenResize(1, 0, mark_destination, ev->oldSize(), ev->size());
 
     for (int i = 0; i < 31; i++)
     {
         if (has_mark_transfer[i])
-            MoveWhenResize(mark_transfer[i], ev->oldSize(), ev->size());
+            MoveWhenResize(2, i, mark_transfer[i], ev->oldSize(), ev->size());
     }
 
     this->setPixmap(origin_pixmap.scaled(ev->size().width(),
