@@ -1,6 +1,8 @@
 ﻿#ifndef SRC_CG_CC
 #define SRC_CG_CC
 
+#pragma execution_character_set("utf-8")
+
 #include <iostream>
 #include <vector>
 #include <fstream>

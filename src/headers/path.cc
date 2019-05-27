@@ -1,6 +1,8 @@
 ﻿#ifndef SRC_PATH_CC
 #define SRC_PATH_CC
 
+#pragma execution_character_set("utf-8")
+
 #include <cassert>
 
 #include <iostream>
@@ -116,15 +118,15 @@ void Path::Show() const
 
 #ifdef TEST_PATH
 
-  bool Path::ValidatePath() const // 验证path是否合法
-  {
-    assert(cities_.size() == len_ && len_ > 0);
-    City_id temp = cities_.at(0).current_city;
-    for (int i = 1; i < len_; ++i)
-      if (cities_.at(i).former_city != temp)
-        return false;
-    return true;
-  }
+bool Path::ValidatePath() const // 验证path是否合法
+{
+  assert(cities_.size() == len_ && len_ > 0);
+  City_id temp = cities_.at(0).current_city;
+  for (int i = 1; i < len_; ++i)
+    if (cities_.at(i).former_city != temp)
+      return false;
+  return true;
+}
 #endif // TEST_PATH
 
 #endif // SRC_PATH_CC

@@ -36,7 +36,7 @@ private:
     int mouse_x_;
     int mouse_y_;
 
-    void MoveWhenResize(QLabel *target, const QRect &origin_rect);
+    void MoveWhenResize(int type, int index, QLabel *target, const QSize &before_size, const QSize &current_size);
     QMenu *rightbutton_menu;
 
     QLabel *mark_origin;

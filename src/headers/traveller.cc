@@ -1,6 +1,8 @@
 ﻿#ifndef SRC_TRAVELLER_CC
 #define SRC_TRAVELLER_CC
 
+#pragma execution_character_set("utf-8")
+
 #include <vector>
 #include <iostream>
 #include <string>

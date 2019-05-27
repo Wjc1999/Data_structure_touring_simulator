@@ -6,7 +6,6 @@
 #include <string>
 #include <sstream>
 
-#include "widget.h"
 #include <QString>
 #include <QWidget>
 #include <QMessageBox>
@@ -18,6 +17,8 @@
 #include <QComboBox>
 
 #include "time_table_widget_item.h"
+#include "widget.h"
+#include "../headers/log.h"
 
 Widget::Widget(QWidget *parent) : QWidget(parent),
                                   ui(new Ui::Widget)
@@ -35,6 +36,7 @@ Widget::~Widget()
 {
     delete ui;
     traveller_widget.SaveData();
+    Log::LogWrite("程序退出");
 }
 
 void Widget::on_LogInButton_released() //登陆
@@ -60,6 +62,7 @@ void Widget::on_LogInButton_released() //登陆
     if (account_check != -1)
     {
         traveller_widget.LoadData(account_check, citygraph_widget);
+        Log::LogWrite(std::string("登陆账号 ") + account_name.toStdString());
         traveller_widget.set_id(account_name.toStdString());
         ui->stackedWidget->setCurrentWidget(ui->MainPage);
     }
@@ -69,7 +72,10 @@ void Widget::on_LogInButton_released() //登陆
 
         if (sB == QMessageBox::Yes)
         {
-            AddAccount(account_name.toStdString());
+            if (AddAccount(account_name.toStdString()))
+                Log::LogWrite(std::string("注册账号 ") + account_name.toStdString());
+            else
+                Log::LogWrite(std::string("注册账号 ") + account_name.toStdString() + " 失败");
             traveller_widget.set_id(account_name.toStdString());
             ui->stackedWidget->setCurrentWidget(ui->MainPage);
         }
@@ -100,7 +106,11 @@ void Widget::on_SignUpButton_released() //注册
     }
     else
     {
-        AddAccount(account_name.toStdString()); //?
+        if (AddAccount(account_name.toStdString()))
+            Log::LogWrite(std::string("注册账号 ") + account_name.toStdString());
+        else
+            Log::LogWrite(std::string("注册账号 ") + account_name.toStdString() + " 失败");
+
         traveller_widget.set_id(account_name.toStdString());
         ui->stackedWidget->setCurrentWidget(ui->MainPage);
     }
@@ -108,21 +118,24 @@ void Widget::on_SignUpButton_released() //注册
 
 void Widget::on_OrderPageButton_released() // 预定行程
 {
+    Log::LogWrite("用户选择预定行程");
     ui->MapLabel->setOriginPixmap();
     ui->stackedWidget->setCurrentWidget(ui->OrderPage);
-    if(ui->strategy_comboBox->currentIndex() != 2)
+    if (ui->strategy_comboBox->currentIndex() != 2)
         ui->limit_time_widget->hide();
 }
 
 void Widget::on_strategy_comboBox_currentIndexChanged(int index)
 {
-    if(index == 2)
+    if (index == 2)
         ui->limit_time_widget->show();
-    else ui->limit_time_widget->hide();
+    else
+        ui->limit_time_widget->hide();
 }
 
 void Widget::on_StatePageButton_released() // 状态查询
 {
+    Log::LogWrite("用户选择查询状态");
     ui->stackedWidget->setCurrentWidget(ui->StatePage);
     ui->stateTableWidget->clearContents();
     ui->stateTableWidget->setSortingEnabled(false);
@@ -187,6 +200,7 @@ void Widget::on_StatePageButton_released() // 状态查询
 
 void Widget::on_QueryPathPageButton_released() // 路线查询
 {
+    Log::LogWrite("用户选择查询路径");
     ui->stackedWidget->setCurrentWidget(ui->QueryPage);
     ui->Path_tableWidget->clearContents();
     ui->Path_tableWidget->setRowCount(0);
@@ -194,36 +208,40 @@ void Widget::on_QueryPathPageButton_released() // 路线查询
 
 void Widget::on_SimulationPageButton_released() // 开始模拟
 {
-    if(traveller_widget.get_position()==-2)
+
+    if (traveller_widget.get_position() == -2)
     {
         QMessageBox::warning(this, "Warning!", "请先预定路程", QMessageBox::Ok);
         return;
     }
+    Log::LogWrite("用户选择模拟旅行");
     simulator.initialize(ui->dayLCDdiaplay, ui->hourLCDdisplay, ui->MapSimulate);
     ui->stackedWidget->setCurrentWidget(ui->SimulatePage);
 }
 
 void Widget::on_StatePageToMenuButton_released() // 从状态页面回到主菜单
 {
+    Log::LogWrite("从状态页面回到主菜单");
     ui->stackedWidget->setCurrentWidget(ui->MainPage);
 }
 
 void Widget::on_OrderPageToMenuButton_released() // 从预定页面返回到主菜单
 {
+    Log::LogWrite("从预定页面返回到主菜单");
     ui->stackedWidget->setCurrentWidget(ui->MainPage);
 }
 
 void Widget::on_QueryPageToMenuButton_released() // 从查询路线页面返回到主菜单
 {
+    Log::LogWrite("从查询路线页面返回到主菜单");
     ui->stackedWidget->setCurrentWidget(ui->MainPage);
 }
 
-void Widget::on_SimuToMenuButton_released()// 从模拟返回到主菜单
+void Widget::on_SimuToMenuButton_released() // 从模拟返回到主菜单
 {
     ui->stackedWidget->setCurrentWidget(ui->MainPage);
     simulator.stop();
 }
-
 
 void Widget::UpdateTable(QTableWidget *table, int row, City_id start_city, City_id target_city, int k)
 {
@@ -274,6 +292,7 @@ void Widget::on_QueryPathButton_released()
     ui->Path_tableWidget->clearContents();
     ui->Path_tableWidget->setRowCount(0);
     ui->Path_tableWidget->setSortingEnabled(false);
+    Log::LogWrite(std::string("获取从 ") + idmap_widget.GetCityStr(start_city) + " 到 " + idmap_widget.GetCityStr(target_city) + " 的路线");
 
     if (start_city == target_city)
     {
@@ -302,24 +321,44 @@ void Widget::on_QueryPathButton_released()
 
 void Widget::on_OrderPathButton_released()
 {
-    if(!ui->MapLabel->has_origin())
+    if (!ui->MapLabel->has_origin())
     {
         QMessageBox::warning(this, "Warning!", "未设置始发地", QMessageBox::Ok);
     }
-    else if(!ui->MapLabel->has_destination())
+    else if (!ui->MapLabel->has_destination())
     {
         QMessageBox::warning(this, "Warning!", "未设置目的地", QMessageBox::Ok);
     }
     else
     {
         Strategy s = static_cast<Strategy>(ui->strategy_comboBox->currentIndex());
-        Time init_time(1,ui->init_time_comboBox->currentIndex());
-        if(s == 2)
+
+        Log::LogWrite(std::string("输入策略: ") + std::to_string(s));
+
+        Time init_time(1, ui->init_time_comboBox->currentIndex());
+        auto plan = ui->MapLabel->getplan();
+        traveller_widget.set_plan(plan);
+
+        std::string pass;
+        Log::LogWrite(std::string("起始城市:") + idmap_widget.GetCityStr(plan.front()));
+
+        if (plan.size() == 2)
+            Log::LogWrite("不经过任何城市");
+        else
+        {
+            for (auto i = ++plan.begin(); i != plan.end(); ++i)
+                pass += idmap_widget.GetCityStr(*i) + " ";
+            Log::LogWrite(std::string("经过以下城市:") + pass);
+        }
+        Log::LogWrite(std::string("目的城市:") + idmap_widget.GetCityStr(plan.back()));
+
+        if (s == LIMIT_TIME)
         {
             Time limit_time(ui->limit_day_spinbox->value(), ui->limit_hour_comboBox->currentIndex());
-            traveller_widget.set_plan(ui->MapLabel->getplan());
+            Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.GetHour()) + "限定时间: " + std::to_string(init_time.GetLength()) + "小时 " + " 旅行策略: 限定时间内最小价格");
+
             Path p = traveller_widget.SchedulePath(citygraph_widget, s, init_time, limit_time);
-            if(!p.GetLen())
+            if (!p.GetLen())
             {
                 QMessageBox::warning(this, "Warning!", "未找到符合要求路径", QMessageBox::Ok);
                 return;
@@ -328,16 +367,21 @@ void Widget::on_OrderPathButton_released()
         }
         else
         {
-            traveller_widget.set_plan(ui->MapLabel->getplan());
+            if (s == LEAST_TIME)
+                Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.GetHour()) + " 旅行策略: 最少时间");
+            else if (s == LEAST_MONEY)
+                Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.GetHour()) + " 旅行策略: 最少价格");
+
             Path p = traveller_widget.SchedulePath(citygraph_widget, s, init_time);
-            if(!p.GetLen())
+            if (!p.GetLen())
             {
                 QMessageBox::warning(this, "Warning!", "未找到符合要求路径", QMessageBox::Ok);
                 return;
             }
             traveller_widget.set_path(p);
         }
-        QMessageBox::information(this, "Success!", "已预定行程" ,QMessageBox::Ok);
+        QMessageBox::information(this, "Success!", "已预定行程", QMessageBox::Ok);
+        Log::LogWrite("成功预定行程");
     }
 }
 
@@ -358,8 +402,6 @@ void Widget::on_ContinueButton_released()
 
 void Widget::on_ResetButton_released()
 {
-     simulator.reset();
+    simulator.reset();
 }
 #endif // SRC_WIDGET
-
-

@@ -1,6 +1,8 @@
 ﻿#ifndef SRC_PATH_H
 #define SRC_PATH_H
 
+#pragma execution_character_set("utf-8")
+
 #include <deque>
 #include <algorithm>
 
