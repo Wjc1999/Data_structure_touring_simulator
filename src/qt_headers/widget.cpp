@@ -28,7 +28,6 @@ Widget::Widget(QWidget *parent) : QWidget(parent),
     ui->stackedWidget->setCurrentWidget(ui->LoginPage);
     //qDebug() << &idmap_widget << endl;
     ui->MapLabel->initializMyLabel(&idmap_widget);
-    ui->MapSimulate->initialize(&citygraph_widget, &traveller_widget);
 }
 
 Widget::~Widget()
@@ -199,7 +198,7 @@ void Widget::on_SimulationPageButton_released() // 开始模拟
         QMessageBox::warning(this, "Warning!", "请先预定路程", QMessageBox::Ok);
         return;
     }
-    simulator.initialize(ui->dayLCDdiaplay, ui->hourLCDdisplay, ui->MapSimulate);
+    simulator.initialize(ui->dayLCDdiaplay, ui->hourLCDdisplay, ui->MapSimulate, &citygraph_widget, &traveller_widget);
     ui->stackedWidget->setCurrentWidget(ui->SimulatePage);
 }
 

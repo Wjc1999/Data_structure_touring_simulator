@@ -8,11 +8,12 @@ Simulator::Simulator(QObject *parent) : QObject(parent)
 }
 
 
-void Simulator::initialize(QLCDNumber* lcd1, QLCDNumber* lcd2, MyMap* map)
+void Simulator::initialize(QLCDNumber* lcd1, QLCDNumber* lcd2, MyMap* map, CityGraph *cg, Traveller *t)
 {
     day_LCD_ = lcd1;
     hour_LCD_ = lcd2;
     map_ = map;
+    map_->initialize(cg, t);
     timer_.setInterval(display_interval_);
     connect(&timer_, SIGNAL(timeout()), this, SLOT(onTimerOut()));
 

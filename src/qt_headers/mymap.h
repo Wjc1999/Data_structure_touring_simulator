@@ -10,7 +10,7 @@ class MyMap : public QLabel
     Q_OBJECT
 public:
     Traveller* traveller_;
-    const Path traveller_path_;
+    Path traveller_path_;
     CityGraph* citygraph_;
     explicit MyMap(QWidget *parent = nullptr);
     void initialize(CityGraph *cg, Traveller *traveller);

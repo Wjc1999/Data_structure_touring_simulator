@@ -9,7 +9,7 @@ void MyMap::initialize(CityGraph *cg, Traveller *t)
 {
     traveller_ = t;
     citygraph_ = cg;
-    //traveller_path_ = traveller_->get_path();
+    traveller_path_ = traveller_->get_path();
     initialize_citymap_pos();
 
     plane_image_ = new QLabel(this);
@@ -30,6 +30,8 @@ void MyMap::initialize(CityGraph *cg, Traveller *t)
     train_image_->setScaledContents(true);
     train_image_->resize(66,66);
     train_image_->hide();
+
+
 }
 
 void MyMap::reset()
@@ -40,6 +42,41 @@ void MyMap::reset()
 void MyMap::update()
 {
     //traveller_->UpdateState(citygraph_, new Time());
+}
+
+void MyMap::initialize_image()
+{
+    PathNode first_node;
+    if(traveller_->get_position()==-1)first_node = traveller_path_.GetNode(0);
+    else first_node = traveller_path_.GetNode(traveller_->get_position());
+
+    Trans_id type = citygraph_->GetRoute(first_node.former_city, first_node.current_city, first_node.kth_way).transport_type;
+    int first_x = city_pos_[first_node.former_city].first - 33;
+    int first_y = city_pos_[first_node.former_city].second - 55;
+    switch (type) {
+    case 0:
+        car_image_->show();
+        train_image_->hide();
+        plane_image_->hide();
+        first_x -= 33;
+        first_y -= 55;
+        car_image_->move(first_x, first_y);
+        break;
+    case 1:
+        train_image_->show();
+        car_image_->hide();
+        plane_image_->hide();
+        train_image_->move(first_x, first_y);
+        break;
+    case 2:
+        plane_image_->show();
+        train_image_->hide();
+        car_image_->hide();
+        plane_image_->move(first_x, first_y);
+        break;
+    default:
+        break;
+    }
 }
 
 void MyMap::initialize_citymap_pos()

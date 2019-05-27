@@ -14,7 +14,7 @@ class Simulator : public QObject
 
 public:
     explicit Simulator(QObject *parent = nullptr);
-    void initialize(QLCDNumber* lcd1, QLCDNumber* lcd2, MyMap* map);
+    void initialize(QLCDNumber* lcd1, QLCDNumber* lcd2, MyMap* map, CityGraph *cg, Traveller *t);
     void start();
     void stop();
     void continuing();
