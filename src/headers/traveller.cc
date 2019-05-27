@@ -19,7 +19,6 @@
 #include "traveller.h"
 #include "user_type.h"
 #include "path.h"
-//#include "io.h"
 #include "time_format.h"
 #include "city_graph.h"
 #include "log.h"
@@ -29,6 +28,30 @@ extern int call_counter_time;
 extern int call_counter_money;
 extern int depth_counter;
 #endif // TEST_GET_PATH
+
+static constexpr int SaveLines = 8;
+const std::string save_path = "../data/traveller_data.txt";
+const std::string name_path = "../data/namelist.txt";
+static constexpr int kMaxInt = INT32_MAX; // 0x7fffffff
+
+struct Traveller::DFSLeastMoneyParWarp
+{
+    int temp_price;
+    int path_price;
+    bool *isMeet;
+    int current;
+    int depth;
+    int min_price;
+};
+
+struct Traveller::DFSLeastTimeParWarp
+{
+    Time t;
+    City_id current;
+    bool *isMeet;
+    int depth;
+    std::vector<City_id> temp;
+};
 
 void Traveller::DFSLeastMoney(const std::vector<std::vector<int>> &price_matrix, std::vector<int> &path, std::vector<int> &temp_path, DFSLeastMoneyParWarp &par_warp)
 {
@@ -722,25 +745,6 @@ void Traveller::PrintPlan() const
 {
     std::for_each(travelling_plan_.begin(), travelling_plan_.end(), [](City_id city) { std::cout << city << " "; });
     std::cout << std::endl;
-}
-
-inline bool Traveller::set_strategy(int strategy)
-{
-    switch (strategy)
-    {
-    case 0:
-        strategy_ = LEAST_MONEY;
-        break;
-    case 1:
-        strategy_ = LEAST_TIME;
-        break;
-    case 2:
-        strategy_ = LIMIT_TIME;
-        break;
-    default:
-        return false;
-    }
-    return true;
 }
 
 #endif // SRC_TRAVELLER_CC

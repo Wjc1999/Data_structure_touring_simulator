@@ -10,45 +10,24 @@
 #include "user_type.h"
 #include "path.h"
 
-const int kMaxInt = INT32_MAX; // 0x7fffffff
-const std::string save_path = "../data/traveller_data.txt";
-const std::string name_path = "../data/namelist.txt";
-const int SaveLines = 8;
-
 class CityGraph;
-
-struct DFSLeastMoneyParWarp
-{
-    int temp_price;
-    int path_price;
-    bool *isMeet;
-    int current;
-    int depth;
-    int min_price;
-};
-
-struct DFSLeastTimeParWarp
-{
-    Time t;
-    City_id current;
-    bool *isMeet;
-    int depth;
-    std::vector<City_id> temp;
-};
+extern const std::string save_path;
+extern const std::string name_path;
 
 class Traveller // 旅行者
 {
+    struct DFSLeastMoneyParWarp;
+    struct DFSLeastTimeParWarp;
+
 public:
     Traveller() = default;
-    Traveller(std::string id) : id_(id) {}
+    Traveller(const std::string &id) : id_(id) {}
 
     // 显示旅客id
-    void PrintID() const { std::cout << id_ << std::endl; }
     const std::string &get_ID() const { return id_; }
-    void set_id(std::string name) { id_ = name; }
+    void set_id(const std::string &name) { id_ = name; }
 
     // 打印旅客路径
-    void ShowPath() const { touring_path_.Show(); }
     const Path &get_path() const { return touring_path_; }
 
     // 为旅客计划一条路径
@@ -70,12 +49,12 @@ public:
 
     const std::vector<City_id> &get_plan() const { return travelling_plan_; }
 
+    void set_plan(std::vector<City_id> &&plan) { travelling_plan_ = std::move(plan); }
     void set_plan(const std::vector<City_id> &plan) { travelling_plan_ = plan; }
-    void set_plan(std::initializer_list<City_id> il) { travelling_plan_ = std::vector<City_id>(il); }
+    void set_plan(const std::initializer_list<City_id> &il) { travelling_plan_ = std::vector<City_id>(il); }
 
     // 保存当前旅客信息
     bool SaveData() const;
-
     bool LoadData(int cnt, const CityGraph &graph);
 
     void append_plan(City_id city) { travelling_plan_.push_back(city); }
@@ -90,13 +69,13 @@ public:
     TravellerState get_state() const { return state_; }
 
     void set_strategy(Strategy strategy) { strategy_ = strategy; }
-    bool set_strategy(int strategy);
+    bool set_strategy(int strategy) { strategy_ = static_cast<Strategy>(strategy); }
 
     void set_init_time(const Time &t) { init_time_ = t; }
     const Time &get_init_time() const { return init_time_; }
 
 private:
-    std::string id_ = "";                  // 旅客id
+    std::string id_;                       // 旅客id
     TravellerState state_ = STAY;          // 旅客当前状态 *
     Strategy strategy_ = LEAST_MONEY;      // 旅行策略
     std::vector<City_id> travelling_plan_; // 旅行计划 <起点>, <中继点>... , <终点>
