@@ -21,14 +21,14 @@ public:
     void reset();
 
 private:
-    QLCDNumber* day_LCD_;
-    QLCDNumber* hour_LCD_;
-    MyMap* map_;
+    QLCDNumber *day_LCD_;
+    QLCDNumber *hour_LCD_;
+    MyMap *map_;
     QTimer timer_;
     bool is_start_ = false;
     int display_day_;
     int display_hour_;
-    int display_interval_ = 100;
+    int display_interval_ = 1000;
 
 public slots:
     void onTimerOut();

@@ -1,6 +1,8 @@
 ﻿#ifndef SRC_IO_CC
 #define SRC_IO_CC
 
+#pragma execution_character_set("utf-8")
+
 #include <cctype>
 #include <iostream>
 #include <limits>
@@ -54,36 +56,36 @@ int Welcome(Traveller &traveller)
         if (option == 'S' || option == 's')
         {
             std::cout << "请输入您想注册的账号：";
-            std::string accout_name;
-            getline(std::cin, accout_name);
+            std::string account_name;
+            getline(std::cin, account_name);
             std::cin.clear();
 
-            while (!IsValidName(accout_name))
+            while (!IsValidName(account_name))
             {
                 ErrorMsg("非法的用户名，请重新输入：");
-                getline(std::cin, accout_name);
+                getline(std::cin, account_name);
                 std::cin.clear();
             }
 
-            while (AccountCheck(accout_name) != -1)
+            while (AccountCheck(account_name) != -1)
             {
                 std::cout << "该账号已被注册，请重新输入：";
-                getline(std::cin, accout_name);
+                getline(std::cin, account_name);
                 std::cin.clear();
 
-                while (!IsValidName(accout_name))
+                while (!IsValidName(account_name))
                 {
                     ErrorMsg("非法的用户名，请重新输入：");
-                    getline(std::cin, accout_name);
+                    getline(std::cin, account_name);
                     std::cin.clear();
                 }
             }
-            if (AddAccount(accout_name))
-                Log::LogWrite(std::string("注册账号") + accout_name);
+            if (AddAccount(account_name))
+                Log::LogWrite(std::string("注册账号") + account_name);
             else
-                Log::LogWrite(std::string("注册账号") + accout_name + "失败");
-            traveller.set_id(accout_name);
-            std::cout << "您已注册账号：" << accout_name << std::endl;
+                Log::LogWrite(std::string("注册账号") + account_name + "失败");
+            traveller.set_id(account_name);
+            std::cout << "您已注册账号：" << account_name << std::endl;
             return -1;
         }
         else if (option == 'l' || option == 'L')
@@ -92,18 +94,18 @@ int Welcome(Traveller &traveller)
             PrintNameList();
 
             std::cout << "请输入您的账号：";
-            std::string accout_name;
-            getline(std::cin, accout_name);
+            std::string account_name;
+            getline(std::cin, account_name);
             std::cin.clear();
 
-            while (!IsValidName(accout_name))
+            while (!IsValidName(account_name))
             {
                 ErrorMsg("非法的用户名,请重新输入");
-                getline(std::cin, accout_name);
+                getline(std::cin, account_name);
                 std::cin.clear();
             }
 
-            while (AccountCheck(accout_name) == -1)
+            while (AccountCheck(account_name) == -1)
             {
                 std::string option_str;
                 char option;
@@ -122,26 +124,26 @@ int Welcome(Traveller &traveller)
                 }
                 if (option == 'Y' || option == 'y')
                 {
-                    AddAccount(accout_name);
-                    traveller.set_id(accout_name);
+                    AddAccount(account_name);
+                    traveller.set_id(account_name);
                     return -1;
                 }
                 else if (option == 'N' || option == 'n')
                 {
                     std::cout << "请重新输入您的账号：";
-                    getline(std::cin, accout_name);
+                    getline(std::cin, account_name);
                     std::cin.clear();
 
-                    while (!IsValidName(accout_name))
+                    while (!IsValidName(account_name))
                     {
                         ErrorMsg("非法的用户名，请重新输入：");
-                        getline(std::cin, accout_name);
+                        getline(std::cin, account_name);
                         std::cin.clear();
                     }
                 }
             }
-            Log::LogWrite(std::string("登陆账号") + accout_name);
-            return AccountCheck(accout_name);
+            Log::LogWrite(std::string("登陆账号") + account_name);
+            return AccountCheck(account_name);
         }
         else if (option == 'q' || option == 'Q')
         {
@@ -399,7 +401,7 @@ bool AddAccount(const Traveller &traveller)
     {
         Log::LogWrite("添加账号失败");
     }
-    
+
     return add_success;
 }
 
@@ -637,7 +639,7 @@ double getSimulateSpeed()
             std::cout << "输入有误，请重新输入" << std::endl;
         }
     }
-    Log::LogWrite(std::string("设置模拟时间间隔为: ") + std::to_string(sleep_sec) + "秒" );
+    Log::LogWrite(std::string("设置模拟时间间隔为: ") + std::to_string(sleep_sec) + "秒");
     return 1000 * sleep_sec;
 }
 

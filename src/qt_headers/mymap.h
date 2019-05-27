@@ -9,17 +9,18 @@ class MyMap : public QLabel
 {
     Q_OBJECT
 public:
-    Traveller* traveller_;
-    Path traveller_path_;
-    CityGraph* citygraph_;
+    Traveller *traveller_;
+    const Path traveller_path_;
+    CityGraph *citygraph_;
     explicit MyMap(QWidget *parent = nullptr);
     void initialize(CityGraph *cg, Traveller *traveller);
     void update();
     void reset();
+
 private:
-    QLabel* plane_image_;
-    QLabel* car_image_;
-    QLabel* train_image_;
+    QLabel *plane_image_;
+    QLabel *car_image_;
+    QLabel *train_image_;
     std::pair<int, int> city_pos_[31];
 
     void initialize_citymap_pos();

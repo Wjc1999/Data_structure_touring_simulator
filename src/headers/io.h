@@ -1,6 +1,8 @@
 ﻿#ifndef SRC_IO_H
 #define SRC_IO_H
 
+#pragma execution_character_set("utf-8")
+
 #include <vector>
 #include <string>
 #include <iostream>

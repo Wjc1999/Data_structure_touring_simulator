@@ -4,7 +4,6 @@
 
 Simulator::Simulator(QObject *parent) : QObject(parent)
 {
-
 }
 
 
@@ -17,7 +16,7 @@ void Simulator::initialize(QLCDNumber* lcd1, QLCDNumber* lcd2, MyMap* map, CityG
     timer_.setInterval(display_interval_);
     connect(&timer_, SIGNAL(timeout()), this, SLOT(onTimerOut()));
 
-    display_day_ = map->traveller_->get_init_time().GetDay()+1;
+    display_day_ = map->traveller_->get_init_time().GetDay() + 1;
     display_hour_ = map->traveller_->get_init_time().GetHour();
     day_LCD_->display(display_day_);
     hour_LCD_->display(display_hour_);
@@ -25,14 +24,15 @@ void Simulator::initialize(QLCDNumber* lcd1, QLCDNumber* lcd2, MyMap* map, CityG
 
 void Simulator::onTimerOut()
 {
-    hour_LCD_->display((++display_hour_)%24);
-    if(display_hour_%24==0)day_LCD_->display(++display_day_);
+    hour_LCD_->display((++display_hour_) % 24);
+    if (display_hour_ % 24 == 0)
+        day_LCD_->display(++display_day_);
     map_->update();
 }
 
 void Simulator::start()
 {
-    if(!is_start_)
+    if (!is_start_)
     {
         timer_.start();
         is_start_ = true;
@@ -41,20 +41,20 @@ void Simulator::start()
 
 void Simulator::stop()
 {
-    if(is_start_)
+    if (is_start_)
         timer_.stop();
 }
 
 void Simulator::continuing()
 {
-    if(is_start_)
+    if (is_start_)
         timer_.start();
 }
 
 void Simulator::reset()
 {
     timer_.stop();
-    display_day_ = map_->traveller_->get_init_time().GetDay();
+    display_day_ = map_->traveller_->get_init_time().GetDay() + 1;
     display_hour_ = map_->traveller_->get_init_time().GetHour();
     day_LCD_->display(display_day_);
     hour_LCD_->display(display_hour_);

@@ -1,6 +1,8 @@
 ﻿#ifndef SAVE_AT_EXIT_CC
 #define SAVE_AT_EXIT_CC
 
+#pragma execution_character_set("utf-8")
+
 #include <cstdlib>
 #include <csignal>
 #include <string>
@@ -23,7 +25,8 @@ void SaveDataOnExit()
 {
     if (!saved && p_traveller != nullptr /*&& (*p_traveller).get_position() != -2*/)
     {
-        std::cout << "saving..." << "\t";
+        std::cout << "saving..."
+                  << "\t";
         if ((*p_traveller).SaveData())
         {
             saved = true;
