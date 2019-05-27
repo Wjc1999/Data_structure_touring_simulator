@@ -1,4 +1,6 @@
 #include "mymap.h"
+#include <cmath>
+#include <windows.h>
 
 MyMap::MyMap(QWidget *parent) : QLabel(parent)
 {
@@ -30,48 +32,117 @@ void MyMap::initialize(CityGraph *cg, Traveller *t)
     train_image_->resize(66, 66);
     train_image_->hide();
 
+    //timer_flush_.setInterval(20);
+    //connect(&timer_flush_, SIGNAL(timeout()), this, SLOT(flushImage()));
+}
 
+void MyMap::ready_for_simulate()
+{
+    traveller_->InitState(*citygraph_);
+    traveller_path_ = traveller_->get_path();
+    reset_image();
+    is_finished_ = false;
 }
 
 void MyMap::reset()
 {
     traveller_->InitState(*citygraph_);
+    reset_image();
+    is_finished_ = false;
 }
+
+/*void MyMap::flushImage()
+{
+    qDebug() << flush_cnt_;
+    flush_cnt_++;
+    int new_x = round(origin_x_ + flush_cnt_/50*single_distance_*cos_);
+    int new_y = round(origin_y_ + flush_cnt_/50*single_distance_*sin_);
+    current_image_->move(new_x, new_y);
+    if(flush_cnt_==50)
+    {
+        timer_flush_.stop();
+        flush_cnt_ = 0;
+    }
+}*/
 
 void MyMap::update()
 {
-    //traveller_->UpdateState(citygraph_, new Time());
+    if(traveller_->get_state() == OFF)
+    {
+        if(traveller_->get_position() != last_pathnode_)
+        {
+            last_pathnode_ = traveller_->get_position();
+            //reset_image();
+            PathNode temp = traveller_path_.GetNode(last_pathnode_);
+            std::pair <int, int> cityA = city_pos_[temp.former_city];
+            std::pair <int, int> cityB = city_pos_[temp.current_city];
+
+            distance_ = sqrt(pow(cityB.first-cityA.first, 2) + pow(cityB.second-cityA.second, 2));
+            sin_ = (cityB.second - cityA.second)/distance_;
+            cos_ = (cityB.first - cityA.first)/distance_;
+            hours_overall_in_single_path = traveller_->get_left_hour();
+            single_distance_ = distance_/hours_overall_in_single_path;
+            origin_x_ = current_image_->x();
+            origin_y_ = current_image_->y();
+        }
+        //int new_x = round(1/hours_overall_in_single_path*distance_*cos_);
+        //int new_y = round(1/hours_overall_in_single_path*distance_*sin_);
+        //timer_flush_.start();
+        //current_image_->move(current_image_->x()+new_x, current_image_->y()+new_y);
+    }
+    if(traveller_->get_position()==-1)
+    {
+        //reset_image();
+        is_finished_ = true;
+    }
+    traveller_->UpdateState(*citygraph_);
 }
 
-void MyMap::initialize_image()
+void MyMap::reset_image()
 {
     PathNode first_node;
-    if(traveller_->get_position()==-1)first_node = traveller_path_.GetNode(0);
+    if(traveller_->get_position()==-1)first_node = traveller_path_.GetNode(traveller_path_.GetLen()-1);
     else first_node = traveller_path_.GetNode(traveller_->get_position());
 
     Trans_id type = citygraph_->GetRoute(first_node.former_city, first_node.current_city, first_node.kth_way).transport_type;
-    int first_x = city_pos_[first_node.former_city].first - 33;
-    int first_y = city_pos_[first_node.former_city].second - 55;
+    int first_x, first_y;
+    if(traveller_->get_position()==-1)
+    {
+        first_x = city_pos_[first_node.current_city].first;
+        first_y = city_pos_[first_node.current_city].second;
+    }
+    else
+    {
+        first_x = city_pos_[first_node.former_city].first;
+        first_y = city_pos_[first_node.former_city].second;
+    }
     switch (type) {
-    case 0:
+    case 0://car
         car_image_->show();
         train_image_->hide();
         plane_image_->hide();
         first_x -= 33;
-        first_y -= 55;
+        first_y -= 44;
         car_image_->move(first_x, first_y);
+        current_image_ = car_image_;
         break;
-    case 1:
+    case 1://train
         train_image_->show();
         car_image_->hide();
         plane_image_->hide();
+        first_x -= 33;
+        first_y -= 50;
         train_image_->move(first_x, first_y);
+        current_image_ = train_image_;
         break;
-    case 2:
+    case 2://plane
         plane_image_->show();
         train_image_->hide();
         car_image_->hide();
+        first_x -= 33;
+        first_y -= 44;
         plane_image_->move(first_x, first_y);
+        current_image_ = plane_image_;
         break;
     default:
         break;

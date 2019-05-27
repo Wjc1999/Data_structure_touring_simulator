@@ -29,6 +29,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent),
     ui->stackedWidget->setCurrentWidget(ui->LoginPage);
     //qDebug() << &idmap_widget << endl;
     ui->MapLabel->initializMyLabel(&idmap_widget);
+    simulator.initialize(ui->dayLCDdiaplay, ui->hourLCDdisplay, ui->MapSimulate, &citygraph_widget, &traveller_widget);
 }
 
 Widget::~Widget()
@@ -214,7 +215,7 @@ void Widget::on_SimulationPageButton_released() // 开始模拟
         return;
     }
     Log::LogWrite("用户选择模拟旅行");
-    simulator.initialize(ui->dayLCDdiaplay, ui->hourLCDdisplay, ui->MapSimulate, &citygraph_widget, &traveller_widget);
+    simulator.ready_for_simulate();
     ui->stackedWidget->setCurrentWidget(ui->SimulatePage);
 }
 

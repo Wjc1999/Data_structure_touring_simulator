@@ -137,7 +137,7 @@ void Simulate(Traveller &traveller, const CityGraph &city_graph, const IDMap &id
         ReadConsoleOutput(hStdOut, data_buffer, coordBufSize, coordBufCoord, &srctRect);
         WriteConsoleOutput(hOutBuf, data_buffer, coordBufSize, coordBufCoord, &srctRect);
 
-        traveller.UpdateState(city_graph, current_time);
+        traveller.UpdateState(city_graph);
         current_time.add_time(1);
         auto duration = Timer(count++);
         // std::cout << duration.count();

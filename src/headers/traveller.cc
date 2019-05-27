@@ -643,7 +643,7 @@ bool Traveller::LoadData(int cnt, const CityGraph &graph)
     return false;
 }
 
-void Traveller::UpdateState(const CityGraph &graph, Time now)
+void Traveller::UpdateState(const CityGraph &graph)
 {
     if (state_ == OFF)
     {
