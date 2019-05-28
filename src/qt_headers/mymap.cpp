@@ -51,6 +51,7 @@ void MyMap::move(int path_node, int hour_left, int cnt)
     {
         last_pathnode_ = path_node;
         reset_image(last_pathnode_);
+
         PathNode temp = traveller_path_.GetNode(path_node);
         std::pair<int, int> cityA = city_pos_[temp.former_city];
         std::pair<int, int> cityB = city_pos_[temp.current_city];

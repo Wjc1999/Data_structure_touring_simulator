@@ -59,7 +59,7 @@ void Traveller::DFSLeastMoney(const std::vector<std::vector<int>> &price_matrix,
 {
 #ifdef TEST_GET_PATH
 	call_counter_money++;
-#endif                                               // TEST_GET_PATH
+#endif												 // TEST_GET_PATH
 	if (par_warp.current == price_matrix.size() - 1) // 到达终点时判断递归深度(路径长度)是否符合要求
 	{
 		if (par_warp.depth == price_matrix.size() - 1) // 路径长度是否符合要求
@@ -161,7 +161,7 @@ Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> 
 	{
 		std::vector<std::vector<Path>> path_matrix;
 		std::vector<std::vector<int>> price_matrix;
-		std::atomic<int> min_price = kMaxInt;
+		int min_price = kMaxInt;
 		Path res;
 		int path_price = GetPathLeastMoney(graph, plan).GetTotalPrice();
 
@@ -215,7 +215,7 @@ Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> 
 		std::vector<int> res_path;
 
 		int thread_path_price = 0;
-		bool *is_meet = new bool[sz] {};
+		bool *is_meet = new bool[sz]{};
 		is_meet[0] = true;
 		DFSLeastMoneyParWarp par_warp = {0, path_price, is_meet, 0, 0, min_price};
 		std::vector<int> temp_path;
@@ -268,7 +268,7 @@ Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> 
 Path Traveller::GetPathLeastMoney(const CityGraph &graph, const std::vector<City_id> &plan)
 {
 	City_id destination; // 终点
-	City_id origin;      // 起点
+	City_id origin;		 // 起点
 	Path path;
 	std::priority_queue<std::pair<int /*k*/, int /*price*/>> find_min_cost;
 	std::pair<int, int> temp_pair;
@@ -278,7 +278,7 @@ Path Traveller::GetPathLeastMoney(const CityGraph &graph, const std::vector<City
 	{
 		destination = plan[cnt];
 		origin = plan[cnt - 1];
-		int cost[kCityNum];      // 记录最小花费
+		int cost[kCityNum];		 // 记录最小花费
 		int preway[kCityNum][2]; // preway[cityA][] = {CityB, transport_index_from_CityB_to_CityA}
 		bool is_count[kCityNum] = {false};
 
@@ -367,7 +367,7 @@ Path Traveller::GetPathLeastMoney(const CityGraph &graph, const std::vector<City
 Path Traveller::GetPathLeastTime(const CityGraph &graph, const std::vector<City_id> &plan, Time now)
 {
 	City_id destination; // 终点
-	City_id origin;      // 起点
+	City_id origin;		 // 起点
 	Path path;
 	std::vector<int> find_min_cost;
 	Time temp_now;
@@ -376,7 +376,7 @@ Path Traveller::GetPathLeastTime(const CityGraph &graph, const std::vector<City_
 	{
 		destination = plan[cnt];
 		origin = plan[cnt - 1];
-		int cost[kCityNum];      // 记录最小花费
+		int cost[kCityNum];		 // 记录最小花费
 		int preway[kCityNum][2]; // preway[cityA][] = {CityB, transport_index_from_CityB_to_CityA}
 		// Time pretime[kCityNum];
 		bool is_count[kCityNum] = {false};
@@ -386,11 +386,11 @@ Path Traveller::GetPathLeastTime(const CityGraph &graph, const std::vector<City_
 			if (j == origin)
 				continue;
 			for (int k = 0; k < graph.Getsize(origin, j); k++) // 将所有从origin到j的价格push到find_min_cost中
-			{                                                  //*****和LM的区别*****
+			{												   //*****和LM的区别*****
 				const Route &route = graph.GetRoute(origin, j, k);
 				temp_now.set_hour(now.GetHour());
 				int wait_hour = route.start_time.hour_diff(temp_now); // 计算从当前时间开始需要等待的时间
-				if (wait_hour < 0)                                    // 如果发车时间在now之前,想要搭乘这辆车就必须等候到其发车
+				if (wait_hour < 0)									  // 如果发车时间在now之前,想要搭乘这辆车就必须等候到其发车
 					wait_hour += 24;
 				int route_hour = route.end_time.hour_diff(route.start_time); // 路途上的时间
 				find_min_cost.push_back(wait_hour + route_hour);
@@ -450,7 +450,7 @@ Path Traveller::GetPathLeastTime(const CityGraph &graph, const std::vector<City_
 				{ //*****和LM的区别*****
 					const Route &route = graph.GetRoute(city_temp, j, k);
 					int wait_hour = route.start_time.hour_diff(temp_now); // 计算从当前时间开始需要等待的时间
-					if (wait_hour < 0)                                    // 如果发车时间在now之前,想要搭乘这辆车就必须等候到其发车
+					if (wait_hour < 0)									  // 如果发车时间在now之前,想要搭乘这辆车就必须等候到其发车
 						wait_hour += 24;
 					int route_hour = route.end_time.hour_diff(route.start_time); // 路途上的时间
 					find_min_cost.push_back(wait_hour + route_hour);
@@ -529,7 +529,7 @@ bool Traveller::SaveData() const
 	int start_index = 0;
 
 	std::ofstream create_name_flie(name_path, std::ofstream::app); // 防止文件不存在导致的打开失败
-	std::ofstream create_file(save_path, std::ofstream::app);      // 防止文件不存在导致的打开失败
+	std::ofstream create_file(save_path, std::ofstream::app);	  // 防止文件不存在导致的打开失败
 
 	std::ifstream name_fis(name_path);
 	if (name_fis)
@@ -617,8 +617,8 @@ bool Traveller::LoadData(int cnt, const CityGraph &graph)
 		for (int i = 0; i < cnt * SaveLines; i++)
 			getline(in_stream, temp); // 找位置
 
-		in_stream >> id_;           // 第一行
-		in_stream >> state_temp;    // 第二行
+		in_stream >> id_;			// 第一行
+		in_stream >> state_temp;	// 第二行
 		in_stream >> strategy_temp; // 第三行
 
 		if (state_temp == 0)
@@ -754,31 +754,33 @@ void Traveller::PrintPlan() const
 
 int Traveller::get_off_hours(const CityGraph &graph, int cnt)
 {
-    int i = touring_path_.GetNode(cnt).former_city;
-    int j = touring_path_.GetNode(cnt).current_city;
-    int k = touring_path_.GetNode(cnt).kth_way;
-    Route route = graph.GetRoute(i, j, k);
-    return route.end_time.hour_diff(route.start_time);
+	int i = touring_path_.GetNode(cnt).former_city;
+	int j = touring_path_.GetNode(cnt).current_city;
+	int k = touring_path_.GetNode(cnt).kth_way;
+	Route route = graph.GetRoute(i, j, k);
+	return route.end_time.hour_diff(route.start_time);
 }
 
 int Traveller::get_stay_hours(const CityGraph &graph, int cnt)
 {
-    PathNode node = touring_path_.GetNode(cnt);
-    Route route = graph.GetRoute(node.former_city, node.current_city, node.kth_way);
-    int diff_hour;
-    if(cnt==0)
-    {
-        diff_hour = route.start_time.hour_diff(init_time_);
-    }
-    else
-    {
-        PathNode nodebefore = touring_path_.GetNode(cnt-1);
-        Route preroute = graph.GetRoute(nodebefore.former_city, nodebefore.current_city, nodebefore.kth_way);
-        diff_hour = route.start_time.hour_diff(Time(1, preroute.end_time.GetHour()));
-    }
-    if (diff_hour < 0)
-        diff_hour += 24;
-    return diff_hour;
+	PathNode node = touring_path_.GetNode(cnt);
+	Route route = graph.GetRoute(node.former_city, node.current_city, node.kth_way);
+	int diff_hour;
+	if (cnt == 0)
+	{
+		diff_hour = route.start_time.hour_diff(init_time_);
+	}
+	else
+	{
+		PathNode nodebefore = touring_path_.GetNode(cnt - 1);
+		Route preroute = graph.GetRoute(nodebefore.former_city, nodebefore.current_city, nodebefore.kth_way);
+		diff_hour = route.start_time.hour_diff(Time(1, preroute.end_time.GetHour()));
+	}
+	if (diff_hour < 0)
+		diff_hour += 24;
+	else if (diff_hour > 23)
+		diff_hour -= 24;
+	return diff_hour;
 }
 
 #endif // SRC_TRAVELLER_CC

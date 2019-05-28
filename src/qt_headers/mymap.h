@@ -21,6 +21,7 @@ public:
     void reset();
     void set_flush_per_hour(int i) { flush_per_hour_ = i; }
     void move(int path_node, int hour_left, int cnt);
+    void reset_image(int i);
     QLabel *current_image_; //当前操作的图
 
 private:
@@ -38,7 +39,7 @@ private:
     int origin_y_;
 
     void initialize_citymap_pos();
-    void reset_image(int i);
+
     void move_image(int x, int y);
 signals:
 

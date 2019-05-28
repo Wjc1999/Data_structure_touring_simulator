@@ -35,7 +35,7 @@ private:
     int display_hour_;
     int simulate_onehour_s_ = 1;   //模拟中1小时对应多少秒，可更改
     int display_interval_ms_ = 20; //间隔多少刷新，可更改
-    int flush_per_hour_ = 50;      //1小时中刷新多少次，simulate_onehour_s_/display_interval_ms_;
+    int flush_per_hour_ = 25;      //1小时中刷新多少次，simulate_onehour_s_/display_interval_ms_;
 
     int flush_count_ = 0; //当前刷新了几次
     int current_pathnode_ = 0;

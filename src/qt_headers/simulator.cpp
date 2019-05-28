@@ -12,7 +12,7 @@ void Simulator::initialize(QLCDNumber *lcd1, QLCDNumber *lcd2, MyMap *map, CityG
     hour_LCD_ = lcd2;
     map_ = map;
     map_->initialize(cg, t);
-    set_flush_rate(1, 20); //这里可以改速率
+    set_flush_rate(1, 10); //这里可以改速率
     timer_.setInterval(display_interval_ms_);
     connect(&timer_, SIGNAL(timeout()), this, SLOT(onTimerOut()));
 }
@@ -47,25 +47,39 @@ void Simulator::onTimerOut()
         hour_LCD_->display((++display_hour_) % 24);
         if (display_hour_ % 24 == 0)
             day_LCD_->display(++display_day_);
+
         if (hour_left_ == 0)
         {
-            current_pathnode_++;
             flush_count_ = 0;
-            if (current_pathnode_ == map_->traveller_path_.GetLen())
-            {
-                timer_.stop();
-                is_finished = true;
-                return;
-            }
 
-            hour_left_ = map_->traveller_->get_stay_hours(*(map_->citygraph_), current_pathnode_);
-            if (hour_left_ == 0)
+            if (current_states_ == STAY)
             {
-                current_states_ = OFF;
                 hour_left_ = map_->traveller_->get_off_hours(*(map_->citygraph_), current_pathnode_);
+                current_states_ = OFF;
             }
             else
-                current_states_ = STAY;
+            {
+                current_pathnode_++;
+
+                if (current_pathnode_ == map_->traveller_path_.GetLen())
+                {
+                    timer_.stop();
+                    is_finished = true;
+                    return;
+                }
+                else
+                    map_->reset_image(current_pathnode_);
+
+                hour_left_ = map_->traveller_->get_stay_hours(*(map_->citygraph_), current_pathnode_);
+                if (hour_left_ == 0)
+                {
+                    hour_left_ = map_->traveller_->get_off_hours(*(map_->citygraph_), current_pathnode_);
+                    current_states_ = OFF;
+                }
+                else
+                    current_states_ = STAY;
+
+            }
         }
     }
 }
