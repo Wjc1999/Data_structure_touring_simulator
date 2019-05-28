@@ -29,7 +29,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent),
     ui->stackedWidget->setCurrentWidget(ui->LoginPage);
     //qDebug() << &idmap_widget << endl;
     ui->MapLabel->initializMyLabel(&idmap_widget);
-    simulator.initialize(ui->dayLCDdiaplay, ui->hourLCDdisplay, ui->MapSimulate, &citygraph_widget, &traveller_widget);
+    simulator.initialize(ui->dayLCDdiaplay, ui->hourLCDdisplay, ui->MapSimulate, ui->pos_label, &idmap_widget, &citygraph_widget, &traveller_widget);
 }
 
 Widget::~Widget()

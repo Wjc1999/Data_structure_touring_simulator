@@ -7,6 +7,8 @@
 #include <QObject>
 #include <QLCDNumber>
 #include <QMessageBox>
+#include <QLabel>
+#include <../src/headers/id_map.h>
 
 class Simulator : public QObject
 {
@@ -15,7 +17,7 @@ class Simulator : public QObject
 public:
     explicit Simulator(QObject *parent = nullptr);
 
-    void initialize(QLCDNumber *lcd1, QLCDNumber *lcd2, MyMap *map, CityGraph *cg, Traveller *t);
+    void initialize(QLCDNumber *lcd1, QLCDNumber *lcd2, MyMap *map, QLabel *label, IDMap *idmap, CityGraph *cg, Traveller *t);
     void ready_for_simulate();
     void set_flush_rate(int simulate_onehour_s_, int display_interval_ms_);
     void start();
@@ -28,9 +30,11 @@ private:
     QLCDNumber *hour_LCD_;
     MyMap *map_;
     QTimer timer_;
+    QLabel *display_label_;
+    IDMap *idmap_;
 
     bool is_start_ = false;
-    bool is_finished = false;
+    bool is_finished_ = false;
     int display_day_;
     int display_hour_;
     int simulate_onehour_s_ = 1;   //模拟中1小时对应多少秒，可更改
