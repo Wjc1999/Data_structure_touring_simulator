@@ -50,7 +50,7 @@ std::string RouteShow(const Time &leave, const Time &arrive)
     return temp;
 }
 
-inline Time &Time::add_time(const int hour, const int day /* = 0 */)
+Time &Time::add_time(const int hour, const int day /* = 0 */)
 {
     day_ += day;
     hour_ += hour;
@@ -63,7 +63,7 @@ inline Time &Time::add_time(const int hour, const int day /* = 0 */)
     return *this;
 }
 
-inline Time Time::time_diff(const Time &t) const
+Time Time::time_diff(const Time &t) const
 {
     int temp_hour = hour_ - t.hour_, temp_day = day_ - t.day_;
     if (temp_hour < 0)
