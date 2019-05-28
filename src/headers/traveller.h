@@ -83,6 +83,8 @@ public:
     int get_position() const { return position_pathnode_; }
 
     int get_left_hour() const { return next_city_hour_left_; }
+    int get_off_hours(const CityGraph &graph, int cnt);
+    int get_stay_hours(const CityGraph &graph, int cnt);
 
     void InitState(const CityGraph &graph);
 
