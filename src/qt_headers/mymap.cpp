@@ -59,11 +59,12 @@ void MyMap::move(int path_node, int hour_left, int cnt)
         hours_overall_in_single_path = hour_left;
         origin_x_ = cityA.first;
         origin_y_ = cityA.second;
-        speed_ = (double)(cityB.first - cityA.first) / (hours_overall_in_single_path * flush_per_hour_);
+        speed_x_ = (double)(cityB.first - cityA.first) / (hours_overall_in_single_path * flush_per_hour_);
+        speed_y_ = speed_x_ * tan_;
         //qDebug() << speed_;
     }
-    int offset_x = speed_ * cnt;
-    int offset_y = offset_x * tan_;
+    int offset_x = speed_x_ * cnt;
+    int offset_y = speed_y_ * cnt;
     move_image(origin_x_ + offset_x, origin_y_ + offset_y);
 }
 

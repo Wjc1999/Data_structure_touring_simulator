@@ -34,7 +34,8 @@ private:
     int last_pathnode_ = -1;          //记录上个点
     int hours_overall_in_single_path; //记录小时总数
     double tan_;
-    double speed_;
+    double speed_x_;
+    double speed_y_;
     int origin_x_;
     int origin_y_;
 
