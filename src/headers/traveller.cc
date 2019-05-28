@@ -671,7 +671,7 @@ bool Traveller::LoadData(int cnt, const CityGraph &graph)
 	return false;
 }
 
-void Traveller::UpdateState(const CityGraph &graph, Time now)
+void Traveller::UpdateState(const CityGraph &graph)
 {
 	if (state_ == OFF)
 	{
@@ -750,6 +750,35 @@ void Traveller::PrintPlan() const
 {
 	std::for_each(travelling_plan_.begin(), travelling_plan_.end(), [](City_id city) { std::cout << city << " "; });
 	std::cout << std::endl;
+}
+
+int Traveller::get_off_hours(const CityGraph &graph, int cnt)
+{
+    int i = touring_path_.GetNode(cnt).former_city;
+    int j = touring_path_.GetNode(cnt).current_city;
+    int k = touring_path_.GetNode(cnt).kth_way;
+    Route route = graph.GetRoute(i, j, k);
+    return route.end_time.hour_diff(route.start_time);
+}
+
+int Traveller::get_stay_hours(const CityGraph &graph, int cnt)
+{
+    PathNode node = touring_path_.GetNode(cnt);
+    Route route = graph.GetRoute(node.former_city, node.current_city, node.kth_way);
+    int diff_hour;
+    if(cnt==0)
+    {
+        diff_hour = route.start_time.hour_diff(init_time_);
+    }
+    else
+    {
+        PathNode nodebefore = touring_path_.GetNode(cnt-1);
+        Route preroute = graph.GetRoute(nodebefore.former_city, nodebefore.current_city, nodebefore.kth_way);
+        diff_hour = route.start_time.hour_diff(Time(1, preroute.end_time.GetHour()));
+    }
+    if (diff_hour < 0)
+        diff_hour += 24;
+    return diff_hour;
 }
 
 #endif // SRC_TRAVELLER_CC
