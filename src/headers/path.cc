@@ -24,20 +24,23 @@ void Path::Remove(const CityGraph &graph)
     total_price_ = 0;
     total_timecost_.Reset();
   }
+
   if (!len_)
     return;
-
   else
   {
     len_--;
+
     end_city_ = cities_.at(len_ - 1).current_city;
     int i = cities_.at(len_).former_city;
     int j = cities_.at(len_).current_city;
     int k = cities_.at(len_).kth_way;
+
     total_price_ -= graph.GetRoute(i, j, k).price;
     int fi = cities_.at(len_ - 1).former_city;
     int fj = cities_.at(len_ - 1).current_city;
     int fk = cities_.at(len_ - 1).kth_way;
+
     Time temp = graph.GetRoute(i, j, k).end_time.time_diff(graph.GetRoute(fi, fj, fk).end_time);
     total_timecost_.minus_time(temp);
     cities_.pop_back();
@@ -51,10 +54,12 @@ void Path::Append(const CityGraph &graph, City_id i, City_id j, int k, int back)
   if (!(len_++))
     end_city_ = j;
   start_city_ = i;
+
   if (back)
     cities_.push_back(temp);
   else
     cities_.push_front(temp);
+
   total_price_ += graph.GetRoute(i, j, k).price;
   // total_timecost_.add_time(graph.GetRoute(i, j, k).end_time.time_diff(graph.GetRoute(i, j, k).start_time));  // 只计算路途上的时间,不计等候时间
 }
@@ -65,6 +70,7 @@ void Path::Append(const CityGraph &graph, City_id i, City_id j, int k, Time tota
   if (!(len_++))
     end_city_ = j;
   start_city_ = i;
+  
   cities_.push_front(temp);
   total_price_ += graph.GetRoute(i, j, k).price;
   // assert(graph.GetRoute(i, j, k).end_time.time_diff(wait_time).GetDay() >= 0);

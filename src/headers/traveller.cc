@@ -688,9 +688,9 @@ void Traveller::UpdateState(const CityGraph &graph)
 				position_pathnode_++;
 				PathNode node = touring_path_.GetNode(position_pathnode_);
 				Route route = graph.GetRoute(node.former_city, node.current_city, node.kth_way);
-				PathNode nodebefore = touring_path_.GetNode(position_pathnode_ - 1);
-				Route preroute = graph.GetRoute(nodebefore.former_city, nodebefore.current_city, nodebefore.kth_way);
-				int diff_hour = route.start_time.hour_diff(Time(1, preroute.end_time.GetHour()));
+				PathNode node_before = touring_path_.GetNode(position_pathnode_ - 1);
+				Route pre_route = graph.GetRoute(node_before.former_city, node_before.current_city, node_before.kth_way);
+				int diff_hour = route.start_time.hour_diff(Time(1, pre_route.end_time.GetHour()));
 				if (diff_hour < 0)
 					diff_hour += 24;
 				if (!diff_hour)
@@ -772,9 +772,9 @@ int Traveller::get_stay_hours(const CityGraph &graph, int cnt)
 	}
 	else
 	{
-		PathNode nodebefore = touring_path_.GetNode(cnt - 1);
-		Route preroute = graph.GetRoute(nodebefore.former_city, nodebefore.current_city, nodebefore.kth_way);
-		diff_hour = route.start_time.hour_diff(Time(1, preroute.end_time.GetHour()));
+		PathNode node_before = touring_path_.GetNode(cnt - 1);
+		Route pre_route = graph.GetRoute(node_before.former_city, node_before.current_city, node_before.kth_way);
+		diff_hour = route.start_time.hour_diff(Time(1, pre_route.end_time.GetHour()));
 	}
 	if (diff_hour < 0)
 		diff_hour += 24;
