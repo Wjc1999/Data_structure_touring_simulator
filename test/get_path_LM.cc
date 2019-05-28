@@ -1,4 +1,3 @@
-
 #ifndef TEST_GET_PATH
 #define TEST_GET_PATH
 #define TEST_TIME
@@ -12,7 +11,7 @@ int depth_counter = 0;
 int main(){
     CityGraph graph;
     Traveller me;
-    vector<City_id> plan{12, 4, 23, 14, 8, 1, 27};
+    vector<City_id> plan{1, 30};
     // plan.push_back(12);
     // plan.push_back(4);
     // plan.push_back(23);
@@ -39,13 +38,13 @@ int main(){
     cout << call_counter_money << endl;
     cout << depth_counter << endl;
 
-    // path = me.get_path(graph, plan, LEAST_TIME);
-    // path.FixTotalTime(graph);
-    // path.Show();
-    // cout << path.GetTotalPrice() << '\t' << endl;
-    // path.GetTotalTime().print() << endl;
-    // cout << call_counter_T << endl;
-    // cout << depth_counter_T << endl;
+    path = me.GetPath(graph, plan, LEAST_TIME);
+    path.FixTotalTime(graph);
+    path.Show();
+    cout << path.GetTotalPrice() << '\t' << endl;
+    path.GetTotalTime().print() << endl;
+    cout << call_counter_time << endl;
+    cout << depth_counter << endl;
     return 0;
 }
 
