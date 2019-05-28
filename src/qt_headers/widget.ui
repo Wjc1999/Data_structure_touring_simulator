@@ -1366,8 +1366,8 @@
       </layout>
      </widget>
      <widget class="QWidget" name="SimulatePage">
-      <layout class="QHBoxLayout" name="horizontalLayout_11">
-       <item>
+      <layout class="QGridLayout" name="gridLayout_11">
+       <item row="0" column="0">
         <widget class="MyMap" name="MapSimulate">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -1407,17 +1407,11 @@
          </property>
         </widget>
        </item>
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,1,2,0">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
+       <item row="0" column="1">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
           <widget class="QWidget" name="LCD_widget" native="true">
-           <layout class="QGridLayout" name="gridLayout_9" columnstretch="1,3">
-            <property name="verticalSpacing">
-             <number>30</number>
-            </property>
+           <layout class="QGridLayout" name="gridLayout_9">
             <item row="0" column="0">
              <widget class="QLabel" name="day_lcd_label">
               <property name="text">
@@ -1441,6 +1435,16 @@
               </property>
              </widget>
             </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="hour_lcd_label">
+              <property name="text">
+               <string>小时</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
             <item row="1" column="1">
              <widget class="QLCDNumber" name="hourLCDdisplay">
               <property name="digitCount">
@@ -1454,28 +1458,78 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="hour_lcd_label">
-              <property name="text">
-               <string>小时</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
            </layout>
           </widget>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,1,0,1">
-           <property name="spacing">
-            <number>10</number>
-           </property>
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <item alignment="Qt::AlignHCenter">
+          <layout class="QHBoxLayout" name="horizontalLayout_10">
+           <item>
+            <widget class="QLabel" name="currentpos_label">
+             <property name="text">
+              <string>当前位置:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="pos_label">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout_10">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="StartButton">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="text">
+              <string>开始</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="StopButton">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>暂停</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="ContinueButton">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>继续</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
             <widget class="QPushButton" name="ResetButton">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -1494,48 +1548,6 @@
              </property>
             </widget>
            </item>
-           <item alignment="Qt::AlignHCenter">
-            <widget class="QPushButton" name="StopButton">
-             <property name="maximumSize">
-              <size>
-               <width>100</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>暂停</string>
-             </property>
-            </widget>
-           </item>
-           <item alignment="Qt::AlignHCenter">
-            <widget class="QPushButton" name="ContinueButton">
-             <property name="maximumSize">
-              <size>
-               <width>100</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>继续</string>
-             </property>
-            </widget>
-           </item>
-           <item alignment="Qt::AlignHCenter">
-            <widget class="QPushButton" name="StartButton">
-             <property name="maximumSize">
-              <size>
-               <width>100</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-             <property name="text">
-              <string>开始</string>
-             </property>
-            </widget>
-           </item>
           </layout>
          </item>
          <item>
@@ -1543,15 +1555,18 @@
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
            <property name="sizeHint" stdset="0">
             <size>
              <width>20</width>
-             <height>108</height>
+             <height>150</height>
             </size>
            </property>
           </spacer>
          </item>
-         <item alignment="Qt::AlignHCenter">
+         <item>
           <widget class="QPushButton" name="SimuToMenuButton">
            <property name="enabled">
             <bool>true</bool>
