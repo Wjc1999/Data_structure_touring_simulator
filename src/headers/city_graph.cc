@@ -56,7 +56,6 @@ bool CityGraph::LoadCityGraph(const std::string &name, int type)
         //temp.price = data[4];
         city_[data[0]][data[1]].push_back(temp);
       }
-      return true;
     }
     else
     { //火车的数据
@@ -72,7 +71,6 @@ bool CityGraph::LoadCityGraph(const std::string &name, int type)
         Route temp = {type, 0, Time(data[2]), Time(data[3]), data[6]};
         city_[data[0]][data[1]].push_back(temp);
       }
-      return true;
     }
   }
   else
@@ -80,6 +78,7 @@ bool CityGraph::LoadCityGraph(const std::string &name, int type)
     Log::LogWrite(std::string("无法打开 ") + name);
     return false;
   }
+  return true;
 }
 
 void CityGraph::Show(City_id former_city, City_id current_city, int k) const

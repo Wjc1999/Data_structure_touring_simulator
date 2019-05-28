@@ -22,6 +22,7 @@ class Traveller // 旅行者
 public:
     Traveller() = default;
     Traveller(const std::string &id) : id_(id) {}
+    Traveller(std::string &&id) : id_(std::move(id)) {}
 
     // 显示旅客id
     const std::string &get_ID() const { return id_; }
