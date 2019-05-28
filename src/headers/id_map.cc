@@ -11,6 +11,13 @@
 #include "user_type.h"
 #include "log.h"
 
+const std::string IDMap::paths_[3]= {
+        // 文件路径
+        "..//data//city_id.txt",            // city_id_path
+        "..//data//train_seat_type_id.txt", // train_seat_type_path
+        "..//data//transport_type_id.txt"   // trans_id_path_
+    };
+
 IDMap::IDMap()
 {
   std::ifstream in_id_file;
@@ -33,7 +40,7 @@ IDMap::IDMap()
     {
       Log::LogWrite(paths_[i] + " 加载失败");
       in_id_file.clear();
-      // error handler
+      return;
     }
   }
   // std::cout << "Loaded IDs" << std::endl;

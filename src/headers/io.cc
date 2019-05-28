@@ -47,7 +47,7 @@ int Welcome(Traveller &traveller)
     std::cout << "注册：S           登陆：L" << std::endl;
     std::string option_str;
     char option;
-    while (1)
+    while (true)
     {
         std::getline(std::cin, option_str);
         std::cin.clear();
@@ -241,14 +241,14 @@ std::vector<City_id> Request(const IDMap &im)
     }
 
     std::cout << "请输入您的当前城市(输入数字)：";
-    while (1)
+    while (true)
     {
         if (!std::cin.good())
             std::cin.clear();
         std::cin >> id;
         if (std::cin.good())
         {
-            while (1)
+            while (true)
             {
                 try
                 {
@@ -278,14 +278,14 @@ std::vector<City_id> Request(const IDMap &im)
 
     Log::LogWrite(std::string("起始城市:") + im.GetCityStr(temp_id));
     std::cout << "请输入您希望经过的城市(以q结束)：";
-    while (1)
+    while (true)
     {
         if (!std::cin.good())
             std::cin.clear();
         std::cin >> id;
         if (std::cin.good())
         {
-            while (1)
+            while (true)
             {
                 try
                 {
@@ -334,14 +334,14 @@ std::vector<City_id> Request(const IDMap &im)
         std::cout << std::endl;
     }
     std::cout << "请输入您的目的城市：";
-    while (1)
+    while (true)
     {
         if (!std::cin.good())
             std::cin.clear();
         std::cin >> id;
         if (std::cin.good())
         {
-            while (1)
+            while (true)
             {
                 try
                 {
@@ -427,7 +427,7 @@ bool PathConfirm()
     std::string option_str;
     char option;
     std::cout << "是否选择该条路线?[Y/N]" << std::endl;
-    while (1)
+    while (true)
     {
         std::getline(std::cin, option_str);
 
@@ -460,7 +460,7 @@ Strategy InputStrategy(Time &init_time, Time &limit_time)
               << "1. 最少金钱" << std::endl
               << "2. 最少时间" << std::endl
               << "3. 限定时间内最少金钱" << std::endl;
-    while (1)
+    while (true)
     {
         std::getline(std::cin, strategy_str);
         std::cin.clear();

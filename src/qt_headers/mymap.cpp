@@ -47,50 +47,54 @@ void MyMap::reset()
 
 void MyMap::move(int path_node, int hour_left, int cnt)
 {
-    if(last_pathnode_ != path_node)
+    if (last_pathnode_ != path_node)
     {
         last_pathnode_ = path_node;
         reset_image(last_pathnode_);
+
         PathNode temp = traveller_path_.GetNode(path_node);
-        std::pair <int, int> cityA = city_pos_[temp.former_city];
-        std::pair <int, int> cityB = city_pos_[temp.current_city];
-        tan_ = (double)(cityB.second - cityA.second)/(cityB.first - cityA.first);
+        std::pair<int, int> cityA = city_pos_[temp.former_city];
+        std::pair<int, int> cityB = city_pos_[temp.current_city];
+        tan_ = (double)(cityB.second - cityA.second) / (cityB.first - cityA.first);
         hours_overall_in_single_path = hour_left;
         origin_x_ = cityA.first;
         origin_y_ = cityA.second;
-        speed_ = (double)(cityB.first - cityA.first)/(hours_overall_in_single_path*flush_per_hour_);
+        speed_x_ = (double)(cityB.first - cityA.first) / (hours_overall_in_single_path * flush_per_hour_);
+        speed_y_ = speed_x_ * tan_;
         //qDebug() << speed_;
     }
-    int offset_x = speed_ * cnt;
-    int offset_y = offset_x * tan_;
+    int offset_x = speed_x_ * cnt;
+    int offset_y = speed_y_ * cnt;
     move_image(origin_x_ + offset_x, origin_y_ + offset_y);
 }
 
 void MyMap::move_image(int x, int y)
 {
-    if(current_image_ == train_image_)
+    if (current_image_ == train_image_)
     {
-        train_image_->move(x-33, y-50);
+        train_image_->move(x - 33, y - 50);
     }
-    else if(current_image_ == car_image_)
+    else if (current_image_ == car_image_)
     {
-        car_image_->move(x-33, y-44);
+        car_image_->move(x - 33, y - 44);
     }
-    else if(current_image_ == plane_image_)
+    else if (current_image_ == plane_image_)
     {
-        plane_image_->move(x-33, y-44);
+        plane_image_->move(x - 33, y - 44);
     }
 }
 
 void MyMap::reset_image(int i)
 {
     PathNode first_node;
-    if(i == -1)first_node = traveller_path_.GetNode(traveller_path_.GetLen()-1);
-    else first_node = traveller_path_.GetNode(i);
+    if (i == -1)
+        first_node = traveller_path_.GetNode(traveller_path_.GetLen() - 1);
+    else
+        first_node = traveller_path_.GetNode(i);
 
     Trans_id type = citygraph_->GetRoute(first_node.former_city, first_node.current_city, first_node.kth_way).transport_type;
     int first_x, first_y;
-    if(i == -1)
+    if (i == -1)
     {
         first_x = city_pos_[first_node.current_city].first;
         first_y = city_pos_[first_node.current_city].second;
@@ -100,8 +104,9 @@ void MyMap::reset_image(int i)
         first_x = city_pos_[first_node.former_city].first;
         first_y = city_pos_[first_node.former_city].second;
     }
-    switch (type) {
-    case 0://car
+    switch (type)
+    {
+    case 0: //car
         car_image_->show();
         train_image_->hide();
         plane_image_->hide();
@@ -110,7 +115,7 @@ void MyMap::reset_image(int i)
         car_image_->move(first_x, first_y);
         current_image_ = car_image_;
         break;
-    case 1://train
+    case 1: //train
         train_image_->show();
         car_image_->hide();
         plane_image_->hide();
@@ -119,7 +124,7 @@ void MyMap::reset_image(int i)
         train_image_->move(first_x, first_y);
         current_image_ = train_image_;
         break;
-    case 2://plane
+    case 2: //plane
         plane_image_->show();
         train_image_->hide();
         car_image_->hide();

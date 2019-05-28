@@ -36,10 +36,11 @@ bool CityGraph::LoadCityGraph(const std::string &name, int type)
 { //将飞机火车汽车数据加载到程序中
   Log::LogWrite(std::string("加载 ") + name + " 中");
   std::ifstream stream(name);
-  if (type != 1)
-  { //飞机汽车的数据
-    if (stream.is_open())
-    {
+
+  if (stream)
+  {
+    if (type != 1)
+    { //飞机汽车的数据
       int data[5];
       while (!stream.eof())
       {
@@ -55,16 +56,9 @@ bool CityGraph::LoadCityGraph(const std::string &name, int type)
         //temp.price = data[4];
         city_[data[0]][data[1]].push_back(temp);
       }
-      stream.close();
-      return true;
     }
-    stream.close();
-    return false;
-  }
-  else
-  { //火车的数据
-    if (stream.is_open())
-    {
+    else
+    { //火车的数据
       int data[7];
       std::string line;
       while (getline(stream, line))
@@ -77,12 +71,14 @@ bool CityGraph::LoadCityGraph(const std::string &name, int type)
         Route temp = {type, 0, Time(data[2]), Time(data[3]), data[6]};
         city_[data[0]][data[1]].push_back(temp);
       }
-      stream.close();
-      return true;
     }
-    stream.close();
+  }
+  else
+  {
+    Log::LogWrite(std::string("无法打开 ") + name);
     return false;
   }
+  return true;
 }
 
 void CityGraph::Show(City_id former_city, City_id current_city, int k) const

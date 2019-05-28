@@ -26,7 +26,7 @@ public:
 
     // 添加一个PathNode到路径首个元素之前,并且更改总价与总时间、长度
     void Append(const CityGraph &graph, City_id former_city, City_id current_city, int k, int back = 0); //通过ijk添加一个节点
-    void Append(const CityGraph &graph, City_id i, City_id j, int k, Time wait_time);
+    void Append(const CityGraph &graph, City_id former_city, City_id current_city, int k, Time wait_time);
     Path &Append(const Path &path);
     void Remove(const CityGraph &graph);
     // 固定路径的出发与结束点
