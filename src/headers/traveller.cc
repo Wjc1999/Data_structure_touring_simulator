@@ -301,7 +301,8 @@ Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> 
 					temp[i] = {0, i + 1};
 					temp_paths[i] = GetPathLeastTime(graph, {plan[0], plan[i + 1]}, start_time);
 					temp_paths[i].FixTotalTime(graph, start_time);
-					par_warps[i] = {temp_paths->GetTotalTime(), i + 1, &total_hour, is_meet[i], 1, &temp[i]};
+					Time s_time = temp_paths[i].GetTotalTime();
+					par_warps[i] = {s_time.add_time(start_time), i + 1, &total_hour, is_meet[i], 1, &temp[i]};
 					t_vec.emplace_back(&Traveller::DFSLeastTime, this, std::ref(graph), std::ref(plan), std::ref(res_paths[i]), std::ref(temp_paths[i]), std::ref(par_warps[i]));
 				}
 
