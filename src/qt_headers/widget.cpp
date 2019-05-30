@@ -188,6 +188,7 @@ void Widget::on_SimulationPageButton_released() // 开始模拟
 void Widget::on_LogoutButton_released()
 {
     traveller_widget.SaveData();
+    traveller_widget = Traveller();
     Log::LogWrite("注销账户");
     ui->stackedWidget->setCurrentWidget(ui->LoginPage);
     ui->lineEdit->setText("");
