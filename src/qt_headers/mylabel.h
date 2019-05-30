@@ -25,6 +25,7 @@ public:
     bool has_destination(){if(where_mark_destination != -1)return true;else return false;}
 protected:
     void mousePressEvent(QMouseEvent *ev);
+    void mouseMoveEvent(QMouseEvent *ev);
     void resizeEvent(QResizeEvent *ev);
 signals:
 

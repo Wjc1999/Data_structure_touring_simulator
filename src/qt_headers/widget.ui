@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1148</width>
+    <width>1166</width>
     <height>694</height>
    </rect>
   </property>
@@ -218,7 +218,7 @@ border-color: rgb(255, 255, 255);
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(235, 235, 235)</string>
+          <string notr="true">background-color: rgb(235, 235, 235)qconicalgradient(cx:0.5, cy:0.5, angle:0, stop:0 rgba(255, 255, 255, 255), stop:0.373979 rgba(255, 255, 255, 255), stop:0.373991 rgba(33, 30, 255, 255), stop:0.624018 rgba(33, 30, 255, 255), stop:0.624043 rgba(255, 0, 0, 255), stop:1 rgba(255, 0, 0, 255))</string>
          </property>
          <property name="text">
           <string>登    陆</string>
@@ -1522,6 +1522,12 @@ border-color: rgb(0, 0, 0);</string>
            <width>1920</width>
            <height>1080</height>
           </size>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="toolTipDuration">
+          <number>2000</number>
          </property>
          <property name="autoFillBackground">
           <bool>false</bool>
