@@ -39,7 +39,8 @@ static constexpr int kMaxInt = INT32_MAX; // 0x7fffffff
 struct Traveller::DFSLeastMoneyParWarp
 {
 	int temp_price;
-	int path_price;
+	int *path_price;
+	int *t_price;
 	bool *isMeet;
 	int current;
 	int depth;
@@ -50,9 +51,10 @@ struct Traveller::DFSLeastTimeParWarp
 {
 	Time t;
 	City_id current;
+	int *total_hour;
 	bool *isMeet;
 	int depth;
-	std::vector<City_id> temp;
+	std::vector<City_id> *temp;
 };
 
 void Traveller::DFSLeastMoney(const std::vector<std::vector<int>> &price_matrix, std::vector<int> &path, std::vector<int> &temp_path, DFSLeastMoneyParWarp &par_warp)
@@ -65,7 +67,8 @@ void Traveller::DFSLeastMoney(const std::vector<std::vector<int>> &price_matrix,
 		if (par_warp.depth == price_matrix.size() - 1) // 路径长度是否符合要求
 		{
 			path = temp_path;
-			par_warp.path_price = par_warp.temp_price;
+			*par_warp.path_price = par_warp.temp_price;
+			*par_warp.t_price = par_warp.temp_price;
 			return;
 #ifdef TEST_GET_PATH
 			depth_counter++;
@@ -86,7 +89,7 @@ void Traveller::DFSLeastMoney(const std::vector<std::vector<int>> &price_matrix,
 		{
 			par_warp.isMeet[i] = true;
 			par_warp.temp_price += price_matrix[par_warp.current][i];
-			if (par_warp.temp_price <= par_warp.path_price && (price_matrix.size() - 2 - par_warp.depth) * par_warp.min_price <= par_warp.path_price - par_warp.temp_price)
+			if (par_warp.temp_price <= *par_warp.path_price && (price_matrix.size() - 2 - par_warp.depth) * par_warp.min_price <= *par_warp.path_price - par_warp.temp_price)
 			{
 				temp_path.push_back(i);
 				par_warp.depth++, par_warp.current = i; // 进入更深层的递归时保存当前的状态
@@ -110,6 +113,8 @@ void Traveller::DFSLeastTime(const CityGraph &graph, const std::vector<City_id> 
 		if (par_warp.depth == plan.size() - 1)
 		{
 			path = temp_path;
+			*par_warp.total_hour = path.GetTotalTime().to_hour();
+			return;
 #ifdef TEST_GET_PATH
 			depth_counter++;
 			std::cout << path.GetTotalTime().to_hour() << std::endl;
@@ -130,13 +135,13 @@ void Traveller::DFSLeastTime(const CityGraph &graph, const std::vector<City_id> 
 			continue;
 		else
 		{
-			par_warp.temp[0] = plan[par_warp.current], par_warp.temp[1] = plan[i];
+			(*par_warp.temp)[0] = plan[par_warp.current], (*par_warp.temp)[1] = plan[i];
 			temp_time = init_time_;
 			path_save = temp_path;
 			par_warp.isMeet[i] = true;
-			temp_path.Append(GetPathLeastTime(graph, par_warp.temp, par_warp.t));
+			temp_path.Append(GetPathLeastTime(graph, *par_warp.temp, par_warp.t));
 			temp_path.FixTotalTime(graph, init_time_);
-			if (temp_path.GetTotalTime().to_hour() < path.GetTotalTime().to_hour() && plan.size() - 1 - par_warp.depth < path.GetTotalTime().to_hour() - temp_path.GetTotalTime().to_hour())
+			if (temp_path.GetTotalTime().to_hour() < *par_warp.total_hour && plan.size() - 1 - par_warp.depth < *par_warp.total_hour - temp_path.GetTotalTime().to_hour())
 			{
 				par_warp.current = i, par_warp.depth++, par_warp.t = temp_time.add_time(temp_path.GetTotalTime());
 				DFSLeastTime(graph, plan, path, temp_path, par_warp);
@@ -167,9 +172,10 @@ Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> 
 
 		std::vector<City_id> temp_plan_shuffle = plan;
 		int temp_path_price;
+
 		std::random_device rd;
 		std::mt19937 g(rd());
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			shuffle(temp_plan_shuffle.begin() + 1, temp_plan_shuffle.end() - 1, g);
 			temp_path_price = GetPathLeastMoney(graph, temp_plan_shuffle).GetTotalPrice();
@@ -210,20 +216,58 @@ Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> 
 					min_price = price_matrix[i].back();
 			}
 		}
+
 		delete[] min_price_is_meet;
 
 		std::vector<int> res_path;
+		if (sz > 10)
+		{
+			int t_price[31]{};
+			bool(*is_meet)[31] = new bool[sz][31]();
+			int temp_prices[31]{};
+			DFSLeastMoneyParWarp par_warps[31]{};
+			std::vector<int> res_paths[31]{};
+			std::vector<int> temp_paths[31]{};
 
-		int thread_path_price = 0;
-		bool *is_meet = new bool[sz]{};
-		is_meet[0] = true;
-		DFSLeastMoneyParWarp par_warp = {0, path_price, is_meet, 0, 0, min_price};
-		std::vector<int> temp_path;
-		res_path.push_back(0);
-		temp_path.push_back(0);
-		DFSLeastMoney(price_matrix, res_path, temp_path, par_warp);
-		delete[] is_meet;
+			std::vector<std::thread> t_vec;
+			for (int i = 0; i < sz - 2; i++)
+			{
+				temp_prices[i] = price_matrix[0][i + 1];
+				is_meet[i][0] = true, is_meet[i][i + 1] = true;
+				par_warps[i] = {temp_prices[i], &path_price, &t_price[i], is_meet[i], i + 1, 1, min_price};
+				temp_paths[i].push_back(0);
+				temp_paths[i].push_back(i + 1);
+				t_vec.emplace_back(&Traveller::DFSLeastMoney, this, std::ref(price_matrix), std::ref(res_paths[i]), std::ref(temp_paths[i]), std::ref(par_warps[i]));
+			}
 
+			for (auto &t : t_vec)
+			{
+				t.join();
+			}
+
+			int temp_p = kMaxInt;
+			for (int i = 0; i < sz - 2; i++)
+			{
+				if (path_price == t_price[i])
+				{
+					res_path = res_paths[i];
+					break;
+				}
+			}
+			delete[] is_meet;
+		}
+		else
+		{
+			int t_price;
+			bool *is_meet = new bool[sz] {};
+			is_meet[0] = true;
+			DFSLeastMoneyParWarp par_warp = {0, &path_price, &t_price,is_meet, 0, 0, min_price};
+			std::vector<int> temp_path;
+			res_path.push_back(0);
+			temp_path.push_back(0);
+			DFSLeastMoney(price_matrix, res_path, temp_path, par_warp);
+			delete[] is_meet;
+		}
 		for (int i = 1; i != res_path.size(); ++i)
 			res.Append(path_matrix[res_path[i - 1]][res_path[i]]);
 		res.FixTotalTime(graph, start_time);
@@ -241,15 +285,53 @@ Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> 
 			return res;
 		else
 		{
-			bool *isMeet = new bool[sz]();
-			Path temp_path;
-			std::vector<City_id> buf;
-			for (i = 1; i != sz; ++i)
-				isMeet[i] = false;
-			std::vector<City_id> temp{0, 1};
-			DFSLeastTimeParWarp par_warp = {start_time, 0, isMeet, 0, temp};
-			DFSLeastTime(graph, plan, res, temp_path, par_warp);
-			delete[] isMeet;
+			if (sz > 2)
+			{
+				int total_hour = res.GetTotalTime().to_hour();
+				bool(*is_meet)[31] = new bool[sz][31]();
+				DFSLeastTimeParWarp par_warps[31]{};
+				Path res_paths[31];
+				Path temp_paths[31];
+				std::vector<std::thread> t_vec;
+				std::vector<City_id> temp[31];
+
+				for (int i = 0; i < sz - 2; i++)
+				{
+					is_meet[i][0] = true, is_meet[i][i + 1] = true;
+					temp[i] = {0, i + 1};
+					temp_paths[i] = GetPathLeastTime(graph, {plan[0], plan[i + 1]}, start_time);
+					temp_paths[i].FixTotalTime(graph, start_time);
+					par_warps[i] = {temp_paths->GetTotalTime(), i + 1, &total_hour, is_meet[i], 1, &temp[i]};
+					t_vec.emplace_back(&Traveller::DFSLeastTime, this, std::ref(graph), std::ref(plan), std::ref(res_paths[i]), std::ref(temp_paths[i]), std::ref(par_warps[i]));
+				}
+
+				for (auto &t : t_vec)
+				{
+					t.join();
+				}
+
+				for (int i = 0; i < sz - 2; i++)
+				{
+					if (total_hour == res_paths[i].GetTotalTime().to_hour())
+					{
+						res = res_paths[i];
+						break;
+					}
+				}
+
+				delete[] is_meet;
+			}
+			else
+			{
+				int total_hour = res.GetTotalTime().to_hour();
+				bool *isMeet = new bool[sz]();
+				Path temp_path;
+				isMeet[0] = true;
+				std::vector<City_id> temp{0, 1};
+				DFSLeastTimeParWarp par_warp = {start_time,  0, &total_hour, isMeet, 0, &temp};
+				DFSLeastTime(graph, plan, res, temp_path, par_warp);
+				delete[] isMeet;
+			}
 		}
 		return res;
 	}
