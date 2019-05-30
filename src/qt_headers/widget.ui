@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1138</width>
+    <width>1148</width>
     <height>694</height>
    </rect>
   </property>
@@ -30,46 +30,41 @@
        <bool>true</bool>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="2" column="3">
-        <widget class="QWidget" name="widget" native="true">
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QLineEdit" name="lineEdit">
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="maxLength">
-             <number>256</number>
-            </property>
-            <property name="clearButtonEnabled">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
+       <item row="1" column="1" colspan="2">
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QLabel" name="welcom_label">
+           <property name="text">
+            <string>欢迎使用</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit">
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="maxLength">
+            <number>256</number>
+           </property>
+           <property name="clearButtonEnabled">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="LogInButton">
+           <property name="text">
+            <string>登陆</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
-       <item row="3" column="3">
-        <widget class="QWidget" name="widget_2" native="true">
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <item>
-           <widget class="QPushButton" name="LogInButton">
-            <property name="text">
-             <string>登陆</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="SignUpButton">
-            <property name="text">
-             <string>注册</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="2" column="0">
+       <item row="1" column="0">
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -82,7 +77,7 @@
          </property>
         </spacer>
        </item>
-       <item row="2" column="4">
+       <item row="1" column="3">
         <spacer name="horizontalSpacer_2">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -95,33 +90,7 @@
          </property>
         </spacer>
        </item>
-       <item row="3" column="0">
-        <spacer name="horizontalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>328</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="3" column="4">
-        <spacer name="horizontalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>328</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="4" column="3">
+       <item row="2" column="2">
         <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -134,7 +103,7 @@
          </property>
         </spacer>
        </item>
-       <item row="0" column="3">
+       <item row="0" column="1">
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -147,27 +116,10 @@
          </property>
         </spacer>
        </item>
-       <item row="1" column="3">
-        <widget class="QLabel" name="welcom_label">
-         <property name="text">
-          <string>欢迎使用</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="MainPage">
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="1">
-        <widget class="QPushButton" name="OrderPageButton">
-         <property name="text">
-          <string>预定行程</string>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="0">
         <spacer name="horizontalSpacer_5">
          <property name="orientation">
@@ -181,12 +133,38 @@
          </property>
         </spacer>
        </item>
-       <item row="2" column="1">
-        <widget class="QPushButton" name="QueryPathPageButton">
+       <item row="0" column="1">
+        <widget class="QPushButton" name="OrderPageButton">
          <property name="text">
-          <string>路线查询</string>
+          <string>预定行程</string>
          </property>
         </widget>
+       </item>
+       <item row="0" column="2">
+        <spacer name="horizontalSpacer_7">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="1" column="0">
+        <spacer name="horizontalSpacer_6">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
        <item row="1" column="1">
         <widget class="QPushButton" name="StatePageButton">
@@ -195,15 +173,8 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <widget class="QPushButton" name="SimulationPageButton">
-         <property name="text">
-          <string>模拟旅行</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <spacer name="horizontalSpacer_6">
+       <item row="1" column="2">
+        <spacer name="horizontalSpacer_8">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -228,47 +199,15 @@
          </property>
         </spacer>
        </item>
-       <item row="0" column="2">
-        <spacer name="horizontalSpacer_7">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+       <item row="2" column="1">
+        <widget class="QPushButton" name="QueryPathPageButton">
+         <property name="text">
+          <string>路线查询</string>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
+        </widget>
        </item>
        <item row="2" column="2">
         <spacer name="horizontalSpacer_10">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="3" column="2">
-        <spacer name="horizontalSpacer_12">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="1" column="2">
-        <spacer name="horizontalSpacer_8">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -293,7 +232,34 @@
          </property>
         </spacer>
        </item>
+       <item row="3" column="1">
+        <widget class="QPushButton" name="SimulationPageButton">
+         <property name="text">
+          <string>模拟旅行</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="2">
+        <spacer name="horizontalSpacer_12">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
        <item row="4" column="1">
+        <widget class="QPushButton" name="LogoutButton">
+         <property name="text">
+          <string>注销账号</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
         <widget class="QPushButton" name="ExitButton">
          <property name="text">
           <string>退出程序</string>
@@ -341,13 +307,29 @@
         </layout>
        </item>
        <item row="2" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,10,1,10">
+        <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,0,10,1,10">
          <item>
           <widget class="QLabel" name="state_target_city_label">
            <property name="text">
             <string>目的地:</string>
            </property>
           </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>37</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
          </item>
          <item>
           <widget class="QLabel" name="state_target_city_content">
