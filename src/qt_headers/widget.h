@@ -41,8 +41,6 @@ public:
 private slots:
   void on_LogInButton_released();
 
-  void on_SignUpButton_released();
-
   void on_OrderPageButton_released();
 
   void on_StatePageButton_released();
@@ -72,6 +70,8 @@ private slots:
   void on_ContinueButton_released();
 
   void on_ResetButton_released();
+
+  void on_LogoutButton_released();
 
 private:
   Ui::Widget *ui;

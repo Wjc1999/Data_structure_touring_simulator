@@ -82,40 +82,6 @@ void Widget::on_LogInButton_released() //登陆
     }
 }
 
-void Widget::on_SignUpButton_released() //注册
-{
-    QString account_name = ui->lineEdit->text();
-
-    if (!account_name.size())
-    {
-        QMessageBox::warning(this, "Warning!", "输入为空", QMessageBox::Ok);
-        return;
-    }
-    else if (!IsValidName(account_name.toStdString()))
-    {
-        QMessageBox::warning(this, "Warning!", "非法的用户名,请重新输入", QMessageBox::Ok);
-        return;
-    }
-
-    int account_check = AccountCheck(account_name.toStdString());
-
-    if (account_check != -1)
-    {
-        QMessageBox::warning(this, "Warning!", "该账号已被注册，请重新输入", QMessageBox::Ok);
-        return;
-    }
-    else
-    {
-        if (AddAccount(account_name.toStdString()))
-            Log::LogWrite(std::string("注册账号 ") + account_name.toStdString());
-        else
-            Log::LogWrite(std::string("注册账号 ") + account_name.toStdString() + " 失败");
-
-        traveller_widget.set_id(account_name.toStdString());
-        ui->stackedWidget->setCurrentWidget(ui->MainPage);
-    }
-}
-
 void Widget::on_OrderPageButton_released() // 预定行程
 {
     Log::LogWrite("用户选择预定行程");
@@ -217,6 +183,14 @@ void Widget::on_SimulationPageButton_released() // 开始模拟
     Log::LogWrite("用户选择模拟旅行");
     simulator.ready_for_simulate();
     ui->stackedWidget->setCurrentWidget(ui->SimulatePage);
+}
+
+void Widget::on_LogoutButton_released()
+{
+    traveller_widget.SaveData();
+    Log::LogWrite("注销账户");
+    ui->stackedWidget->setCurrentWidget(ui->LoginPage);
+    ui->lineEdit->setText("");
 }
 
 void Widget::on_StatePageToMenuButton_released() // 从状态页面回到主菜单
