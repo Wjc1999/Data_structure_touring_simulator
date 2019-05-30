@@ -285,7 +285,7 @@ Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> 
 			return res;
 		else
 		{
-			if (sz > 100)
+			if (sz > 2)
 			{
 				int total_hour = res.GetTotalTime().to_hour();
 				bool(*is_meet)[31] = new bool[sz][31]();
@@ -318,6 +318,8 @@ Path Traveller::SchedulePath(const CityGraph &graph, const std::vector<City_id> 
 						break;
 					}
 				}
+
+				delete[] is_meet;
 			}
 			else
 			{
