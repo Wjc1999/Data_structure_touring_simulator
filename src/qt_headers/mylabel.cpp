@@ -162,6 +162,21 @@ void MyLabel::initializMyLabel(IDMap *a)
     current_qsize_ = origin_qsize_ = this->size();
 
     rightbutton_menu = new QMenu(this);
+    rightbutton_menu->setStyleSheet(
+                "\
+                QMenu {\
+                \
+                background-color:rgb(240,240,240);\
+                border: 1px solid rgb(0,0,0);\
+                }\
+            QMenu::item {\
+                color: rgb(0,0,0);\
+                background-color:rgb(240,240,240);\
+                 }\
+            QMenu::item:selected { \
+                background-color:rgb(200,200,200);\
+                }\
+               ");
     QAction *add_origin = new QAction(rightbutton_menu);
     QAction *add_destination = new QAction(rightbutton_menu);
     QAction *add_transfer = new QAction(rightbutton_menu);

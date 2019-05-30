@@ -19,7 +19,10 @@
   <property name="whatsThis">
    <string>A Touring Simulation</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_5">
+  <property name="styleSheet">
+   <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="autoFillBackground">
@@ -27,82 +30,14 @@
      </property>
      <widget class="QWidget" name="LoginPage">
       <property name="autoFillBackground">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="1" column="1" colspan="2">
-        <layout class="QVBoxLayout" name="verticalLayout_4">
-         <item>
-          <widget class="QLabel" name="welcom_label">
-           <property name="text">
-            <string>欢迎使用</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="lineEdit">
-           <property name="autoFillBackground">
-            <bool>false</bool>
-           </property>
-           <property name="maxLength">
-            <number>256</number>
-           </property>
-           <property name="clearButtonEnabled">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="LogInButton">
-           <property name="text">
-            <string>登陆</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="1" column="0">
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>328</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="1" column="3">
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>328</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="2" column="2">
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>236</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255);
+border-color: rgb(255, 255, 255);
+</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_5" columnstretch="2,1,2">
        <item row="0" column="1">
         <spacer name="verticalSpacer">
          <property name="orientation">
@@ -111,7 +46,194 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>237</height>
+           <height>276</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="welcom_label">
+         <property name="font">
+          <font>
+           <family>Microsoft YaHei UI</family>
+           <pointsize>11</pointsize>
+           <weight>50</weight>
+           <italic>false</italic>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>欢迎使用</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>437</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="lineEdit">
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="maxLength">
+          <number>256</number>
+         </property>
+         <property name="clearButtonEnabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>437</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="3" column="1" alignment="Qt::AlignHCenter">
+        <widget class="QPushButton" name="LogInButton">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>100</height>
+          </size>
+         </property>
+         <property name="palette">
+          <palette>
+           <active>
+            <colorrole role="Button">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>235</red>
+               <green>235</green>
+               <blue>235</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="Base">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>235</red>
+               <green>235</green>
+               <blue>235</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="Window">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>235</red>
+               <green>235</green>
+               <blue>235</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </active>
+           <inactive>
+            <colorrole role="Button">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>235</red>
+               <green>235</green>
+               <blue>235</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="Base">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>235</red>
+               <green>235</green>
+               <blue>235</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="Window">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>235</red>
+               <green>235</green>
+               <blue>235</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </inactive>
+           <disabled>
+            <colorrole role="Button">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>235</red>
+               <green>235</green>
+               <blue>235</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="Base">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>235</red>
+               <green>235</green>
+               <blue>235</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="Window">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>235</red>
+               <green>235</green>
+               <blue>235</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </disabled>
+          </palette>
+         </property>
+         <property name="font">
+          <font>
+           <family>Microsoft YaHei UI</family>
+           <pointsize>11</pointsize>
+           <weight>50</weight>
+           <italic>false</italic>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(235, 235, 235)</string>
+         </property>
+         <property name="text">
+          <string>登    陆</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>278</height>
           </size>
          </property>
         </spacer>
@@ -119,7 +241,10 @@
       </layout>
      </widget>
      <widget class="QWidget" name="MainPage">
-      <layout class="QGridLayout" name="gridLayout_3">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_3" columnstretch="10,5,10">
        <item row="0" column="0">
         <spacer name="horizontalSpacer_5">
          <property name="orientation">
@@ -135,6 +260,15 @@
        </item>
        <item row="0" column="1">
         <widget class="QPushButton" name="OrderPageButton">
+         <property name="maximumSize">
+          <size>
+           <width>3000</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(235, 235, 235)</string>
+         </property>
          <property name="text">
           <string>预定行程</string>
          </property>
@@ -168,6 +302,15 @@
        </item>
        <item row="1" column="1">
         <widget class="QPushButton" name="StatePageButton">
+         <property name="maximumSize">
+          <size>
+           <width>3000</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(235, 235, 235)</string>
+         </property>
          <property name="text">
           <string>状态查询</string>
          </property>
@@ -201,6 +344,15 @@
        </item>
        <item row="2" column="1">
         <widget class="QPushButton" name="QueryPathPageButton">
+         <property name="maximumSize">
+          <size>
+           <width>3000</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(235, 235, 235)</string>
+         </property>
          <property name="text">
           <string>路线查询</string>
          </property>
@@ -234,6 +386,15 @@
        </item>
        <item row="3" column="1">
         <widget class="QPushButton" name="SimulationPageButton">
+         <property name="maximumSize">
+          <size>
+           <width>3000</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(235, 235, 235)</string>
+         </property>
          <property name="text">
           <string>模拟旅行</string>
          </property>
@@ -254,6 +415,15 @@
        </item>
        <item row="4" column="1">
         <widget class="QPushButton" name="LogoutButton">
+         <property name="maximumSize">
+          <size>
+           <width>3000</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(235, 235, 235)</string>
+         </property>
          <property name="text">
           <string>注销账号</string>
          </property>
@@ -261,6 +431,15 @@
        </item>
        <item row="5" column="1">
         <widget class="QPushButton" name="ExitButton">
+         <property name="maximumSize">
+          <size>
+           <width>3000</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(235, 235, 235)</string>
+         </property>
          <property name="text">
           <string>退出程序</string>
          </property>
@@ -269,6 +448,10 @@
       </layout>
      </widget>
      <widget class="QWidget" name="StatePage">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255);
+</string>
+      </property>
       <layout class="QGridLayout" name="gridLayout_8">
        <item row="0" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,10">
@@ -374,6 +557,10 @@
        </item>
        <item row="4" column="0">
         <widget class="QTableWidget" name="stateTableWidget">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(249, 249, 249);
+border-color: rgb(0, 0, 0);</string>
+         </property>
          <property name="sortingEnabled">
           <bool>true</bool>
          </property>
@@ -476,6 +663,9 @@
            <height>25</height>
           </size>
          </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(235, 235, 235)</string>
+         </property>
          <property name="text">
           <string>返回主菜单</string>
          </property>
@@ -490,6 +680,10 @@
       </layout>
      </widget>
      <widget class="QWidget" name="QueryPage">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255);
+</string>
+      </property>
       <layout class="QGridLayout" name="gridLayout_4">
        <item row="0" column="0">
         <layout class="QVBoxLayout" name="verticalLayout" stretch="1,10">
@@ -515,6 +709,10 @@
              </item>
              <item>
               <widget class="QComboBox" name="origin_comboBox">
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(235, 235, 235);
+border-color: rgb(0, 0, 0);</string>
+               </property>
                <item>
                 <property name="text">
                  <string>济南</string>
@@ -685,6 +883,10 @@
              </item>
              <item>
               <widget class="QComboBox" name="target_comboBox">
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(235, 235, 235);
+border-color: rgb(0, 0, 0);</string>
+               </property>
                <item>
                 <property name="text">
                  <string>济南</string>
@@ -846,6 +1048,9 @@
            </item>
            <item>
             <widget class="QPushButton" name="QueryPathButton">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(235, 235, 235)</string>
+             </property>
              <property name="text">
               <string>查询</string>
              </property>
@@ -855,6 +1060,10 @@
          </item>
          <item>
           <widget class="QTableWidget" name="Path_tableWidget">
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(252, 252, 252);
+border-color: rgb(0, 0, 0);</string>
+           </property>
            <property name="sortingEnabled">
             <bool>true</bool>
            </property>
@@ -923,6 +1132,9 @@
            <height>25</height>
           </size>
          </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(235, 235, 235)</string>
+         </property>
          <property name="text">
           <string>返回主菜单</string>
          </property>
@@ -931,6 +1143,10 @@
       </layout>
      </widget>
      <widget class="QWidget" name="OrderPage">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255);
+</string>
+      </property>
       <layout class="QGridLayout" name="gridLayout_7" columnstretch="9,1">
        <property name="topMargin">
         <number>9</number>
@@ -946,6 +1162,9 @@
        </property>
        <item row="2" column="1">
         <widget class="QWidget" name="limit_time_widget" native="true">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
          <layout class="QGridLayout" name="gridLayout">
           <item row="0" column="0" colspan="2">
            <widget class="QLabel" name="limit_time_label">
@@ -963,6 +1182,9 @@
           </item>
           <item row="1" column="1">
            <widget class="QSpinBox" name="limit_day_spinbox">
+            <property name="styleSheet">
+             <string notr="true">border-color: rgb(0, 0, 0);</string>
+            </property>
             <property name="minimum">
              <number>1</number>
             </property>
@@ -977,6 +1199,10 @@
           </item>
           <item row="2" column="1">
            <widget class="QComboBox" name="limit_hour_comboBox">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(253, 253, 253);
+border-color: rgb(0, 0, 0);</string>
+            </property>
             <item>
              <property name="text">
               <string>0</string>
@@ -1104,6 +1330,10 @@
        </item>
        <item row="3" column="1">
         <widget class="QPushButton" name="OrderPathButton">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(235, 235, 235);
+border-color: rgb(0, 0, 0);</string>
+         </property>
          <property name="text">
           <string>开始</string>
          </property>
@@ -1124,6 +1354,9 @@
        </item>
        <item row="1" column="1">
         <widget class="QWidget" name="init_time_widget" native="true">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
          <layout class="QGridLayout" name="gridLayout_6">
           <item row="0" column="0">
            <widget class="QLabel" name="init_time_label">
@@ -1141,6 +1374,10 @@
           </item>
           <item row="1" column="1">
            <widget class="QComboBox" name="init_time_comboBox">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(253, 253, 253);
+border-color: rgb(0, 0, 0);</string>
+            </property>
             <item>
              <property name="text">
               <string>0</string>
@@ -1287,7 +1524,10 @@
           </size>
          </property>
          <property name="autoFillBackground">
-          <bool>true</bool>
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: transparent;</string>
          </property>
          <property name="text">
           <string/>
@@ -1308,6 +1548,10 @@
        </item>
        <item row="5" column="1">
         <widget class="QPushButton" name="OrderPageToMenuButton">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(235, 235, 235);
+border-color: rgb(0, 0, 0);</string>
+         </property>
          <property name="text">
           <string>返回主菜单</string>
          </property>
@@ -1315,6 +1559,9 @@
        </item>
        <item row="0" column="1">
         <widget class="QWidget" name="strategy_widget" native="true">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
            <widget class="QLabel" name="strategy_label">
@@ -1325,6 +1572,10 @@
           </item>
           <item>
            <widget class="QComboBox" name="strategy_comboBox">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(253, 253, 253);
+border-color: rgb(0, 0, 0);</string>
+            </property>
             <item>
              <property name="text">
               <string>最少金钱</string>
@@ -1348,6 +1599,9 @@
       </layout>
      </widget>
      <widget class="QWidget" name="SimulatePage">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
+      </property>
       <layout class="QGridLayout" name="gridLayout_11">
        <item row="0" column="0">
         <widget class="MyMap" name="MapSimulate">
@@ -1370,7 +1624,10 @@
           </size>
          </property>
          <property name="autoFillBackground">
-          <bool>true</bool>
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: transparent;</string>
          </property>
          <property name="text">
           <string/>
@@ -1480,6 +1737,9 @@
              <property name="layoutDirection">
               <enum>Qt::LeftToRight</enum>
              </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(235, 235, 235);</string>
+             </property>
              <property name="text">
               <string>开始</string>
              </property>
@@ -1493,6 +1753,9 @@
                <height>16777215</height>
               </size>
              </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(235, 235, 235);</string>
+             </property>
              <property name="text">
               <string>暂停</string>
              </property>
@@ -1505,6 +1768,9 @@
                <width>100</width>
                <height>16777215</height>
               </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(235, 235, 235);</string>
              </property>
              <property name="text">
               <string>继续</string>
@@ -1524,6 +1790,9 @@
                <width>100</width>
                <height>16777215</height>
               </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(235, 235, 235);</string>
              </property>
              <property name="text">
               <string>重置</string>
@@ -1570,6 +1839,9 @@
              <width>0</width>
              <height>0</height>
             </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(235, 235, 235);</string>
            </property>
            <property name="text">
             <string>返回主菜单</string>
