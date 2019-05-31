@@ -36,14 +36,17 @@ bool MyLabel::hasOriginPixmap()
 
 void MyLabel::mouseMoveEvent(QMouseEvent *ev)
 {
-    Sleep(500);
-    //qDebug() << ev->pos().x() << ev->pos().y();
     mouse_x_ = ev->pos().x();
     mouse_y_ = ev->pos().y();
     int i = judge_mouse_pos();
     if (i != -1)
     {
+        Sleep(400);
         setToolTip(QString::fromStdString(idmap->GetCityStr(i)));
+    }
+    else
+    {
+        setToolTip(NULL);
     }
 }
 
