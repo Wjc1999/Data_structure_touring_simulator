@@ -14,8 +14,8 @@ class Time;
 
 struct PathNode
 {
-    City_id former_city;  //前一个城市id，相当于“i”
-    City_id current_city; //节点城市名，相当于“j”
+    City_id former_city;  //始发城市id，相当于“i”
+    City_id current_city; //目的城市id，相当于“j”
     int kth_way;          //第k种方法，相当于“k”
 };
 
@@ -77,7 +77,7 @@ public:
 #endif
 
 private:
-    std::deque<PathNode> cities_; //储存节点
+    std::deque <PathNode> cities_; //储存节点
     int start_city_ = 0;          //记录出发城市
     int end_city_ = 0;            //记录到达城市
     int len_ = 0;                 //路径长度
