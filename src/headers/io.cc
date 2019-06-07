@@ -235,9 +235,9 @@ std::vector<City_id> Request(const IDMap &im)
     City_id temp_id;
 
     std::cout << "当前支持的城市有：" << std::endl;
-    for (int i = 0; i < im.GetCityMapSize(); i++)
+    for (int i = 0; i < im.getCityMapSize(); i++)
     {
-        std::cout << i + 1 << " : " << im.GetCityStr(i) << std::endl;
+        std::cout << i + 1 << " : " << im.getCityStr(i) << std::endl;
     }
 
     std::cout << "请输入您的当前城市(输入数字)：";
@@ -263,9 +263,9 @@ std::vector<City_id> Request(const IDMap &im)
                 std::cin.clear();
             }
 
-            if (temp_id < im.GetCityMapSize() && temp_id >= 0)
+            if (temp_id < im.getCityMapSize() && temp_id >= 0)
             {
-                std::cout << "您选择的当前城市是：" << im.GetCityStr(temp_id) << std::endl;
+                std::cout << "您选择的当前城市是：" << im.getCityStr(temp_id) << std::endl;
                 res.push_back(temp_id);
                 break;
             }
@@ -276,7 +276,7 @@ std::vector<City_id> Request(const IDMap &im)
         }
     }
 
-    Log::LogWrite(std::string("起始城市:") + im.GetCityStr(temp_id));
+    Log::LogWrite(std::string("起始城市:") + im.getCityStr(temp_id));
     std::cout << "请输入您希望经过的城市(以q结束)：";
     while (true)
     {
@@ -306,7 +306,7 @@ std::vector<City_id> Request(const IDMap &im)
             if (id == "q")
                 break;
 
-            if (temp_id >= im.GetCityMapSize() || temp_id < 0)
+            if (temp_id >= im.getCityMapSize() || temp_id < 0)
                 ErrorMsg("无效的城市，请重新输入");
             else if (temp_id == res.front())
                 ErrorMsg("与起点重复，请重新输入");
@@ -328,9 +328,9 @@ std::vector<City_id> Request(const IDMap &im)
         std::cout << "您选择经过的城市是：";
         std::string pass;
         for (auto i = ++res.begin(); i != res.end(); ++i)
-            pass += im.GetCityStr(*i) + " ";
+            pass += im.getCityStr(*i) + " ";
         Log::LogWrite(std::string("经过以下城市:") + pass);
-        std::for_each(++res.begin(), res.end(), [&](City_id city_id) { std::cout << im.GetCityStr(city_id) << " "; });
+        std::for_each(++res.begin(), res.end(), [&](City_id city_id) { std::cout << im.getCityStr(city_id) << " "; });
         std::cout << std::endl;
     }
     std::cout << "请输入您的目的城市：";
@@ -360,17 +360,17 @@ std::vector<City_id> Request(const IDMap &im)
             {
                 ErrorMsg("重复的城市，请重新输入");
             }
-            else if (temp_id >= im.GetCityMapSize() || temp_id < 0)
+            else if (temp_id >= im.getCityMapSize() || temp_id < 0)
                 ErrorMsg("无效的城市，请重新输入");
             else
             {
-                std::cout << "您选择的目的城市是：" << im.GetCityStr(temp_id) << std::endl;
+                std::cout << "您选择的目的城市是：" << im.getCityStr(temp_id) << std::endl;
                 res.push_back(temp_id);
                 break;
             }
         }
     }
-    Log::LogWrite(std::string("目的城市:") + im.GetCityStr(temp_id));
+    Log::LogWrite(std::string("目的城市:") + im.getCityStr(temp_id));
     return res;
 }
 
@@ -392,7 +392,7 @@ bool PrintNameList()
 // 根据所提供的traveller添加账号
 bool AddAccount(const Traveller &traveller)
 {
-    bool add_success = traveller.SaveData();
+    bool add_success = traveller.saveData();
     if (add_success)
     {
         Log::LogWrite("添加账号成功");
@@ -472,16 +472,16 @@ Strategy InputStrategy(Time &init_time, Time &limit_time)
         {
         case 0:
             init_time = InputInitTime();
-            Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.GetHour()) + " 旅行策略: 最少价格");
+            Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.getHour()) + " 旅行策略: 最少价格");
             return LEAST_MONEY;
         case 1:
             init_time = InputInitTime();
-            Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.GetHour()) + " 旅行策略: 最少时间");
+            Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.getHour()) + " 旅行策略: 最少时间");
             return LEAST_TIME;
         case 2:
             init_time = InputInitTime();
             limit_time = InputLimitTime();
-            Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.GetHour()) + "限定时间: " + std::to_string(init_time.GetLength()) + "小时 " + " 旅行策略: 限定时间内最小价格");
+            Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.getHour()) + "限定时间: " + std::to_string(init_time.getLength()) + "小时 " + " 旅行策略: 限定时间内最小价格");
             return LIMIT_TIME;
         default:
             ErrorMsg("无效的输入，请重新输入");
@@ -525,15 +525,15 @@ void PrintTravellerInfo(const CityGraph &graph, const IDMap &id_map, const Time 
         else if (position == -1)
         {
             std::cout << std::endl;
-            std::cout << "您的始发地是：" << id_map.GetCityStr(plan.front()) << std::endl;
-            std::cout << "您的目的地是：" << id_map.GetCityStr(plan.back()) << std::endl;
+            std::cout << "您的始发地是：" << id_map.getCityStr(plan.front()) << std::endl;
+            std::cout << "您的目的地是：" << id_map.getCityStr(plan.back()) << std::endl;
 
             if (plan.size() > 2)
             {
                 std::cout << "您的途经城市有：";
                 for (int i = 1; i < plan.size() - 1; i++)
                 {
-                    std::cout << id_map.GetCityStr(plan.at(i)) << " ";
+                    std::cout << id_map.getCityStr(plan.at(i)) << " ";
                 }
                 std::cout << std::endl;
             }
@@ -542,14 +542,14 @@ void PrintTravellerInfo(const CityGraph &graph, const IDMap &id_map, const Time 
         else
         {
             PrintPath(graph, id_map, path, position);
-            std::cout << "当前在：" << id_map.GetCityStr(path.GetNode(position).former_city) << std::endl;
+            std::cout << "当前在：" << id_map.getCityStr(path.getNode(position).former_city) << std::endl;
             std::cout << "离出发还有：" << traveller.get_left_hour() << "h" << std::endl;
         }
     }
     else
     {
         PrintPath(graph, id_map, path, position);
-        std::cout << "距目的地 " << id_map.GetCityStr(path.GetNode(position).current_city) << " 还有：" << traveller.get_left_hour() << "h" << std::endl;
+        std::cout << "距目的地 " << id_map.getCityStr(path.getNode(position).current_city) << " 还有：" << traveller.get_left_hour() << "h" << std::endl;
     }
 }
 
@@ -574,39 +574,39 @@ std::ostream &PrintPath(const CityGraph &graph, const IDMap &id_map, const Path 
               << "完成" << '\t' << std::endl;
     for (int path_node = 0; path_node < index; path_node++)
     {
-        int i = path.GetNode(path_node).former_city;
-        int j = path.GetNode(path_node).current_city;
-        int k = path.GetNode(path_node).kth_way;
-        Route route = graph.GetRoute(i, j, k);
-        auto former_city_str = id_map.GetCityStr(i);
-        auto current_city_str = id_map.GetCityStr(j);
+        int i = path.getNode(path_node).former_city;
+        int j = path.getNode(path_node).current_city;
+        int k = path.getNode(path_node).kth_way;
+        Route route = graph.getRoute(i, j, k);
+        auto former_city_str = id_map.getCityStr(i);
+        auto current_city_str = id_map.getCityStr(j);
         std::cout << former_city_str << wrap[former_city_str.size() > comp.size()]
                   << current_city_str << wrap[current_city_str.size() > comp.size()]
-                  << id_map.GetTransStr(route.transport_type) << '\t'
+                  << id_map.getTransStr(route.transport_type) << '\t'
                   << RouteShow(route.start_time, route.end_time)
                   << route.price << '\t'
                   << "O" << '\t' << std::endl;
     }
 
-    for (int path_node = index; path_node < path.GetLen(); path_node++)
+    for (int path_node = index; path_node < path.getLen(); path_node++)
     {
-        int i = path.GetNode(path_node).former_city;
-        int j = path.GetNode(path_node).current_city;
-        int k = path.GetNode(path_node).kth_way;
-        Route route = graph.GetRoute(i, j, k);
-        auto former_city_str = id_map.GetCityStr(i);
-        auto current_city_str = id_map.GetCityStr(j);
+        int i = path.getNode(path_node).former_city;
+        int j = path.getNode(path_node).current_city;
+        int k = path.getNode(path_node).kth_way;
+        Route route = graph.getRoute(i, j, k);
+        auto former_city_str = id_map.getCityStr(i);
+        auto current_city_str = id_map.getCityStr(j);
         std::cout << former_city_str << wrap[former_city_str.size() > comp.size()]
                   << current_city_str << wrap[current_city_str.size() > comp.size()]
-                  << id_map.GetTransStr(route.transport_type) << '\t'
+                  << id_map.getTransStr(route.transport_type) << '\t'
                   << RouteShow(route.start_time, route.end_time)
                   << route.price << '\t'
                   << "X" << '\t' << std::endl;
     }
     if (showtotal)
     {
-        std::cout << "总价格花费：" << path.GetTotalPrice() << std::endl;
-        std::cout << "总时间花费：" << path.GetTotalTime().GetLength() << "h" << std::endl;
+        std::cout << "总价格花费：" << path.getTotalPrice() << std::endl;
+        std::cout << "总时间花费：" << path.getTotalTime().getLength() << "h" << std::endl;
     }
     return os;
 }
@@ -760,9 +760,9 @@ void PrintRoutes(const CityGraph &graph, const IDMap &id_map)
     City_id start_city;
     City_id target_city;
     std::cout << "输入两个城市，获取两城市间的所有路线" << std::endl;
-    for (int i = 0; i < id_map.GetCityMapSize(); i++)
+    for (int i = 0; i < id_map.getCityMapSize(); i++)
     {
-        std::cout << i + 1 << " : " << id_map.GetCityStr(i) << std::endl;
+        std::cout << i + 1 << " : " << id_map.getCityStr(i) << std::endl;
     }
     std::cout << "请输入始发城市：";
     while (1)
@@ -773,9 +773,9 @@ void PrintRoutes(const CityGraph &graph, const IDMap &id_map)
         if (std::cin.good())
         {
             start_city = std::stoi(id) - 1;
-            if (start_city < id_map.GetCityMapSize() && start_city >= 0)
+            if (start_city < id_map.getCityMapSize() && start_city >= 0)
             {
-                std::cout << "您选择的始发城市是：" << id_map.GetCityStr(start_city) << std::endl;
+                std::cout << "您选择的始发城市是：" << id_map.getCityStr(start_city) << std::endl;
                 break;
             }
             else
@@ -794,9 +794,9 @@ void PrintRoutes(const CityGraph &graph, const IDMap &id_map)
         if (std::cin.good())
         {
             target_city = std::stoi(id) - 1;
-            if (target_city < id_map.GetCityMapSize() && target_city >= 0)
+            if (target_city < id_map.getCityMapSize() && target_city >= 0)
             {
-                std::cout << "您选择的目的城市是：" << id_map.GetCityStr(target_city) << std::endl;
+                std::cout << "您选择的目的城市是：" << id_map.getCityStr(target_city) << std::endl;
                 break;
             }
             else
@@ -806,8 +806,8 @@ void PrintRoutes(const CityGraph &graph, const IDMap &id_map)
             }
         }
     }
-    Log::LogWrite(std::string("获取从 ") + id_map.GetCityStr(start_city) + " 到 " + id_map.GetCityStr(target_city) + " 的路线");
-    int size = graph.Getsize(start_city, target_city);
+    Log::LogWrite(std::string("获取从 ") + id_map.getCityStr(start_city) + " 到 " + id_map.getCityStr(target_city) + " 的路线");
+    int size = graph.getSize(start_city, target_city);
     if (!size)
     {
         std::cout << "两城市间无路线" << std::endl;
@@ -828,11 +828,11 @@ void PrintRoutes(const CityGraph &graph, const IDMap &id_map)
 
         for (int k = 0; k < size; k++)
         {
-            Route route = graph.GetRoute(start_city, target_city, k);
+            Route route = graph.getRoute(start_city, target_city, k);
 
-            std::string cityi = id_map.GetCityStr(start_city);
-            std::string cityj = id_map.GetCityStr(target_city);
-            std::string method = id_map.GetTransStr(route.transport_type);
+            std::string cityi = id_map.getCityStr(start_city);
+            std::string cityj = id_map.getCityStr(target_city);
+            std::string method = id_map.getTransStr(route.transport_type);
 
             std::cout << k + 1 << '\t'
                       << cityi << wrap[cityi.size() > comp.size()]

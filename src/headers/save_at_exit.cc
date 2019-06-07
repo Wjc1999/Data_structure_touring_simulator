@@ -27,7 +27,7 @@ void SaveDataOnExit()
     {
         std::cout << "saving..."
                   << "\t";
-        if ((*p_traveller).SaveData())
+        if ((*p_traveller).saveData())
         {
             saved = true;
             Log::LogWrite("数据保存成功");

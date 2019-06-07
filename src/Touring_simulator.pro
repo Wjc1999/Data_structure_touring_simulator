@@ -32,14 +32,14 @@ SOURCES += \
     headers/log.cc \
     headers/path.cc \
     headers/save_at_exit.cc \
-    headers/simulation.cc \
     headers/time_format.cc \
     headers/traveller.cc \
     main.cpp \
     qt_headers/widget.cpp \
     qt_headers/mylabel.cpp \
     qt_headers/mymap.cpp \
-    qt_headers/simulator.cpp
+    qt_headers/simulator.cpp \
+    headers/simulation.cc
 
 HEADERS += \
     qt_headers/time_table_widget_item.h \
@@ -50,13 +50,13 @@ HEADERS += \
     headers/log.h \
     headers/path.h \
     headers/save_at_exit.h \
-    headers/simulation.h \
     headers/time_format.h \
     headers/traveller.h \
     headers/user_type.h \
     qt_headers/mylabel.h \
     qt_headers/simulator.h \
-    qt_headers/mymap.h
+    qt_headers/mymap.h \
+    headers/simulation.h
 
 FORMS += \
     qt_headers/widget.ui

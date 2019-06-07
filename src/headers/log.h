@@ -13,11 +13,11 @@
  */
 namespace Log
 {
-bool LogWrite(const std::string &log_str);
+    bool LogWrite(const std::string &log_str);
 
-const std::string &get_log_path();
+    const std::string &get_log_path();
 
-bool CloseLog();
+    bool CloseLog();
 }; // namespace Log
 
 #endif // SRC_LOG_H
