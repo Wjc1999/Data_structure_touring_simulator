@@ -52,7 +52,7 @@ void MyMap::move(int path_node, int hour_left, int cnt)
         last_pathnode_ = path_node;
         reset_image(last_pathnode_);
 
-        PathNode temp = traveller_path_.GetNode(path_node);
+        PathNode temp = traveller_path_.getNode(path_node);
         std::pair<int, int> cityA = city_pos_[temp.former_city];
         std::pair<int, int> cityB = city_pos_[temp.current_city];
         tan_ = (double)(cityB.second - cityA.second) / (cityB.first - cityA.first);
@@ -88,11 +88,11 @@ void MyMap::reset_image(int i)
 {
     PathNode first_node;
     if (i == -1)
-        first_node = traveller_path_.GetNode(traveller_path_.GetLen() - 1);
+        first_node = traveller_path_.getNode(traveller_path_.getLen() - 1);
     else
-        first_node = traveller_path_.GetNode(i);
+        first_node = traveller_path_.getNode(i);
 
-    Trans_id type = citygraph_->GetRoute(first_node.former_city, first_node.current_city, first_node.kth_way).transport_type;
+    Trans_id type = citygraph_->getRoute(first_node.former_city, first_node.current_city, first_node.kth_way).transport_type;
     int first_x, first_y;
     if (i == -1)
     {

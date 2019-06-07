@@ -42,7 +42,7 @@ void MyLabel::mouseMoveEvent(QMouseEvent *ev)
     if (i != -1)
     {
         Sleep(400);
-        setToolTip(QString::fromStdString(idmap->GetCityStr(i)));
+        setToolTip(QString::fromStdString(idmap->getCityStr(i)));
     }
     else
     {

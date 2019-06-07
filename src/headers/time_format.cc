@@ -30,15 +30,15 @@ Time &Time::minus_time(const int hour, const int day)
 std::string RouteShow(const Time &leave, const Time &arrive)
 {
     std::string temp;
-    temp += std::to_string(leave.GetHour());
+    temp += std::to_string(leave.getHour());
     temp += ":00\t\t";
-    temp += std::to_string(arrive.GetHour());
+    temp += std::to_string(arrive.getHour());
     temp += ":00";
     /*std::cout << leave.GetHour() << ":00" << "\t\t"
             << arrive.GetHour() << ":00";*/
-    if (arrive.GetDay())
+    if (arrive.getDay())
     {
-        temp += "+" + std::to_string(arrive.GetDay()) + "\t\t";
+        temp += "+" + std::to_string(arrive.getDay()) + "\t\t";
         //std::cout << "+" << arrive.GetDay() << "\t\t";
     }
 

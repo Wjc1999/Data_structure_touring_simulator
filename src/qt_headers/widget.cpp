@@ -35,15 +35,12 @@ Widget::Widget(QWidget *parent) : QWidget(parent),
 Widget::~Widget()
 {
     delete ui;
-    traveller_widget.SaveData();
+    traveller_widget.saveData();
     Log::LogWrite("程序退出");
 }
 
 void Widget::on_LogInButton_released() //登陆
 {
-    //QString temp;
-    //temp.fromStdString(idmap_widget.GetCityStr(13));
-    //qDebug() << temp;
     QString account_name = ui->lineEdit->text();
 
     if (!account_name.size())
@@ -61,7 +58,7 @@ void Widget::on_LogInButton_released() //登陆
 
     if (account_check != -1)
     {
-        traveller_widget.LoadData(account_check, citygraph_widget);
+        traveller_widget.loadData(account_check, citygraph_widget);
         Log::LogWrite(std::string("登陆账号 ") + account_name.toStdString());
         traveller_widget.set_id(account_name.toStdString());
         ui->stackedWidget->setCurrentWidget(ui->MainPage);
@@ -125,15 +122,15 @@ void Widget::on_StatePageButton_released() // 状态查询
     }
     else
     {
-        ui->state_start_city_content->setText(QString::fromStdString(idmap_widget.GetCityStr(plan.front())));
-        ui->state_target_city_content->setText(QString::fromStdString(idmap_widget.GetCityStr(plan.back())));
+        ui->state_start_city_content->setText(QString::fromStdString(idmap_widget.getCityStr(plan.front())));
+        ui->state_target_city_content->setText(QString::fromStdString(idmap_widget.getCityStr(plan.back())));
 
         if (plan.size() > 2)
         {
             temp_str.clear();
             for (int i = 1; i < plan.size() - 1; i++)
             {
-                temp_str += idmap_widget.GetCityStr(plan.at(i)) + " ";
+                temp_str += idmap_widget.getCityStr(plan.at(i)) + " ";
             }
             ui->state_pass_content->setText(QString::fromStdString(temp_str));
         }
@@ -141,8 +138,8 @@ void Widget::on_StatePageButton_released() // 状态查询
         {
             ui->state_pass_content->setText(empty_plan_qstr);
         }
-        ui->state_time_content->setNum(path.GetTotalTime().GetLength());
-        ui->state_price_content->setNum(path.GetTotalPrice());
+        ui->state_time_content->setNum(path.getTotalTime().getLength());
+        ui->state_price_content->setNum(path.getTotalPrice());
 
         if (position == -1)
         {
@@ -150,14 +147,14 @@ void Widget::on_StatePageButton_released() // 状态查询
         }
         else
         {
-            ui->state_position_content->setText(QString::fromStdString(idmap_widget.GetCityStr(path.GetNode(position).former_city)));
+            ui->state_position_content->setText(QString::fromStdString(idmap_widget.getCityStr(path.getNode(position).former_city)));
         }
     }
 
-    ui->stateTableWidget->setRowCount(path.GetLen());
-    for (int i = 0; i < path.GetLen(); i++)
+    ui->stateTableWidget->setRowCount(path.getLen());
+    for (int i = 0; i < path.getLen(); i++)
     {
-        auto &node = path.GetNode(i);
+        auto &node = path.getNode(i);
         UpdateTable(ui->stateTableWidget, i, node.former_city, node.current_city, node.kth_way);
     }
 
@@ -187,7 +184,7 @@ void Widget::on_SimulationPageButton_released() // 开始模拟
 
 void Widget::on_LogoutButton_released()
 {
-    traveller_widget.SaveData();
+    traveller_widget.saveData();
     traveller_widget = Traveller();
     Log::LogWrite("注销账户");
     ui->stackedWidget->setCurrentWidget(ui->LoginPage);
@@ -224,12 +221,12 @@ void Widget::UpdateTable(QTableWidget *table, int row, City_id start_city, City_
     std::string start_time_str, end_time_str;
     std::stringstream ss;
 
-    start_city_qstr = QString::fromStdString(idmap_widget.GetCityStr(start_city));
-    target_city_qstr = QString::fromStdString(idmap_widget.GetCityStr(target_city));
+    start_city_qstr = QString::fromStdString(idmap_widget.getCityStr(start_city));
+    target_city_qstr = QString::fromStdString(idmap_widget.getCityStr(target_city));
 
-    Route r = citygraph_widget.GetRoute(start_city, target_city, k);
+    Route r = citygraph_widget.getRoute(start_city, target_city, k);
 
-    transport_type_qstr = QString::fromStdString(idmap_widget.GetTransStr(r.transport_type));
+    transport_type_qstr = QString::fromStdString(idmap_widget.getTransStr(r.transport_type));
 
     ss.str(RouteShow(r.start_time, r.end_time));
     ss.clear();
@@ -267,7 +264,7 @@ void Widget::on_QueryPathButton_released()
     ui->Path_tableWidget->clearContents();
     ui->Path_tableWidget->setRowCount(0);
     ui->Path_tableWidget->setSortingEnabled(false);
-    Log::LogWrite(std::string("获取从 ") + idmap_widget.GetCityStr(start_city) + " 到 " + idmap_widget.GetCityStr(target_city) + " 的路线");
+    Log::LogWrite(std::string("获取从 ") + idmap_widget.getCityStr(start_city) + " 到 " + idmap_widget.getCityStr(target_city) + " 的路线");
 
     if (start_city == target_city)
     {
@@ -275,7 +272,7 @@ void Widget::on_QueryPathButton_released()
         return;
     }
 
-    int size = citygraph_widget.Getsize(start_city, target_city);
+    int size = citygraph_widget.getSize(start_city, target_city);
     if (!size)
     {
         QMessageBox::warning(this, "Warning!", "两城市间无路线", QMessageBox::Ok);
@@ -315,25 +312,25 @@ void Widget::on_OrderPathButton_released()
         traveller_widget.set_plan(plan);
 
         std::string pass;
-        Log::LogWrite(std::string("起始城市:") + idmap_widget.GetCityStr(plan.front()));
+        Log::LogWrite(std::string("起始城市:") + idmap_widget.getCityStr(plan.front()));
 
         if (plan.size() == 2)
             Log::LogWrite("不经过任何城市");
         else
         {
             for (auto i = ++plan.begin(); i != plan.end(); ++i)
-                pass += idmap_widget.GetCityStr(*i) + " ";
+                pass += idmap_widget.getCityStr(*i) + " ";
             Log::LogWrite(std::string("经过以下城市:") + pass);
         }
-        Log::LogWrite(std::string("目的城市:") + idmap_widget.GetCityStr(plan.back()));
+        Log::LogWrite(std::string("目的城市:") + idmap_widget.getCityStr(plan.back()));
 
         if (s == LIMIT_TIME)
         {
             Time limit_time(ui->limit_day_spinbox->value(), ui->limit_hour_comboBox->currentIndex());
-            Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.GetHour()) + "限定时间: " + std::to_string(init_time.GetLength()) + "小时 " + " 旅行策略: 限定时间内最小价格");
+            Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.getHour()) + "限定时间: " + std::to_string(init_time.getLength()) + "小时 " + " 旅行策略: 限定时间内最小价格");
 
-            Path p = traveller_widget.SchedulePath(citygraph_widget, s, init_time, limit_time);
-            if (!p.GetLen())
+            Path p = traveller_widget.schedulePath(citygraph_widget, s, init_time, limit_time);
+            if (!p.getLen())
             {
                 QMessageBox::warning(this, "Warning!", "未找到符合要求路径", QMessageBox::Ok);
                 return;
@@ -343,12 +340,12 @@ void Widget::on_OrderPathButton_released()
         else
         {
             if (s == LEAST_TIME)
-                Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.GetHour()) + " 旅行策略: 最少时间");
+                Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.getHour()) + " 旅行策略: 最少时间");
             else if (s == LEAST_MONEY)
-                Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.GetHour()) + " 旅行策略: 最少价格");
+                Log::LogWrite(std::string("起始时间: ") + std::to_string(init_time.getHour()) + " 旅行策略: 最少价格");
 
-            Path p = traveller_widget.SchedulePath(citygraph_widget, s, init_time);
-            if (!p.GetLen())
+            Path p = traveller_widget.schedulePath(citygraph_widget, s, init_time);
+            if (!p.getLen())
             {
                 QMessageBox::warning(this, "Warning!", "未找到符合要求路径", QMessageBox::Ok);
                 return;

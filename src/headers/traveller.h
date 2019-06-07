@@ -32,10 +32,10 @@ public:
     const Path &get_path() const { return touring_path_; }
 
     // 为旅客计划一条路径
-    Path SchedulePath(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time t = Time(), Time limit = Time());
-    Path SchedulePath(const CityGraph &graph, Strategy s, Time t = Time(), Time limit = Time())
+    Path schedulePath(const CityGraph &graph, const std::vector<City_id> &plan, Strategy s, Time t = Time(), Time limit = Time());
+    Path schedulePath(const CityGraph &graph, Strategy s, Time t = Time(), Time limit = Time())
     {
-        return SchedulePath(graph, travelling_plan_, s, t, limit);
+        return schedulePath(graph, travelling_plan_, s, t, limit);
     }
 
     // 设置旅行路径
@@ -46,7 +46,7 @@ public:
     }
 
     // 打印旅客计划
-    void PrintPlan() const;
+    void printPlan() const;
 
     const std::vector<City_id> &get_plan() const { return travelling_plan_; }
 
@@ -55,8 +55,8 @@ public:
     void set_plan(const std::initializer_list<City_id> &il) { travelling_plan_ = std::vector<City_id>(il); }
 
     // 保存当前旅客信息
-    bool SaveData() const;
-    bool LoadData(int cnt, const CityGraph &graph);
+    bool saveData() const;
+    bool loadData(int cnt, const CityGraph &graph);
 
     void append_plan(City_id city) { travelling_plan_.push_back(city); }
 
@@ -66,9 +66,9 @@ public:
     int get_off_hours(const CityGraph &graph, int cnt);
     int get_stay_hours(const CityGraph &graph, int cnt);
 
-    void InitState(const CityGraph &graph);
+    void initState(const CityGraph &graph);
 
-    void UpdateState(const CityGraph &graph);
+    void updateState(const CityGraph &graph);
     TravellerState get_state() const { return state_; }
 
     void set_strategy(Strategy strategy) { strategy_ = strategy; }

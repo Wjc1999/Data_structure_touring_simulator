@@ -27,13 +27,13 @@ public:
   int get_city_num() const { return kCityNum; }
 
   //打印ijk的存储数据
-  void Show(City_id former_city, City_id current_city, int k) const;
+  void show(City_id former_city, City_id current_city, int k) const;
 
   //获得存储在ijk的Route
-  const Route &GetRoute(City_id former_city, City_id current_city, int k) const { return city_[former_city][current_city].at(k); }
+  const Route &getRoute(City_id former_city, City_id current_city, int k) const { return city_[former_city][current_city].at(k); }
 
   //获得city[i][j]的大小
-  int Getsize(City_id i, City_id j) const { return city_[i][j].size(); }
+  int getSize(City_id i, City_id j) const { return city_[i][j].size(); }
 
 #ifdef TEST_CG
 

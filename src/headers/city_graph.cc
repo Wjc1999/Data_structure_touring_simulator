@@ -21,78 +21,72 @@ static const std::string car_file_path = "../data/car_extract_with_id.txt";
 
 CityGraph::CityGraph()
 {
-  if (
-      LoadCityGraph(flight_file_path, 2) &&
-      LoadCityGraph(train_file_path, 1) &&
-      LoadCityGraph(car_file_path, 0))
-    Log::LogWrite("车次数据加载成功");
-  else
-  {
-    Log::LogWrite("车次数据读取失败");
-  }
+    if(LoadCityGraph(flight_file_path, 2) &&
+       LoadCityGraph(train_file_path, 1) &&
+       LoadCityGraph(car_file_path, 0))
+        Log::LogWrite("车次数据加载成功");
+    else
+    {
+        Log::LogWrite("车次数据读取失败");
+    }
 }
 
 bool CityGraph::LoadCityGraph(const std::string &name, int type)
 { //将飞机火车汽车数据加载到程序中
-  Log::LogWrite(std::string("加载 ") + name + " 中");
-  std::ifstream stream(name);
+    Log::LogWrite(std::string("加载 ") + name + " 中");
+    std::ifstream stream(name);
 
-  if (stream)
-  {
-    if (type != 1)
-    { //飞机汽车的数据
-      int data[5];
-      while (!stream.eof())
-      {
-        for (int i = 0; i < 5; i++)
-        {
-          stream >> data[i];
+    if (stream)
+    {
+        if (type != 1)
+        { //飞机汽车的数据
+            int data[5];
+            while (!stream.eof())
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    stream >> data[i];
+                }
+                Route temp = {type, 0, Time(data[2]), Time(data[3]), data[4]};
+                city_[data[0]][data[1]].push_back(temp);
+            }
         }
-        Route temp = {type, 0, Time(data[2]), Time(data[3]), data[4]};
-        //temp.transport_type = type;
-        //temp.train_seat_type = ;
-        //temp.start_time = Time(data[2]);
-        //temp.end_time = Time(data[3]);
-        //temp.price = data[4];
-        city_[data[0]][data[1]].push_back(temp);
-      }
+        else
+        { //火车的数据
+            int data[7];
+            std::string line;
+            while (getline(stream, line))
+            {
+                std::istringstream ss(line);
+                for (int i = 0; i < 7; i++)
+                {
+                    ss >> data[i];
+                }
+                Route temp = {type, 0, Time(data[2]), Time(data[3]), data[6]};
+                city_[data[0]][data[1]].push_back(temp);
+            }
+        }
     }
     else
-    { //火车的数据
-      int data[7];
-      std::string line;
-      while (getline(stream, line))
-      {
-        std::istringstream ss(line);
-        for (int i = 0; i < 7; i++)
-        {
-          ss >> data[i];
-        }
-        Route temp = {type, 0, Time(data[2]), Time(data[3]), data[6]};
-        city_[data[0]][data[1]].push_back(temp);
-      }
+    {
+        Log::LogWrite(std::string("无法打开 ") + name);
+        return false;
     }
-  }
-  else
-  {
-    Log::LogWrite(std::string("无法打开 ") + name);
-    return false;
-  }
-  return true;
+    return true;
 }
 
-void CityGraph::Show(City_id former_city, City_id current_city, int k) const
+void CityGraph::show(City_id former_city, City_id current_city, int k) const
 {
-  if (former_city != current_city)
-  {
-    std::cout << former_city << ' ' << current_city << ' ' << k << ' '
-              << city_[former_city][current_city].at(k).start_time.GetDay() << ' '
-              << city_[former_city][current_city].at(k).start_time.GetHour() << ' '
-              << city_[former_city][current_city].at(k).end_time.GetDay() << ' '
-              << city_[former_city][current_city].at(k).end_time.GetHour() << ' '
-              << city_[former_city][current_city].at(k).price << std::endl;
-  }
-  else
-    std::cout << "No data!" << std::endl;
+    if (former_city != current_city)
+    {
+        std::cout << former_city << ' ' << current_city << ' ' << k << ' '
+                  << city_[former_city][current_city].at(k).start_time.getDay() << ' '
+                  << city_[former_city][current_city].at(k).start_time.getHour() << ' '
+                  << city_[former_city][current_city].at(k).end_time.getDay() << ' '
+                  << city_[former_city][current_city].at(k).end_time.getHour() << ' '
+                  << city_[former_city][current_city].at(k).price << std::endl;
+    }
+    else
+        std::cout << "No data!" << std::endl;
 }
 #endif // SRC_CG_CC

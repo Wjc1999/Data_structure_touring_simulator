@@ -32,7 +32,6 @@ SOURCES += \
     headers/log.cc \
     headers/path.cc \
     headers/save_at_exit.cc \
-    headers/simulation.cc \
     headers/time_format.cc \
     headers/traveller.cc \
     main.cpp \
@@ -50,7 +49,6 @@ HEADERS += \
     headers/log.h \
     headers/path.h \
     headers/save_at_exit.h \
-    headers/simulation.h \
     headers/time_format.h \
     headers/traveller.h \
     headers/user_type.h \

@@ -36,11 +36,11 @@ public:
 	// 返回当前时间对应的小时数
 	int to_hour() const { return day_ * 24 + hour_; }
 
-	int GetDay() const { return day_; }
-	int GetHour() const { return hour_; }
-	void Reset() { hour_ = 0, day_ = 0; }               //重置
-	int GetLength() const { return hour_ + day_ * 24; } //获得总时长
-	void set_hour(int hour) { hour_ = hour; }
+    int getDay() const { return day_; }
+    int getHour() const { return hour_; }
+    void reset() { hour_ = 0, day_ = 0; }               //重置
+    int getLength() const { return hour_ + day_ * 24; } //获得总时长
+    void set_hour(int hour) { hour_ = hour; }
 
 #ifdef TEST_TIME
 #include <iostream>

@@ -18,17 +18,17 @@ public:
 	IDMap();
 
 	// 给序号获得城市名
-	const std::string &GetCityStr(City_id id) const { return city_map_.at(id); }
+    const std::string &getCityStr(City_id id) const { return city_map_.at(id); }
 
 	// 给序号获得火车座位等级名
-	const std::string &GetTrainSeatTypeStr(Train_id id) const { return train_map_.at(id); }
+    const std::string &getTrainSeatTypeStr(Train_id id) const { return train_map_.at(id); }
 
 	// 给序号获得交通方式
-	const std::string &GetTransStr(Trans_id id) const { return trans_map_.at(id); }
+    const std::string &getTransStr(Trans_id id) const { return trans_map_.at(id); }
 
-	std::map<int, std::string>::size_type GetCityMapSize() const { return city_map_.size(); }
-	std::map<int, std::string>::size_type GetTrainMapSize() const { return train_map_.size(); }
-	std::map<int, std::string>::size_type GetTransMapSize() const { return trans_map_.size(); }
+    std::map<int, std::string>::size_type getCityMapSize() const { return city_map_.size(); }
+    std::map<int, std::string>::size_type getTrainMapSize() const { return train_map_.size(); }
+    std::map<int, std::string>::size_type getTransMapSize() const { return trans_map_.size(); }
 
 private:
 	static const std::string paths_[3];
