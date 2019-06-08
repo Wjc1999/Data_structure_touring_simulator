@@ -6,12 +6,12 @@
 
 #include "time_format.h"
 
-Time &Time::add_time(const Time &t)
+Time &Time::add_time(const Time &t) noexcept
 {
 	return add_time(t.hour_, t.day_);
 }
 
-int Time::hour_diff(const Time &t) const
+int Time::hour_diff(const Time &t) const noexcept
 {
 	int temp_hour = hour_ - t.hour_, temp_day = day_ - t.day_;
 	if (temp_hour < 0)
@@ -22,12 +22,12 @@ int Time::hour_diff(const Time &t) const
 	return temp_hour + temp_day * 24;
 }
 
-Time &Time::minus_time(const Time &t)
+Time &Time::minus_time(const Time &t) noexcept
 {
 	return add_time(-t.hour_, -t.day_);
 }
 
-Time &Time::minus_time(const int hour, const int day)
+Time &Time::minus_time(const int hour, const int day) noexcept
 {
 	return add_time(-hour, -day);
 }
@@ -35,16 +35,16 @@ Time &Time::minus_time(const int hour, const int day)
 std::string RouteShow(const Time &leave, const Time &arrive)
 {
     std::string temp;
-    temp += std::to_string(leave.getHour());
+    temp += std::to_string(leave.get_hour());
     temp += ":00\t\t";
-    temp += std::to_string(arrive.getHour());
+    temp += std::to_string(arrive.get_hour());
     temp += ":00";
-    /*std::cout << leave.GetHour() << ":00" << "\t\t"
-            << arrive.GetHour() << ":00";*/
-    if (arrive.getDay())
+    /*std::cout << leave.get_hour() << ":00" << "\t\t"
+            << arrive.get_hour() << ":00";*/
+    if (arrive.get_day())
     {
-        temp += "+" + std::to_string(arrive.getDay()) + "\t\t";
-        //std::cout << "+" << arrive.GetDay() << "\t\t";
+        temp += "+" + std::to_string(arrive.get_day()) + "\t\t";
+        //std::cout << "+" << arrive.get_day() << "\t\t";
     }
 
 	else
@@ -55,7 +55,7 @@ std::string RouteShow(const Time &leave, const Time &arrive)
 	return temp;
 }
 
-Time &Time::add_time(const int hour, const int day /* = 0 */)
+Time &Time::add_time(const int hour, const int day /* = 0 */) noexcept
 {
 	day_ += day;
 	hour_ += hour;
@@ -68,7 +68,7 @@ Time &Time::add_time(const int hour, const int day /* = 0 */)
 	return *this;
 }
 
-Time Time::time_diff(const Time &t) const
+Time Time::time_diff(const Time &t) const noexcept
 {
 	int temp_hour = hour_ - t.hour_, temp_day = day_ - t.day_;
 	if (temp_hour < 0)
