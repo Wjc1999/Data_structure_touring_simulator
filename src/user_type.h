@@ -1,10 +1,8 @@
-﻿#ifndef SRC_USER_TYPE
+#ifndef SRC_USER_TYPE
 #define SRC_USER_TYPE
-
 #include <string>
 using City_id = int;
 using Train_id = int;
-//0 汽车  1 火车  2 飞机
 using Trans_id = int;
 using City_str = std::string;
 using Train_str = std::string;
